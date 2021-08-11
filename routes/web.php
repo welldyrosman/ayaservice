@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/pasien','PasienController@getallpasien');
+$router->get('/api/v1/pasien','PasienController@getallpasien');
 $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
 $router->post('/api/v1/registrasi','PasienController@addpasienoffline');
