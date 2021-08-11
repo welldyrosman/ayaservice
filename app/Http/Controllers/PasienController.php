@@ -8,15 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 class PasienController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
     private function insertdatapasien($request,$data){
         $ktp=$request->input('ktpno');
         $cek=Pasien::where('ktpno',$ktp)->first();
@@ -58,7 +49,7 @@ class PasienController extends Controller
                 'partner_tel' => 'required',
                 'partner_status' => 'required',
                 'add_user'=>'required'
-            ]);
+            ],['required'=>':attribute cannot Empty']);
             $data['reg_rule']=2;
             $data['status_akun']=1;
             $pasien=$this->insertdatapasien($request,$data);
@@ -91,7 +82,7 @@ class PasienController extends Controller
                 'partner_status' => 'required',
                 'password' => 'required',
                 'password2' => 'required',
-            ]);
+            ],['required'=>':attribute cannot Empty']);
             $data['reg_rule']=1;
             $data['status_akun']=2;
             $pasien=$this->insertdatapasien($request,$data);
@@ -153,6 +144,52 @@ class PasienController extends Controller
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
+        }
+
+    }
+    public function bannedpasien($id){
+        $pasien=Pasien::find($id);
+        if($pasien==null){
+            return Tools::MyResponse(false,"Data Pasien Tidak Ditemukan",null,428);
+        }else{
+            $data=['status_akun'=>3];
+            $pasien->fill($data);
+            $pasien->save();
+            return Tools::MyResponse(true,"Pasien Di Banned",$pasien,200);
+        }
+
+    }
+    public function disabled($id){
+        $pasien=Pasien::find($id);
+        if($pasien==null){
+            return Tools::MyResponse(false,"Data Pasien Tidak Ditemukan",null,428);
+        }else{
+            $data=['status_akun'=>2];
+            $pasien->fill($data);
+            $pasien->save();
+            return Tools::MyResponse(true,"Pasien Di Non Aktivkan",$pasien,200);
+        }
+    }
+    public function enabled($id){
+        $pasien=Pasien::find($id);
+        if($pasien==null){
+            return Tools::MyResponse(false,"Data Pasien Tidak Ditemukan",null,428);
+        }else{
+            $data=['status_akun'=>1];
+            $pasien->fill($data);
+            $pasien->save();
+            return Tools::MyResponse(true,"Pasien Di Aktivkan",$pasien,200);
+        }
+    }
+    public function setactive($id){
+        $pasien=Pasien::find($id);
+        if($pasien==null){
+            return Tools::MyResponse(false,"Data Pasien Tidak Ditemukan",null,428);
+        }else{
+            $data=['status_akun'=>3];
+            $pasien->fill($data);
+            $pasien->save();
+            return Tools::MyResponse(true,"Pasien Di Banned",$pasien,200);
         }
 
     }
