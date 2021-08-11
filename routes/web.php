@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/api/v1/pasien','PasienController@getallpasien');
+$router->get('/pasien','PasienController@getallpasien');
 $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
 $router->post('/api/v1/registrasi','PasienController@addpasienoffline');
@@ -33,3 +33,7 @@ $router->get('/api/v1/poli/{id}','PoliController@getid');
 $router->put('/api/v1/poli/{id}','PoliController@update');
 $router->delete('/api/v1/poli/{id}','PoliController@delete');
 $router->post('/api/v1/poli','PoliController@create');
+
+$router->get('/key', function() {
+    return \Illuminate\Support\Str::random(32);
+});
