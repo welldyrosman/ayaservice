@@ -34,6 +34,7 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router){
     $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 
     $router->post('/api/v1/reservation','ReservasiController@bookonline');
+    $router->get('/api/v1/myreservasi','ReservasiController@myreservation');
 });
 
 $router->post('/auth/v1/login', 'AuthController@loginPost');
