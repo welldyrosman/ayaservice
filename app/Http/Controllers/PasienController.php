@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Pasien;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
 class PasienController extends Controller
@@ -86,6 +87,12 @@ class PasienController extends Controller
             $data['reg_rule']=1;
             $data['status_akun']=2;
             $pasien=$this->insertdatapasien($request,$data);
+            $akun=[
+                "name"=>$data["nama"],
+                "email"=>$data["email"],
+                "password"=>app('hash')->make($data["password"])
+            ];
+            User::create($akun);
             DB::commit();
             return Tools::MyResponse(true,"OK",$pasien,200);
         }catch(Exception $e){
