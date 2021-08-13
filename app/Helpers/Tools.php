@@ -16,7 +16,15 @@ class Tools{
             if($responsecode==428){
                 $msg=$err;
             }else{
-                $msg=property_exists($err,'validator')?$err->validator->errors():$err->getMessage();
+                if(property_exists($err,'validator')){
+                    $msg=$err->validator->errors();
+                }else{
+                    if(method_exists($err,'getMessage')){
+                        $msg=$err->getMessage();
+                    }else{
+                        $msg=$msg;
+                    }
+                }
                 $errcode=property_exists($err,'validator')?427:$responsecode;
             }
 

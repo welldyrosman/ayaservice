@@ -17,7 +17,7 @@ use App\Models\User;
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->group(['middleware' => 'jwt.auth'], function () use ($router){
+$router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/poli','PoliController@getall');
     $router->get('/api/v1/poli/{id}','PoliController@getid');
     $router->put('/api/v1/poli/{id}','PoliController@update');
@@ -33,13 +33,23 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router){
     $router->get('/api/v1/pasien','PasienController@getallpasien');
     $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 
+    $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
+    $router->post('/api/v1/staff/{id}','StaffController@create');
+});
+
+$router->group(['middleware' => 'auth:api'], function () use ($router){
+
+
+
+
     $router->post('/api/v1/reservation','ReservasiController@bookonline');
     $router->get('/api/v1/myreservasi','ReservasiController@myreservation');
     $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
-    $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
+
 });
 
 $router->post('/auth/v1/login', 'AuthController@loginPost');
+$router->post('/auth/v1/login2', 'AuthController@loginstaff');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
