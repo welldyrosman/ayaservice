@@ -38,10 +38,6 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 });
 
 $router->group(['middleware' => 'auth:api'], function () use ($router){
-
-
-
-
     $router->post('/api/v1/reservation','ReservasiController@bookonline');
     $router->get('/api/v1/myreservasi','ReservasiController@myreservation');
     $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
