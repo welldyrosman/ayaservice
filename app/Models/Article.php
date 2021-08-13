@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Poli extends Model
+class Article extends Model
 {
-    protected $table = 'poli';
+    protected $table = 'article';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'subject', 'content',
+        'subject', 'content','thumbnail_img','staff_id','enable_mk'
     ];
 }

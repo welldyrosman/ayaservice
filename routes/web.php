@@ -48,6 +48,14 @@ $router->post('/auth/v1/login', 'AuthController@loginPost');
 $router->post('/auth/v1/login2', 'AuthController@loginstaff');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
 $router->get('/api/v1/pasien','PasienController@getallpasien');
+
+$router->get('/api/v1/articleimg/{id}','ArticleController@get_image');
+$router->get('/api/v1/article','ArticleController@getall');
+$router->get('/api/v1/article/{id}','ArticleController@getid');
+$router->post('/api/v1/article','ArticleController@create');
+$router->delete('/api/v1/article/{id}','ArticleController@delete');
+$router->post('/api/v1/article/{id}','ArticleController@update');
+
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
 //     return response()->json(compact('token'));

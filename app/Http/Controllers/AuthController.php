@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\JWTAuth;
 use App\Helpers\Tools;
 use App\Models\Pasien;
+use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
@@ -24,9 +25,6 @@ class AuthController extends Controller
 
         $this->jwt = $jwt;
     }
-    private function getpersonalinfo(){
-        return Pasien::where('email', $this->user['email'])->first();
-    }
     public  function loginstaff(Request $request){
         try{
             $this->validate($request, [
@@ -38,18 +36,20 @@ class AuthController extends Controller
             };
         } catch (TokenExpiredException $e) {
             return Tools::MyResponse(false,$e,null,401);
-          //  return response()->json(['token_expired'], $e->getStatusCode());
         } catch (TokenInvalidException $e) {
             return Tools::MyResponse(false,$e,null,401);
-            //return response()->json(['token_invalid'], $e->getStatusCode());
         } catch (JWTException $e) {
             return Tools::MyResponse(false,$e,null,401);
-            //return response()->json(['token_absent' => $e->getMessage()], $e->getStatusCode());
         } catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
-
-        return Tools::MyResponse(true,'OK',compact('token'),200);
+        $token=compact('token')['token'];
+        $user= Auth::guard('staff')->user($token);
+        $data=[
+            "data"=>$user,
+            "token"=>$token
+        ];
+        return Tools::MyResponse(true,'OK',$data,200);
     }
     public function loginPost(Request $request)
     {
@@ -59,8 +59,6 @@ class AuthController extends Controller
         ]);
 
         try {
-           // return response()->json($this->jwt->user());
-          //  \Config::set('auth.providers.users.model', \App\Trainer::class);
             if (!$token = $this->jwt->attempt($request->only('email', 'password'))) {
                throw new Exception("User Not Found");
             }
@@ -76,7 +74,6 @@ class AuthController extends Controller
         } catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
-
         $token=compact('token')['token'];
         $user=Auth::user($token);
         $pasein=Pasien::where('email', $user['email'])->first();
