@@ -12,7 +12,7 @@ class Reservasi extends Model
      * @var array
      */
     protected $fillable = [
-        'pasien_id', 'poli_id','tgl_book','status'
+        'pasien_id', 'poli_id','tgl_book','status','cancel_reason','staff_id','checkin_time','cancel_time'
     ];
     public function poli()
     {

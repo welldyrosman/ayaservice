@@ -41,7 +41,6 @@ class AuthController extends Controller
             return Tools::MyResponse(false,$e,null,401);
             //return response()->json(['token_absent' => $e->getMessage()], $e->getStatusCode());
         }
-
-        return response()->json(compact('token'));
+        return Tools::MyResponse(true,'OK',compact('token'),200);
     }
 }
