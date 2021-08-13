@@ -30,7 +30,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->put('/api/v1/registrasi/banned/{id}','PasienController@bannedpasien');
     $router->put('/api/v1/registrasi/enable/{id}','PasienController@disabled');
     $router->put('/api/v1/registrasi/disable/{id}','PasienController@enabled');
-    $router->get('/api/v1/pasien','PasienController@getallpasien');
+  //  $router->get('/api/v1/pasien','PasienController@getallpasien');
     $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
@@ -47,6 +47,7 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
 $router->post('/auth/v1/login', 'AuthController@loginPost');
 $router->post('/auth/v1/login2', 'AuthController@loginstaff');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
+$router->get('/api/v1/pasien','PasienController@getallpasien');
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
 //     return response()->json(compact('token'));
