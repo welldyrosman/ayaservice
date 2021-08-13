@@ -7,8 +7,10 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\JWTAuth;
 use App\Helpers\Tools;
+use App\Models\Pasien;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use stdClass;
 
 class AuthController extends Controller
 {
@@ -21,7 +23,9 @@ class AuthController extends Controller
     {
 
         $this->jwt = $jwt;
-      //  $this->middleware('auth:staff', ['except' => ['loginPost']]);
+    }
+    private function getpersonalinfo(){
+        return Pasien::where('email', $this->user['email'])->first();
     }
     public  function loginstaff(Request $request){
         try{
@@ -44,6 +48,7 @@ class AuthController extends Controller
         } catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
+
         return Tools::MyResponse(true,'OK',compact('token'),200);
     }
     public function loginPost(Request $request)
@@ -71,6 +76,14 @@ class AuthController extends Controller
         } catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
-        return Tools::MyResponse(true,'OK',compact('token'),200);
+
+        $token=compact('token')['token'];
+        $user=Auth::user($token);
+        $pasein=Pasien::where('email', $user['email'])->first();
+        $data=[
+            "data"=>$pasein,
+            "token"=>$token
+        ];
+        return Tools::MyResponse(true,'OK',$data,200);
     }
 }
