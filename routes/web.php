@@ -25,7 +25,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/poli','PoliController@create');
 
     $router->post('/api/v1/registrasi','PasienController@addpasienoffline');
-    $router->put('/api/v1/registrasi/{id}','PasienController@updatepasienoffline');
+
     $router->delete('/api/v1/registrasi/{id}','PasienController@deletepasien');
     $router->put('/api/v1/registrasi/banned/{id}','PasienController@bannedpasien');
     $router->put('/api/v1/registrasi/enable/{id}','PasienController@disabled');
@@ -35,6 +35,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
     $router->post('/api/v1/staff/{id}','StaffController@create');
+    $router->post('/api/v1/checkin','ReservasiController@checkinoffline');
+
 });
 
 $router->group(['middleware' => 'auth:api'], function () use ($router){
@@ -48,6 +50,8 @@ $router->post('/auth/v1/login', 'AuthController@loginPost');
 $router->post('/auth/v1/login2', 'AuthController@loginstaff');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
 $router->get('/api/v1/pasien','PasienController@getallpasien');
+$router->post('/api/v1/registrasi/{id}','PasienController@updatepasienoffline');
+
 
 $router->get('/api/v1/articleimg/{id}','ArticleController@get_image');
 $router->get('/api/v1/article','ArticleController@getall');

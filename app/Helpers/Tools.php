@@ -2,6 +2,9 @@
 
 namespace App\Helpers;
 
+use App\Models\Poli;
+use Exception;
+
 class Tools{
 
     public static function sayhello()
@@ -22,7 +25,7 @@ class Tools{
                     if(method_exists($err,'getMessage')){
                         $msg=$err->getMessage();
                     }else{
-                        $msg=$msg;
+                        $msg=$err;
                     }
                 }
                 $errcode=property_exists($err,'validator')?427:$responsecode;
@@ -36,6 +39,14 @@ class Tools{
             "messages"=>$msg,
             "data"=>$data
         ],$errcode);
+    }
+    public static function CheckPoli($id){
+        $poli=Poli::find($id);
+        if(!$poli){
+            throw new Exception("Cannot Found Poli");
+        }else{
+            return $poli;
+        }
     }
 }
 ?>

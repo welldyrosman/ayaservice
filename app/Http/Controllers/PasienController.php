@@ -7,8 +7,11 @@ use App\Models\Pasien;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Str;
 class PasienController extends Controller
 {
+    protected $path='app\photo_pasien';
+    protected $publicpath='storage\photo_pasien';
     private function insertdatapasien($request,$data){
         $ktp=$request->input('ktpno');
         $cek=Pasien::where('ktpno',$ktp)->first();
@@ -26,6 +29,13 @@ class PasienController extends Controller
         }
         if($pass!=$pass2){
             throw new Exception("Kombinasi Password Salah");
+        }
+        if($data['photo_pasien']!=null){
+            $thumbnail = Str::random(34);
+            $ext=$request->file('photo_pasien')->getClientOriginalExtension();
+            $this->filename=$thumbnail.'.'.$ext;
+            $request->file('photo_pasien')->move(storage_path($this->path), $this->filename);
+            $data['photo_pasien']=$this->filename;
         }
         $pasien = Pasien::create($data);
         return $pasien;
@@ -127,9 +137,18 @@ class PasienController extends Controller
                 'partner' => 'required',
                 'partner_tel' => 'required',
                 'partner_status' => 'required',
-                'add_user'=>'required'
             ],['required'=>':attribute cannot Empty']);
             $data = $request->all();
+            if($data['photo_pasien']!=null){
+            $current_avatar_path = storage_path($this->publicpath) . '/' .$pasien->photo;
+                if (file_exists($current_avatar_path)) {
+                unlink($current_avatar_path);
+                }
+                $thumbnail = Str::random(34);
+                $ext=$request->file('photo_pasien')->getClientOriginalExtension();
+                $this->filename=$thumbnail.'.'.$ext;
+                $request->file('photo_pasien')->move(storage_path($this->path), $this->filename);
+            }
             $pasien->fill($data);
             $pasien->save();
             DB::commit();

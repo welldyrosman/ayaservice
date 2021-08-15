@@ -56,7 +56,7 @@ class DokterController extends Controller
             $akundata=[
                 "nama"=>$data['nama'],
                 "email"=>$data["email"],
-                "password"=>"Dokter@#123",
+                "password"=>app('hash')->make("Dokter@#123"),
                 "role_id"=>2
             ];
             Staff::create($akundata);
@@ -73,9 +73,9 @@ class DokterController extends Controller
         try{
             $Dokter = Dokter::find($id);
             if (!$Dokter) {
-                throw new Exception("Pasien tidak ditemukan");
+                throw new Exception("Dokter tidak ditemukan");
             }
-            $current_avatar_path = storage_path($this->path) . '/' .$Dokter->thumbnail_img;
+            $current_avatar_path = storage_path($this->publicpath) . '/' .$Dokter->photo;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
@@ -93,22 +93,26 @@ class DokterController extends Controller
                 throw new Exception("Dokter Tidak Ditemukan");
             }
             $this->validate($request,[
-                'subject' => 'required',
-                'content' => 'required',
-                'thumbnail_img'=>'required|image',
+                'nama' => 'required',
+                'tempat' => 'required',
+                'tgl_lahir' => 'required',
+                'pendidikan'=>'required',
+                'poli_id'=>'required',
+                'email'=>'required',
+                'desc'=>'required',
+                'photo'=>'required|image',
             ],['required'=>':attribute cannot Empty']);
 
-
-            $current_avatar_path = storage_path($this->path) . '/' .$Dokter->thumbnail_img;
+            $current_avatar_path = storage_path($this->publicpath) . '/' .$Dokter->photo;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
             $thumbnail = Str::random(34);
-            $ext=$request->file('thumbnail_img')->getClientOriginalExtension();
+            $ext=$request->file('photo')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
-            $request->file('thumbnail_img')->move(storage_path($this->path), $this->filename);
+            $request->file('photo')->move(storage_path($this->path), $this->filename);
             $data=$request->all();
-            $data['thumbnail_img']=$this->filename;
+            $data['photo']=$this->filename;
             $Dokter->fill($data);
             $Dokter->save();
             return Tools::MyResponse(true,"Dokter Was Updated",$Dokter,200);
