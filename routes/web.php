@@ -56,6 +56,12 @@ $router->post('/api/v1/article','ArticleController@create');
 $router->delete('/api/v1/article/{id}','ArticleController@delete');
 $router->post('/api/v1/article/{id}','ArticleController@update');
 
+
+$router->get('/api/v1/dokter','DokterController@getall');
+$router->get('/api/v1/dokter/{id}','DokterController@getid');
+$router->post('/api/v1/dokter','DokterController@create');
+$router->delete('/api/v1/dokter/{id}','DokterController@delete');
+$router->post('/api/v1/dokter/{id}','DokterController@update');
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
 //     return response()->json(compact('token'));

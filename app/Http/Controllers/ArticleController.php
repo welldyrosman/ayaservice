@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Support\Str;
 class ArticleController extends Controller
 {
-    protected $path='thumbnail_img';
+    protected $path='app/thumbnail_img';
     public function getall(){
         $Article=Article::all();
         return Tools::MyResponse(true,"OK",$Article,200);
@@ -64,7 +64,7 @@ class ArticleController extends Controller
         try{
             $Article = Article::find($id);
             if (!$Article) {
-                throw new Exception("Pasien tidak ditemukan");
+                throw new Exception("Article tidak ditemukan");
             }
             $current_avatar_path = storage_path($this->path) . '/' .$Article->thumbnail_img;
             if (file_exists($current_avatar_path)) {
