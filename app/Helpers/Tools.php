@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Pasien;
 use App\Models\Poli;
 use Exception;
 
@@ -46,6 +47,22 @@ class Tools{
             throw new Exception("Cannot Found Poli");
         }else{
             return $poli;
+        }
+    }
+    public static function Checkpasien($id){
+        $pasien=Pasien::find($id);
+        if(!$pasien){
+            throw new Exception("Cannot Found Pasien");
+        }else{
+            return $pasien;
+        }
+    }
+    public static function Checkemail($email){
+        $poli=Pasien::where('email',$email)->first();
+        if($poli){
+            throw new Exception("Email Was Used By Other");
+        }else{
+            return null;
         }
     }
 }

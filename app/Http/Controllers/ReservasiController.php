@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 use Tymon\JWTAuth\JWTAuth;
 
 class ReservasiController extends Controller
@@ -66,6 +67,7 @@ class ReservasiController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+
     public function checkinoffline(Request $request){
         DB::beginTransaction();
         try{
@@ -84,6 +86,7 @@ class ReservasiController extends Controller
                 throw new Exception("Cannot Regist More Than 1");
             }
             Tools::CheckPoli($poliid);
+            Tools::Checkpasien($pasienid);
             $data=$request->all();
             $token = $this->jwt->getToken();
             $user= Auth::guard('staff')->user($token);

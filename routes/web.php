@@ -45,6 +45,8 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
 
 });
+$router->get('/api/v1/screen','AntrianController@getscreen');
+
 
 $router->post('/auth/v1/login', 'AuthController@loginPost');
 $router->post('/auth/v1/login2', 'AuthController@loginstaff');

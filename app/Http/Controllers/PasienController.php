@@ -63,6 +63,10 @@ class PasienController extends Controller
             ],['required'=>':attribute cannot Empty']);
             $data['reg_rule']=2;
             $data['status_akun']=1;
+
+            if(isset($data["email"])){
+                Tools::Checkemail($data["email"]);
+            }
             $pasien=$this->insertdatapasien($request,$data);
             DB::commit();
             return Tools::MyResponse(true,"OK",$pasien,200);
@@ -96,6 +100,7 @@ class PasienController extends Controller
             ],['required'=>':attribute cannot Empty']);
             $data['reg_rule']=1;
             $data['status_akun']=2;
+            Tools::Checkemail($data["email"]);
             $pasien=$this->insertdatapasien($request,$data);
             $akun=[
                 "name"=>$data["nama"],
