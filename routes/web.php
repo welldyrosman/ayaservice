@@ -36,7 +36,18 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
     $router->post('/api/v1/staff/{id}','StaffController@create');
     $router->post('/api/v1/checkin','ReservasiController@checkinoffline');
+    $router->get('/api/v1/reservasi','ReservasiController@gettodayreservasi');
 
+
+    $router->post('/api/v1/article','ArticleController@create');
+    $router->delete('/api/v1/article/{id}','ArticleController@delete');
+    $router->post('/api/v1/article/{id}','ArticleController@update');
+
+    $router->get('/api/v1/dokter','DokterController@getall');
+    $router->get('/api/v1/dokter/{id}','DokterController@getid');
+    $router->post('/api/v1/dokter','DokterController@create');
+    $router->delete('/api/v1/dokter/{id}','DokterController@delete');
+    $router->post('/api/v1/dokter/{id}','DokterController@update');
 });
 
 $router->group(['middleware' => 'auth:api'], function () use ($router){
@@ -58,16 +69,10 @@ $router->post('/api/v1/registrasi/{id}','PasienController@updatepasienoffline');
 $router->get('/api/v1/articleimg/{id}','ArticleController@get_image');
 $router->get('/api/v1/article','ArticleController@getall');
 $router->get('/api/v1/article/{id}','ArticleController@getid');
-$router->post('/api/v1/article','ArticleController@create');
-$router->delete('/api/v1/article/{id}','ArticleController@delete');
-$router->post('/api/v1/article/{id}','ArticleController@update');
 
 
-$router->get('/api/v1/dokter','DokterController@getall');
-$router->get('/api/v1/dokter/{id}','DokterController@getid');
-$router->post('/api/v1/dokter','DokterController@create');
-$router->delete('/api/v1/dokter/{id}','DokterController@delete');
-$router->post('/api/v1/dokter/{id}','DokterController@update');
+
+
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
 //     return response()->json(compact('token'));

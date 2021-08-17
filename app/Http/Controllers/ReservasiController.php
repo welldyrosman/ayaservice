@@ -21,8 +21,12 @@ class ReservasiController extends Controller
         $this->jwt = $jwt;
 
     }
-    private function gettodayreservasi(){
-
+    public function gettodayreservasi(){
+        $reservasi=DB::select("SELECT a.*,p.nama,p.ktpno FROM u5621751_ayaklinik.reservasi a
+        join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+        where a.tgl_book=current_date()
+        ;");
+         return Tools::MyResponse(true,"OK",$reservasi,200);
     }
     private function changestatus($id,$newstatus,$reason){
         DB::beginTransaction();
