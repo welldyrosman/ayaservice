@@ -70,9 +70,19 @@ $router->get('/api/v1/articleimg/{id}','ArticleController@get_image');
 $router->get('/api/v1/article','ArticleController@getall');
 $router->get('/api/v1/article/{id}','ArticleController@getid');
 
+$router->get('/api/v1/obatnc','BarangController@getnoncompositeobat');
+$router->get('/api/v1/obat','BarangController@getallobat');
+$router->get('/api/v1/obat/{id}','BarangController@getidobat');
+$router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
+$router->post('/api/v1/obat','BarangController@createobat');
+$router->put('/api/v1/obat/{id}','BarangController@updateobat');
+$router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
 
 
-
+$router->get('/api/v1/cosmetic','BarangController@getallcosmetic');
+$router->post('/api/v1/cosmetic','BarangController@createcosmetic');
+$router->put('/api/v1/cosmetic/{id}','BarangController@updatecosmetic');
+$router->delete('/api/v1/cosmetic/{id}','BarangController@deletecosmetic');
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
 //     return response()->json(compact('token'));
