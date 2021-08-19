@@ -14,6 +14,13 @@
 */
 use \Illuminate\Http\Request;
 use App\Models\User;
+use Faker\Provider\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as Image;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -77,6 +84,15 @@ $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
 $router->post('/api/v1/obat','BarangController@createobat');
 $router->put('/api/v1/obat/{id}','BarangController@updateobat');
 $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
+
+$router->get('pdftest','PasienController@membercard');
+
+$router->get('ayaklinik/logo','PasienController@get_image');
+
+$router->get('pdftestview',function(Request $request){
+    $data = ['title' => 'Welcome to belajarphp.net'];
+    return view('Kartupasien',$data);
+});
 
 
 $router->get('/api/v1/cosmetic','BarangController@getallcosmetic');

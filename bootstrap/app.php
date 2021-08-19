@@ -22,7 +22,9 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
-
+ $app->configure('app');
+ $app->configure('auth');
+ $app->configure('filesystems');
  $app->withFacades();
 
  $app->withEloquent();
@@ -40,10 +42,13 @@ $app = new Laravel\Lumen\Application(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    App\Exceptions\Handler::class,
 );
-
+$app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function ($app) {
+    return new \Laravel\Lumen\Http\ResponseFactory;
+});
 $app->singleton(
+
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
@@ -95,6 +100,8 @@ $app->routeMiddleware([
  $app->register(App\Providers\AuthServiceProvider::class);
  $app->register(App\Providers\EventServiceProvider::class);
  $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+ $app->register(Barryvdh\DomPDF\ServiceProvider::class);
+ $app->register(Intervention\Image\ImageServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

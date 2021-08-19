@@ -7,11 +7,30 @@ use App\Models\Pasien;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image as Image;
 class PasienController extends Controller
 {
     protected $path='app\photo_pasien';
     protected $publicpath='storage\photo_pasien';
+    public function get_image(){
+        $avatar_path = storage_path('app/logo.png');
+            if (file_exists($avatar_path)) {
+                $file = file_get_contents($avatar_path);
+                return response($file, 200)->header('Content-Type', 'image/jpeg');
+            }
+        return Tools::MyResponse(false,"Image Not Found",null,401);
+    }
+    public function membercard(){
+        $data = ['title' => 'Welcome to belajarphp.net'];
+        $pdf = App::make('dompdf.wrapper');
+        $customPaper = array(0,0,325,205);
+
+        $pdf->loadView('Kartupasien', $data);
+        $pdf->setPaper($customPaper);
+        return $pdf->stream('kuntul.pdf');
+    }
     private function insertdatapasien($request,$data){
         $ktp=$request->input('ktpno');
         $cek=Pasien::where('ktpno',$ktp)->first();
