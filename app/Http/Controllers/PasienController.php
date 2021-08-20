@@ -284,11 +284,11 @@ class PasienController extends Controller
         $cmd="";
         if($filter){
             foreach($filter as $key=>$value){
-                if($key=="kode_pasien"){
-                    $digit=str_replace("AKP","", strtoupper($value));
-                    $value=is_numeric($digit)?intval($digit):"z";
-                    $key="id";
-                }
+                // if($key=="kode_pasien"){
+                //     // $digit=str_replace("AKP","", strtoupper($value));
+                //     // $value=is_numeric($digit)?intval($digit):"z";
+                //     $key="id";
+                // }
                 $cmd.=" AND $key LIKE '%$value%' ";
             }
         }
@@ -299,7 +299,7 @@ class PasienController extends Controller
             $orderby.=" order by $col $pieces[1]";
         }
         try{
-            $pasien=DB::select("select * from pasiens where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
+            $pasien=DB::select("with t as(select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien from pasiens)select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
             $data=new stdClass();
             $data->rows=$pasien;
             $data->count=Pasien::all()->count();
