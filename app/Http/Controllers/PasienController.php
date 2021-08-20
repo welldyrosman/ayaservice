@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image as Image;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
+use stdClass;
+
 class PasienController extends Controller
 {
     protected $path='app\photo_pasien';
@@ -275,7 +277,7 @@ class PasienController extends Controller
             "rowsPerPage"=>"required",
             "page"=>"required"
         ]);
-        $offset=$request->input('page');
+        $offset=$request->input('page')-1;
         $rowsPerPage=$request->input('rowsPerPage');
         $filter=$request->input('filter');
         $sort=$request->input('sort');
@@ -292,7 +294,12 @@ class PasienController extends Controller
         }
         try{
             $pasien=DB::select("select * from pasiens where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
-            return Tools::MyResponse(true,"OK",$pasien,200);
+            $data=new stdClass();
+            $data->rows=$pasien;
+            $data->count=Pasien::all()->count();
+            return Tools::MyResponse(true,"OK",$data,200);
+            // $pasien=Pasien::all();
+            // return Tools::MyResponse(true,"OK",$pasien,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
