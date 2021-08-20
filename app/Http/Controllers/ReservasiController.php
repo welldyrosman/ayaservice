@@ -22,7 +22,7 @@ class ReservasiController extends Controller
 
     }
     public function gettodayreservasi(){
-        $reservasi=DB::select("SELECT a.*,p.nama,p.ktpno FROM u5621751_ayaklinik.reservasi a
+        $reservasi=DB::select("SELECT a.*,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
         join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
         where a.tgl_book=current_date()
         ;");
