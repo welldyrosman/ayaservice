@@ -103,6 +103,8 @@ return [
     | will not be safe. Please do this before deploying an application!
     |
     */
+    'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+    'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
     'DB' => Illuminate\Support\Facades\DB::class,
     'key' => env('APP_KEY'),
 

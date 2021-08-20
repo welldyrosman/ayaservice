@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as Image;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Milon\Barcode\DNS1D;
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -85,12 +85,16 @@ $router->post('/api/v1/obat','BarangController@createobat');
 $router->put('/api/v1/obat/{id}','BarangController@updateobat');
 $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
 
-$router->get('pdftest','PasienController@membercard');
+$router->get('pdftest/{id}','PasienController@membercard');
 
 $router->get('ayaklinik/logo','PasienController@get_image');
+$router->get('pasien/barcode/{id}','PasienController@getbarcode');
 
 $router->get('pdftestview',function(Request $request){
-    $data = ['title' => 'Welcome to belajarphp.net'];
+    $d = new DNS1D();
+    $d->setStorPath(__DIR__.'/cache/');
+    $ss=$d->getBarcodeHTML('232323', 'EAN13',1,21,'#276071',false);
+    $data = ['barcode' => $ss];
     return view('Kartupasien',$data);
 });
 

@@ -10,10 +10,18 @@ use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image as Image;
+use Milon\Barcode\DNS1D;
+use Milon\Barcode\DNS2D;
 class PasienController extends Controller
 {
     protected $path='app\photo_pasien';
     protected $publicpath='storage\photo_pasien';
+    public function getbarcode($id){
+        $d = new DNS1D();
+        $d->setStorPath(__DIR__.'/cache/');
+        echo $d->getBarcodeHTML($id, 'EAN13');
+        //return response($d->getBarcodeHTML($id, 'EAN13'), 200);//->header('Content-Type', 'image/jpeg');
+    }
     public function get_image(){
         $avatar_path = storage_path('app/logo.png');
             if (file_exists($avatar_path)) {
@@ -22,14 +30,25 @@ class PasienController extends Controller
             }
         return Tools::MyResponse(false,"Image Not Found",null,401);
     }
-    public function membercard(){
-        $data = ['title' => 'Welcome to belajarphp.net'];
-        $pdf = App::make('dompdf.wrapper');
-        $customPaper = array(0,0,325,205);
-
-        $pdf->loadView('Kartupasien', $data);
-        $pdf->setPaper($customPaper);
-        return $pdf->stream('kuntul.pdf');
+    public function membercard($id){
+        $pasien=Pasien::find($id);
+        try{
+            if(!$pasien){
+                throw new Exception("Cannot Found Pasien");
+            }
+            $pdf = App::make('dompdf.wrapper');
+            $customPaper = array(0,0,243,155);
+            $d = new DNS1D();
+            $d->setStorPath(__DIR__.'/cache/');
+            $ss=$d->getBarcodeHTML($id, 'EAN13',1,21,'#276071',false);
+            $pasien->nopasien='PKA'.$pasien->id;
+            $data = ['barcode' => $ss,'pasien'=>$pasien];
+            $pdf->loadView('Kartupasien', $data);
+            $pdf->setPaper($customPaper);
+            return $pdf->stream('kuntul.pdf');
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
     private function insertdatapasien($request,$data){
         $ktp=$request->input('ktpno');

@@ -25,6 +25,7 @@ $app = new Laravel\Lumen\Application(
  $app->configure('app');
  $app->configure('auth');
  $app->configure('filesystems');
+ $app->configure('barcode');
  $app->withFacades();
 
  $app->withEloquent();
@@ -102,7 +103,7 @@ $app->routeMiddleware([
  $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
  $app->register(Barryvdh\DomPDF\ServiceProvider::class);
  $app->register(Intervention\Image\ImageServiceProvider::class);
-
+ $app->register(Milon\Barcode\BarcodeServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
