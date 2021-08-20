@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
+        "illuminate/mail": "^8.55",
         "intervention/image": "dev-master",
         "laravel/lumen-framework": "^8.0",
         "milon/barcode": "^8.0",

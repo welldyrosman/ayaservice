@@ -12,10 +12,13 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+
+use App\Mail\RegisterVer;
 use \Illuminate\Http\Request;
 use App\Models\User;
 use Faker\Provider\File;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as Image;
@@ -98,6 +101,11 @@ $router->get('pdftestview',function(Request $request){
     return view('Kartupasien',$data);
 });
 
+$router->get('/mail', function() {
+    Mail::to(['welldyrosman@gmail.com'])->send(new RegisterVer);
+
+    return new RegisterVer;
+});
 
 $router->get('/api/v1/cosmetic','BarangController@getallcosmetic');
 $router->post('/api/v1/cosmetic','BarangController@createcosmetic');

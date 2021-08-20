@@ -270,9 +270,33 @@ class PasienController extends Controller
             return Tools::MyResponse(true,"OK",$data,200);
         }
     }
-    public function getallpasien(){
-        $data=Pasien::all();
-        return Tools::MyResponse(true,"OK",$data,200);
+    public function getallpasien(Request $request){
+        $this->validate($request,[
+            "rowsPerPage"=>"required",
+            "page"=>"required"
+        ]);
+        $offset=$request->input('page');
+        $rowsPerPage=$request->input('rowsPerPage');
+        $filter=$request->input('filter');
+        $sort=$request->input('sort');
+        $cmd="";
+        if($filter){
+            foreach($filter as $key=>$value){
+                $cmd.=" AND $key LIKE '%$value%' ";
+            }
+        }
+        $orderby="";
+        if($sort){
+            $pieces = explode(",", $sort);
+            $orderby.=" order by $pieces[0] $pieces[1]";
+        }
+        try{
+            $pasien=DB::select("select * from pasiens where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
+            return Tools::MyResponse(true,"OK",$pasien,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
 
     //

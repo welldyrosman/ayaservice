@@ -26,10 +26,19 @@ $app = new Laravel\Lumen\Application(
  $app->configure('auth');
  $app->configure('filesystems');
  $app->configure('barcode');
- $app->withFacades();
+ $app->configure('mail');
 
+
+ $app->withFacades();
  $app->withEloquent();
 
+
+ $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+ $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
+
+ $app->alias('mailer', Illuminate\Mail\Mailer::class);
+ $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+ $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -104,6 +113,7 @@ $app->routeMiddleware([
  $app->register(Barryvdh\DomPDF\ServiceProvider::class);
  $app->register(Intervention\Image\ImageServiceProvider::class);
  $app->register(Milon\Barcode\BarcodeServiceProvider::class);
+ $app->register(Illuminate\Mail\MailServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
