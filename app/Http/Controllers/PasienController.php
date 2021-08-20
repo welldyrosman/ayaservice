@@ -284,6 +284,10 @@ class PasienController extends Controller
         $cmd="";
         if($filter){
             foreach($filter as $key=>$value){
+                if($key=="kode_pasien"){
+                    $value=explode("AKP",$value)[1]*1;
+                    $key="id";
+                }
                 $cmd.=" AND $key LIKE '%$value%' ";
             }
         }
