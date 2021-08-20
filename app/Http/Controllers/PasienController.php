@@ -295,7 +295,8 @@ class PasienController extends Controller
         $orderby="";
         if($sort){
             $pieces = explode(",", $sort);
-            $orderby.=" order by $pieces[0] $pieces[1]";
+            $col=$pieces[0]=="kode_pasien"?"id":$pieces[0];
+            $orderby.=" order by $col $pieces[1]";
         }
         try{
             $pasien=DB::select("select * from pasiens where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
