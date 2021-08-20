@@ -285,7 +285,8 @@ class PasienController extends Controller
         if($filter){
             foreach($filter as $key=>$value){
                 if($key=="kode_pasien"){
-                    $value=explode("AKP",$value)[1]*1;
+                    $digit=str_replace("AKP","",$value);
+                    $value=is_numeric($digit)?$digit:"z";
                     $key="id";
                 }
                 $cmd.=" AND $key LIKE '%$value%' ";
