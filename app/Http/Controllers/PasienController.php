@@ -293,7 +293,7 @@ class PasienController extends Controller
             }
         }
         $orderby="";
-        if($sort){
+        if($sort||$sort==""){
             $pieces = explode(",", $sort);
             $col=$pieces[0]=="kode_pasien"?"id":$pieces[0];
             $orderby.=" order by $col $pieces[1]";
