@@ -17,7 +17,7 @@ use stdClass;
 class PasienController extends Controller
 {
     protected $path='app/photo_pasien';
-    protected $publicpath='storage/photo_pasien';
+    protected $publicpath='storage/app/photo_pasien';
     public function getbarcode($id){
         $d = new DNS1D();
         $d->setStorPath(__DIR__.'/cache/');
@@ -188,7 +188,7 @@ class PasienController extends Controller
             $data = $request->all();
             if(key_exists('photo_pasien',$data) && $data['photo_pasien']!=null){
                // throw new Exception(storage_path());
-                $current_avatar_path = public_path($this->path. '/' .$pasien->photo_pasien) ;
+                $current_avatar_path = public_path($this->publicpath. '/' .$pasien->photo_pasien) ;
                 if (file_exists($current_avatar_path)) {
                     unlink($current_avatar_path);
                 }else{
