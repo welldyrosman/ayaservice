@@ -155,6 +155,7 @@ class PasienController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+    protected $filename;
     public function updatepasienoffline(Request $request,$id){
         DB::beginTransaction();
         try{

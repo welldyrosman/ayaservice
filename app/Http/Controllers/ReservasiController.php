@@ -21,6 +21,40 @@ class ReservasiController extends Controller
         $this->jwt = $jwt;
 
     }
+    public function getallreservation(Request $request){
+        $this->validate($request,[
+            "rowsPerPage"=>"required",
+            "page"=>"required"
+        ]);
+        $offset=$request->input('page')-1;
+        $rowsPerPage=$request->input('rowsPerPage');
+        $filter=$request->input('filter');
+        $sort=$request->input('sort');
+        $cmd="";
+        if($filter){
+            foreach($filter as $key=>$value){
+                $cmd.=" AND $key LIKE '%$value%' ";
+            }
+        }
+        $orderby="";
+        if($sort||$sort!=""){
+            $pieces = explode(",", $sort);
+            $col=$pieces[0];
+            $orderby.=" order by $col $pieces[1]";
+        }
+        try{
+            $pasien=DB::select("with t as(select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien from pasiens)select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
+            $data=new stdClass();
+            $data->rows=$pasien;
+            $data->count=Pasien::all()->count();
+            return Tools::MyResponse(true,"OK",$data,200);
+            // $pasien=Pasien::all();
+            // return Tools::MyResponse(true,"OK",$pasien,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     public function gettodayreservasi(){
         $reservasi=DB::select("SELECT a.*,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
         join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
