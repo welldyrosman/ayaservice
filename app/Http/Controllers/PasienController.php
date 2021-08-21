@@ -17,7 +17,7 @@ use stdClass;
 class PasienController extends Controller
 {
     protected $path='app/photo_pasien';
-    protected $publicpath='app\photo_pasien';
+    protected $publicpath='storage\photo_pasien';
     public function getbarcode($id){
         $d = new DNS1D();
         $d->setStorPath(__DIR__.'/cache/');
