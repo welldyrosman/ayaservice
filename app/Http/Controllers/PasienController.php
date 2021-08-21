@@ -184,7 +184,7 @@ class PasienController extends Controller
                 'partner_status' => 'required',
             ],['required'=>':attribute cannot Empty']);
             $data = $request->all();
-            if($data['photo_pasien']!=null){
+            if(key_exists('photo_pasien',$data) &&$data['photo_pasien']!=null){
             $current_avatar_path = storage_path($this->publicpath) . '/' .$pasien->photo;
                 if (file_exists($current_avatar_path)) {
                 unlink($current_avatar_path);
