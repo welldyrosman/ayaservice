@@ -17,7 +17,7 @@ use stdClass;
 class PasienController extends Controller
 {
     protected $path='app/photo_pasien';
-    protected $publicpath='storage/photo_pasien';
+    protected $publicpath='app\photo_pasien';
     public function getbarcode($id){
         $d = new DNS1D();
         $d->setStorPath(__DIR__.'/cache/');
@@ -74,7 +74,8 @@ class PasienController extends Controller
             $thumbnail = Str::random(34);
             $ext=$request->file('photo_pasien')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
-            $request->file('photo_pasien')->move(storage_path($this->path), $this->filename);
+
+            $request->file('photo_pasien')->move(storage_path($this->publicpath), $this->filename);
             $data['photo_pasien']=$this->filename;
         }
         $pasien = Pasien::create($data);
@@ -186,7 +187,8 @@ class PasienController extends Controller
             ],['required'=>':attribute cannot Empty']);
             $data = $request->all();
             if(key_exists('photo_pasien',$data) && $data['photo_pasien']!=null){
-                $current_avatar_path = storage_path($this->publicpath) . '/' .$pasien->photo;
+               // throw new Exception(storage_path());
+                $current_avatar_path = storage_path($this->publicpath. '\\' .$pasien->photo_pasien) ;
                 if (file_exists($current_avatar_path)) {
                     unlink($current_avatar_path);
                 }
