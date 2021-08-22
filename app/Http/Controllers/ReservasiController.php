@@ -45,8 +45,6 @@ class ReservasiController extends Controller
             $data->rows=$pasien;
             $data->count=Reservasi::all()->count();
             return Tools::MyResponse(true,"OK",$data,200);
-            // $pasien=Pasien::all();
-            // return Tools::MyResponse(true,"OK",$pasien,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
@@ -68,13 +66,26 @@ class ReservasiController extends Controller
         ;");
          return $reservasi;
     }
-    public function graphicreservasi(){
-        $graph=DB::select("select  MONTHNAME(tgl_book) monthbook,count(id) as qty from reservasi group by MONTH(tgl_book) order by  MONTH(tgl_book) desc");
-        $arrdata=[];
-        $arrcat=[];
+    public function dashboard(){
+        $data=new stdClass();
+        $data->graph=$this->graphicreservasi();
+        $data->onregqty=count(DB::select("select * from reservasi where tgl_book=current_date() and role_id=1"));
+        $data->offregqty=count(DB::select("select * from reservasi where tgl_book=current_date() and role_id=2"));
+        $data->oncheckqty=count(DB::select("select * from reservasi where tgl_book=current_date() and role_id=1 and status=1"));
+        $data->queue=count(DB::select("select * from antrian where queue_date=current_date() and status=1 "));
+
+        return Tools::MyResponse(true,"OK",$data,200);
+    }
+    private function graphicreservasi(){
+        $graph=DB::select("select  MONTHNAME(tgl_book) monthbook,count(id) as qty from reservasi group by MONTH(tgl_book),monthbook order by  MONTH(tgl_book) desc");
+        $arrdata=array();
+        $arrcat=array();
         foreach($graph as $item){
-           // appe
+            array_push($arrcat,$item->monthbook);
+            array_push($arrdata,$item->qty);
         }
+
+        return ["data"=>$arrdata,"category"=>$arrcat];
     }
     private function changestatus($id,$newstatus,$reason){
         DB::beginTransaction();
@@ -143,7 +154,9 @@ class ReservasiController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+    public function screening(){
 
+    }
     private function reservasiaction($poliid,$pasienid,$tglbook,$kind){
         $data=[];
         if($kind==2){

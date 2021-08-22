@@ -51,7 +51,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/reservasiall','ReservasiController@getallreservation');
     $router->get('/api/v1/reservasioff','ReservasiController@offreservasi');
     $router->get('/api/v1/reservasion','ReservasiController@onreservasi');
-
+    $router->get('/api/v1/regdashboard','ReservasiController@dashboard');
 
     $router->post('/api/v1/article','ArticleController@create');
     $router->delete('/api/v1/article/{id}','ArticleController@delete');
