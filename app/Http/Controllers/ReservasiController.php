@@ -52,12 +52,28 @@ class ReservasiController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
-    public function gettodayreservasi(){
+    public function offreservasi(){
+        $reservasi=$this->gettodayreservasi(2);
+        return Tools::MyResponse(true,"OK",$reservasi,200);
+    }
+    public function onreservasi(){
+        $reservasi=$this->gettodayreservasi(1);
+        return Tools::MyResponse(true,"OK",$reservasi,200);
+    }
+    private function gettodayreservasi($roleid){
         $reservasi=DB::select("SELECT a.*,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
-        join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
-        where a.tgl_book=current_date()
+            join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+            where a.tgl_book=current_date() and a.role_id=$roleid
         ;");
-         return Tools::MyResponse(true,"OK",$reservasi,200);
+         return $reservasi;
+    }
+    public function graphicreservasi(){
+        $graph=DB::select("select  MONTHNAME(tgl_book) monthbook,count(id) as qty from reservasi group by MONTH(tgl_book) order by  MONTH(tgl_book) desc");
+        $arrdata=[];
+        $arrcat=[];
+        foreach($graph as $item){
+           // appe
+        }
     }
     private function changestatus($id,$newstatus,$reason){
         DB::beginTransaction();
@@ -103,44 +119,6 @@ class ReservasiController extends Controller
         }
     }
 
-    public function checkinoffline(Request $request){
-        DB::beginTransaction();
-        try{
-            $this->validate($request,[
-                'poli_id'=>'required',
-                'pasien_id'=>'required'
-            ]);
-            $poliid=$request->input('poli_id');
-            $pasienid=$request->input('pasien_id');
-            $now=Carbon::now()->format('Y-m-d');
-            $cekantrian=DB::select("SELECT * FROM antrian
-            where pasien_id=$pasienid
-            and poli_id=$poliid
-            and cast(reg_time as date)='$now'");
-            if(count($cekantrian)>0){
-                throw new Exception("Cannot Regist More Than 1");
-            }
-            Tools::CheckPoli($poliid);
-            Tools::Checkpasien($pasienid);
-            $data=$request->all();
-            $token = $this->jwt->getToken();
-            $user= Auth::guard('staff')->user($token);
-            $chekindata=[
-                "reg_time"=>Carbon::now(),
-                "poli_id"=>$poliid,
-                "status"=>1,
-                "staff_id"=>$user->id,
-                "pasien_id"=>$data['pasien_id']
-            ];
-            $antrian=Antrian::create($chekindata);
-            DB::commit();
-            return Tools::MyResponse(true,"Queue Has Been Created",$antrian,200);
-        }
-        catch(Exception $e){
-            DB::rollback();
-            return Tools::MyResponse(false,$e,null,401);
-        }
-    }
     public function checkin($id){
         try{
             return $this->changestatus($id,'3',null);
@@ -153,6 +131,7 @@ class ReservasiController extends Controller
         $reason=$request->input('cancel_reason');
         return $this->changestatus($id,'2',$reason);
     }
+
     public function myreservation(){
         try{
             $reservasi=DB::table('reservasi as r')
@@ -164,6 +143,58 @@ class ReservasiController extends Controller
         }
     }
 
+    private function reservasiaction($poliid,$pasienid,$tglbook,$kind){
+        $data=[];
+        if($kind==2){
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+            $data['staff_id']=$user->id;
+        }
+        Tools::CheckPoli($poliid);
+        $resevasicek=Reservasi::where('pasien_id',$pasienid)
+        ->where('tgl_book',$tglbook)
+        ->where('status','!=','2')->first();
+        if($resevasicek){
+            throw new Exception("Cannot make more than 1 Reservation in a Day");
+        }
+        $data['pasien_id']=$pasienid;
+        $data['status']=1;
+        $data['role_id']=$kind;
+        $data['tgl_book']=$tglbook;
+        $data['poli_id']=$poliid;
+        $reservasi=Reservasi::create($data);
+        return $reservasi;
+    }
+    public function checkinoffline(Request $request){
+        DB::beginTransaction();
+        try{
+            $this->validate($request,[
+                'poli_id'=>'required',
+                'pasien_id'=>'required',
+                'tgl_book'=>'required'
+            ]);
+            $poliid=$request->input('poli_id');
+            $pasienid=$request->input('pasien_id');
+            $tglbook=$request->input('tgl_book');
+            Tools::Checkpasien($pasienid);
+
+            $reservation=$this->reservasiaction($poliid,$pasienid,$tglbook,2);
+            // $chekindata=[
+            //     "reg_time"=>Carbon::now(),
+            //     "poli_id"=>$poliid,
+            //     "status"=>1,
+            //     "staff_id"=>$user->id,
+            //     "pasien_id"=>$data['pasien_id']
+            // ];
+            // $antrian=Antrian::create($chekindata);
+            DB::commit();
+            return Tools::MyResponse(true,"Queue Has Been Created",$reservation,200);
+        }
+        catch(Exception $e){
+            DB::rollback();
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     public function bookonline(Request $request){
         try{
             $this->validate($request,[
@@ -178,16 +209,7 @@ class ReservasiController extends Controller
             $user= Auth::guard('api')->user($token);
             $pasien=Pasien::where('email',$user['email'])->first();
             $pasienid=$pasien->id;
-            Tools::CheckPoli($poliid);
-            $resevasicek=Reservasi::where('pasien_id',$pasienid)
-            ->where('tgl_book',$tglbook)
-            ->where('status','!=','2')->first();
-            if($resevasicek){
-                throw new Exception("Cannot make more than 1 Reservation ina Day");
-            }
-            $data['pasien_id']=$pasienid;
-            $data['status']=1;
-            $reservasi=Reservasi::create($data);
+            $reservasi=$this->reservasiaction($poliid,$pasienid,$tglbook,1);
             return Tools::MyResponse(true,"OK",$reservasi,200);
         }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
