@@ -5,13 +5,11 @@ namespace App\Helpers;
 use App\Models\Pasien;
 use App\Models\Poli;
 use Exception;
+use Illuminate\Http\Request;
 
 class Tools{
 
-    public static function sayhello()
-    {
-        return "Hello Friends";
-    }
+
     public static function MyResponse($issuccess,$err,$data,$responsecode){
         $msg="";
         $errcode=$responsecode;
@@ -64,6 +62,29 @@ class Tools{
         }else{
             return null;
         }
+    }
+    public static function GenFilterQueryStr($filter){
+        $cmd="";
+        if($filter){
+            foreach($filter as $key=>$value){
+                $cmd.=" AND $key LIKE '%$value%' ";
+            }
+        }
+        return $cmd;
+    }
+    public static function GenSortQueryStr($sort){
+        $orderby="";
+        if($sort||$sort!=""){
+            $pieces = explode(",", $sort);
+            $col=$pieces[0];
+            $orderby.=" order by $col $pieces[1]";
+        }
+        return $orderby;
+    }
+    public static function GenPagingQueryStr(Request $request){
+        $offset=$request->input('page')-1;
+        $rowsPerPage=$request->input('rowsPerPage');
+        return "LIMIT $rowsPerPage OFFSET $offset";
     }
 }
 ?>

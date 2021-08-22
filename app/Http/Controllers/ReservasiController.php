@@ -26,27 +26,24 @@ class ReservasiController extends Controller
             "rowsPerPage"=>"required",
             "page"=>"required"
         ]);
-        $offset=$request->input('page')-1;
-        $rowsPerPage=$request->input('rowsPerPage');
+        $page=Tools::GenPagingQueryStr($request);
         $filter=$request->input('filter');
         $sort=$request->input('sort');
-        $cmd="";
-        if($filter){
-            foreach($filter as $key=>$value){
-                $cmd.=" AND $key LIKE '%$value%' ";
-            }
-        }
-        $orderby="";
-        if($sort||$sort!=""){
-            $pieces = explode(",", $sort);
-            $col=$pieces[0];
-            $orderby.=" order by $col $pieces[1]";
-        }
+        $cmd=Tools::GenFilterQueryStr($filter);
+        $orderby=Tools::GenSortQueryStr($sort);
         try{
-            $pasien=DB::select("with t as(select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien from pasiens)select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
+            $pasien=DB::select("with t as
+            (
+                select CONCAT('AKP',LPAD(p.id,4,'0')) as pasien_kode,p.nama,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,
+                r.*,l.poli
+                from reservasi r
+                join pasiens p on r.pasien_id=p.id
+                join poli l on r.poli_id=l.id
+            )
+            select * from t where 1=1 $cmd $orderby $page");
             $data=new stdClass();
             $data->rows=$pasien;
-            $data->count=Pasien::all()->count();
+            $data->count=Reservasi::all()->count();
             return Tools::MyResponse(true,"OK",$data,200);
             // $pasien=Pasien::all();
             // return Tools::MyResponse(true,"OK",$pasien,200);
