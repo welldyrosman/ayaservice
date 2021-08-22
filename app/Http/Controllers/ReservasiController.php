@@ -61,7 +61,7 @@ class ReservasiController extends Controller
         return Tools::MyResponse(true,"OK",$reservasi,200);
     }
     private function gettodayreservasi($roleid){
-        $reservasi=DB::select("SELECT a.*,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
+        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as pasien_kode,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
             join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
             join poli l on a.poli_id=l.id
             where a.tgl_book=current_date() and a.role_id=$roleid
