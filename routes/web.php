@@ -58,6 +58,13 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/dokter','DokterController@create');
     $router->delete('/api/v1/dokter/{id}','DokterController@delete');
     $router->post('/api/v1/dokter/{id}','DokterController@update');
+
+    $router->get('/api/v1/cosmetic','BarangController@getallcosmetic');
+    $router->post('/api/v1/cosmetic','BarangController@createcosmetic');
+    $router->put('/api/v1/cosmetic/{id}','BarangController@updatecosmetic');
+    $router->delete('/api/v1/cosmetic/{id}','BarangController@deletecosmetic');
+
+
 });
 
 $router->group(['middleware' => 'auth:api'], function () use ($router){
@@ -66,6 +73,12 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
 
 });
+$router->get('/api/v1/medicalform','MedicalformController@getall');
+$router->post('/api/v1/medicalform','MedicalformController@create');
+
+$router->get('/api/v1/medicalkind','MedicalkindController@getall');
+$router->post('/api/v1/medicalkind','MedicalkindController@create');
+
 $router->get('/api/v1/screen','AntrianController@getscreen');
 
 
@@ -107,10 +120,7 @@ $router->get('/mail', function() {
     return new RegisterVer;
 });
 
-$router->get('/api/v1/cosmetic','BarangController@getallcosmetic');
-$router->post('/api/v1/cosmetic','BarangController@createcosmetic');
-$router->put('/api/v1/cosmetic/{id}','BarangController@updatecosmetic');
-$router->delete('/api/v1/cosmetic/{id}','BarangController@deletecosmetic');
+
 // $router->get('/login', function (Request $request) {
 //     $token = app('auth')->attempt($request->only('email', 'password'));
 //     return response()->json(compact('token'));
