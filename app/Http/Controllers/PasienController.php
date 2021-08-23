@@ -309,7 +309,12 @@ class PasienController extends Controller
             $orderby.=" order by $col $pieces[1]";
         }
         try{
-            $pasien=DB::select("with t as(select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien from pasiens)select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
+            $pasien=DB::select("with t as(
+                select p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien 
+                from pasiens p 
+                join t_propinsi pv on p.prov=pv.id
+                join t_kota kt on p.kota=kt.id_kota
+                )select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
             $data=new stdClass();
             $data->rows=$pasien;
             $data->count=Pasien::all()->count();
