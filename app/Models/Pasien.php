@@ -20,8 +20,8 @@ class Pasien extends Model implements AuthenticatableContract, AuthorizableContr
      */
     protected $fillable = [
         'ktpno', 'nama','tempat_lahir','tgl_lahir','jk','status_nikah',
-        'alamat','kec','kota','pekerjaan','no_telp','email','no_kk','pendidikan','partner',
-        'partner_tel','partner_status','reg_rule','status_akun','add_user','photo_pasien'
+        'alamat','prov','kec','kota','kel','pekerjaan','no_telp','email','no_kk','pendidikan','partner',
+        'partner_tel','partner_status','reg_rule','status_akun','add_user','photo_pasien',
     ];
     public function getJWTIdentifier()
     {
