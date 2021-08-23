@@ -83,6 +83,9 @@ $router->get('/tools/city/{id}','AddressController@getcity');
 $router->get('/tools/kec/{idprov}/{idkota}','AddressController@getkec');
 $router->get('/tools/desa/{idprov}/{idkota}/{idkec}','AddressController@getdes');
 
+$router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
+$router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
+
 $router->get('/api/v1/medicalform','MedicalformController@getall');
 $router->post('/api/v1/medicalform','MedicalformController@create');
 

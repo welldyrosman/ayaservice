@@ -130,7 +130,6 @@ class ReservasiController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
-
     public function checkin($id){
         try{
             return $this->changestatus($id,'3',null);
@@ -143,7 +142,6 @@ class ReservasiController extends Controller
         $reason=$request->input('cancel_reason');
         return $this->changestatus($id,'2',$reason);
     }
-
     public function myreservation(){
         try{
             $reservasi=DB::table('reservasi as r')
@@ -153,9 +151,6 @@ class ReservasiController extends Controller
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
-    }
-    public function screening(){
-
     }
     private function reservasiaction($poliid,$pasienid,$tglbook,$kind){
         $data=[];
@@ -229,4 +224,6 @@ class ReservasiController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+
+
 }

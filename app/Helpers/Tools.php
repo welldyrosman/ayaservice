@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\MedicalForm;
+use App\Models\Medicalkind;
 use App\Models\Pasien;
 use App\Models\Poli;
 use Exception;
@@ -62,6 +64,20 @@ class Tools{
         }else{
             return null;
         }
+    }
+    public static function CheckMedkindinForm($medkind,$poli,$medformid){
+        $medkind=Medicalkind::find($medkind);
+        if(!$medkind){
+            throw new Exception("cannot found Medical Kind");
+        }
+        $medform=MedicalForm::where('medkind_id',$medkind)->where('poli_id',$poli)->first();
+        if(!$medform){
+            throw new Exception("cannot found form");
+        }
+        if($medform->id!=$medformid){
+            throw new Exception("Form ID not match with poli and medkind");
+        }
+        return $medform;
     }
     public static function GenFilterQueryStr($filter){
         $cmd="";

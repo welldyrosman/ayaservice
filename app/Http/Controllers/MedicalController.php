@@ -12,6 +12,7 @@ use App\Models\Poli;
 use App\Models\Resep;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use stdClass;
 
 class MedicalController extends Controller{
@@ -35,7 +36,7 @@ class MedicalController extends Controller{
             $resepid=$resep->id;
             DetailResep::where('resep_id',$resepid)->delete();
             foreach($detail_resep as $row){
-                $this->validate($row,[
+                Validator::make($row,[
                     "barang_id"=>"required",
                     "qty"=>"required",
                 ]);
