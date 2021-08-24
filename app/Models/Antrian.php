@@ -13,5 +13,5 @@ class Antrian extends Model
      * @var array
      */
     protected $fillable = [
-        'reg_time', 'poli_id','status','staff_id','pasien_id'];
+        'reg_time', 'poli_id','status','staff_id','pasien_id','queue_date','medical_id'];
 }

@@ -91,6 +91,7 @@ $router->get('/tools/desa/{idprov}/{idkota}/{idkec}','AddressController@getdes')
 
 $router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
 $router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
+$router->get('/api/v1/getscreening/{id}','ScreeningController@doktergetscreen');
 
 $router->get('/api/v1/medicalform','MedicalformController@getall');
 $router->post('/api/v1/medicalform','MedicalformController@create');

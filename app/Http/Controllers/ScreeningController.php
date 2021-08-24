@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
+use App\Models\Antrian;
 use App\Models\Medical;
 use App\Models\MedicalScreen;
+use App\Models\Pasien;
 use App\Models\Poli;
 use App\Models\Reservasi;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use stdClass;
 use Tymon\JWTAuth\JWTAuth;
 class ScreeningController extends Controller
 {
@@ -17,11 +20,15 @@ class ScreeningController extends Controller
     {
         $this->jwt = $jwt;
     }
+    private function getform($id){
+        $data=DB::select("SELECT f.*,k.nama,k.datatype,f.id as medform_id FROM medform f
+        join medkind k on f.medkind_id=k.id where f.poli_id=$id
+    ;");
+        return $data;
+    }
     public function screening($id){
         try{
-            $data=DB::select("SELECT f.*,k.nama,k.datatype,f.id as medform_id FROM medform f
-                join medkind k on f.medkind_id=k.id where f.poli_id=$id
-            ;");
+           $data=$this->getform($id);
             if(count($data)<1){
                 throw new Exception("Form Poli Belum di Setting");
             }
@@ -46,9 +53,11 @@ class ScreeningController extends Controller
             }
             $token = $this->jwt->getToken();
             //$user= Auth::guard('staff')->user($token);
+            $poliid=$reservasi->poli_id;
+            $pasienid=$reservasi->pasien_id;
             $medicaldata=[
-                "poli_id"=>$reservasi->poli_id,
-                "pasien_id"=>$reservasi->pasien_id,
+                "poli_id"=>$poliid,
+                "pasien_id"=>$pasienid,
                 "status"=>"1",
               //  "staff_id"=>$user->id
             ];
@@ -57,8 +66,8 @@ class ScreeningController extends Controller
             $screenitems=$data['screenitems'];
             foreach($screenitems as $items){
                 $items["medical_id"]=$medicalid;
-                $items["poli_id"]=$reservasi->poli_id;
-                Tools::CheckMedkindinForm($items["medkind_id"],$reservasi->poli_id,$items["medform_id"]);
+                $items["poli_id"]=$poliid;
+                Tools::CheckMedkindinForm($items["medkind_id"],$poliid,$items["medform_id"]);
                 $medcr=MedicalScreen::where('medical_id',$medicalid)->where('medkind_id',$items["medkind_id"])->first();
                 if($medcr!=null){
                     throw new Exception("Cannot Input Same Item in one Form");
@@ -66,8 +75,57 @@ class ScreeningController extends Controller
               //  $items["staff_id"]=$user->id;
                 MedicalScreen::create($items);
             }
+            if($reservasi->medical_id!=null){
+                throw new Exception("This Pasien Has Been Screening before");
+            }
+            $antrian=Antrian::create([
+                "reg_time"=>$reservasi->created_at,
+                "poli_id"=>$poliid,
+                "status"=>1,
+                "staff_id"=>null,
+                "queue_date"=>$reservasi->tgl_book,
+                "medical_id"=>$medicalid,
+                "pasien_id"=>$pasienid
+            ]);
+            $reservasi->fill([
+                "medical_id"=>$medicalid,
+                "antrian_id"=> $antrian->id
+            ]);
+            $reservasi->save();
             DB::commit();
             return Tools::MyResponse(true,"OK",$data,200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function doktergetscreen(Request $request,$id){
+        DB::beginTransaction();
+        try{
+            $antrian=Antrian::find($id);
+            if(!$antrian){
+                throw new Exception("Cannot Found Antrian");
+            }
+            $getform=$this->getform($antrian->poli_id);
+            $pasien=Pasien::find($antrian->pasien_id);
+            $screendata=MedicalScreen::where('medical_id',$antrian->medical_id)->get();
+            $medical=Medical::find($antrian->medical_id);
+
+            $antrian->fill([
+                "status"=>"2"
+            ]);
+            $antrian->save();
+            $medical->fill([
+                "dokter_id"=>1 //hardcode temporary
+            ]);
+            $medical->save();
+            DB::commit();
+            $ret=new stdClass();
+            $ret->formtemplate=$getform;
+            $ret->pasien=$pasien;
+            $ret->screendata=$screendata;
+            $ret->medical=$medical;
+            return Tools::MyResponse(true,"OK",$ret,200);
         }catch(Exception $e){
             DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);

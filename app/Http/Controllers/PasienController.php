@@ -275,7 +275,9 @@ class PasienController extends Controller
 
     }
     public function getpasienbyid($id){
-        $data=Pasien::find($id);
+        $data=DB::select("select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien
+        ,(select max(created_at) as last_time from medical where pasien_id=pasiens.id) as last_time
+        from pasiens")($id);
         if($data==null){
             return Tools::MyResponse(false,"Data Pasien Tidak Ditemukan",null,428);
         }else{
@@ -310,7 +312,8 @@ class PasienController extends Controller
         }
         try{
             $pasien=DB::select("with t as(
-                select p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien
+                select p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota
+                ,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien
                 from pasiens p
                 join t_propinsi pv on p.prov=pv.id
                 join t_kota kt on p.kota=kt.id_kota and p.prov=kt.id_prov
