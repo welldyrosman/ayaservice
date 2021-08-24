@@ -43,7 +43,7 @@ class PasienController extends Controller
             $d = new DNS1D();
             $d->setStorPath(__DIR__.'/cache/');
             $ss=$d->getBarcodeHTML($id, 'EAN13',1,21,'#276071',false);
-            $pasien->nopasien='PKA'.$pasien->id;
+            $pasien->nopasien='AKP'.$pasien->id;
             $data = ['barcode' => $ss,'pasien'=>$pasien];
             $pdf->loadView('Kartupasien', $data);
             $pdf->setPaper($customPaper);
