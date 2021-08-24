@@ -313,7 +313,7 @@ class PasienController extends Controller
                 select p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien
                 from pasiens p
                 join t_propinsi pv on p.prov=pv.id
-                join t_kota kt on p.kota=kt.id_kota and p.prov=kt.prov_id
+                join t_kota kt on p.kota=kt.id_kota and p.prov=kt.id_prov
                 )select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
             $data=new stdClass();
             $data->rows=$pasien;
