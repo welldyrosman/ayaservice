@@ -277,7 +277,7 @@ class PasienController extends Controller
     public function getpasienbyid($id){
         $data=DB::select("select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien
         ,(select max(created_at) as last_time from medical where pasien_id=pasiens.id) as last_time
-        from pasiens")($id);
+        from pasiens where id=$id");
         if($data==null){
             return Tools::MyResponse(false,"Data Pasien Tidak Ditemukan",null,428);
         }else{
