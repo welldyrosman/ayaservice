@@ -120,7 +120,7 @@ $router->post('/api/v1/obat','BarangController@createobat');
 $router->put('/api/v1/obat/{id}','BarangController@updateobat');
 $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
 
-$router->get('pdftest/{id}','PasienController@membercard');
+$router->get('/api/v1/cetakkartu/{id}','PasienController@membercard');
 
 $router->get('ayaklinik/logo','PasienController@get_image');
 $router->get('pasien/barcode/{id}','PasienController@getbarcode');
