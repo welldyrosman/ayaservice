@@ -34,7 +34,7 @@ class ReservasiController extends Controller
         try{
             $pasien=DB::select("with t as
             (
-                select CONCAT('AKP',LPAD(p.id,4,'0')) as pasien_kode,p.nama,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,
+                select CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,p.nama,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,
                 r.*,l.poli
                 from reservasi r
                 join pasiens p on r.pasien_id=p.id
