@@ -67,7 +67,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/cosmetic','BarangController@createcosmetic');
     $router->put('/api/v1/cosmetic/{id}','BarangController@updatecosmetic');
     $router->delete('/api/v1/cosmetic/{id}','BarangController@deletecosmetic');
-
+    $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
 
 });
 
@@ -80,7 +80,7 @@ $router->post('/tools/newtask','TaskController@createtask');
 $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->post('/api/v1/reservation','ReservasiController@bookonline');
     $router->get('/api/v1/myreservasi','ReservasiController@myreservation');
-    $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
+
 
 });
 
