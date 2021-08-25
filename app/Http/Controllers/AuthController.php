@@ -77,6 +77,7 @@ class AuthController extends Controller
         $token=compact('token')['token'];
         $user=Auth::user($token);
         $pasein=Pasien::where('email', $user['email'])->first();
+        $pasein->kode_pasien='AKP'.str_pad($pasein->id,4,"0");
         $data=[
             "data"=>$pasein,
             "token"=>$token
