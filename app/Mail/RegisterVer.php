@@ -16,9 +16,12 @@ class RegisterVer extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $nama;
+    public $id;
+    public function __construct($details)
     {
-        //
+        $this->nama = $details->nama;
+        $this->id=$details->id;
     }
 
     /**

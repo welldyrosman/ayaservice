@@ -104,6 +104,7 @@ $router->get('/api/v1/screen','AntrianController@getscreen');
 
 $router->post('/auth/v1/login', 'AuthController@loginPost');
 $router->post('/auth/v1/login2', 'AuthController@loginstaff');
+$router->get('/api/v1/verify/{id}', 'AuthController@verify');
 $router->post('/api/v1/pasien','PasienController@addpasienonline');
 
 
@@ -135,9 +136,9 @@ $router->get('pdftestview',function(Request $request){
 });
 
 $router->get('/mail', function() {
-    Mail::to(['welldyrosman@gmail.com'])->send(new RegisterVer);
+  //  Mail::to(['welldyrosman@gmail.com'])->send(new RegisterVer);
 
-    return new RegisterVer;
+   // return new RegisterVer;
 });
 
 

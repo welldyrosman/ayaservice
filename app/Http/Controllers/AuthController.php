@@ -9,8 +9,11 @@ use Tymon\JWTAuth\JWTAuth;
 use App\Helpers\Tools;
 use App\Models\Pasien;
 use App\Models\Staff;
+use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use stdClass;
 
 class AuthController extends Controller
@@ -24,6 +27,29 @@ class AuthController extends Controller
     {
 
         $this->jwt = $jwt;
+    }
+    public function verify($id){
+        DB::beginTransaction();
+        try{
+            $pasien=Pasien::find($id);
+            Tools::Checkpasien($id);
+            $user=User::where('email',$pasien->email)->first();
+            if(!$user){
+                throw new Exception("Cannot Found User");
+            }
+            if($user->email_verified_at!=null){
+                throw new Exception("Invalid Verify");
+            }
+            $pasien->fill(['status_akun'=>'1']);
+            $pasien->save();
+            $user->fill(['email_verified_at'=>Carbon::now()]);
+            $user->save();
+            DB::commit();
+            return Tools::MyResponse(true,"Email Verified",$pasien,200);
+        }catch(Exception $e){
+            DB::rollback();
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
     public  function loginstaff(Request $request){
         try{
