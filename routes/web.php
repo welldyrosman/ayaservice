@@ -80,7 +80,7 @@ $router->post('/tools/newtask','TaskController@createtask');
 $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->post('/api/v1/reservation','ReservasiController@bookonline');
     $router->get('/api/v1/myreservasi','ReservasiController@myreservation');
-
+    $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 
 });
 

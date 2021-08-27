@@ -100,14 +100,21 @@ class AuthController extends Controller
         } catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
-        $token=compact('token')['token'];
-        $user=Auth::user($token);
-        $pasein=Pasien::where('email', $user['email'])->first();
-        $pasein->kode_pasien='AKP'.str_pad($pasein->id,4,"0");
-        $data=[
-            "data"=>$pasein,
-            "token"=>$token
-        ];
-        return Tools::MyResponse(true,'OK',$data,200);
+        try{
+            $token=compact('token')['token'];
+            $user=Auth::user($token);
+            $pasein=Pasien::where('email', $user['email'])->first();
+            if($pasein->status_akun!=1){
+                throw new Exception("Check your mail and Verify Your Account Please".$pasein->status_akun);
+            }
+            $pasein->kode_pasien='AKP'.str_pad($pasein->id,4,"0");
+            $data=[
+                "data"=>$pasein,
+                "token"=>$token
+            ];
+            return Tools::MyResponse(true,'OK',$data,200);
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
 }

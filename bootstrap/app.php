@@ -31,7 +31,9 @@ $app = new Laravel\Lumen\Application(
 
  $app->withFacades();
  $app->withEloquent();
-
+ $app->withFacades(true, [
+    'Illuminate\Support\Facades\Notification' => 'Notification',
+]);
 
  $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
  $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
@@ -95,6 +97,7 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -114,6 +117,8 @@ $app->routeMiddleware([
  $app->register(Intervention\Image\ImageServiceProvider::class);
  $app->register(Milon\Barcode\BarcodeServiceProvider::class);
  $app->register(Illuminate\Mail\MailServiceProvider::class);
+ $app->register(\Illuminate\Notifications\NotificationServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
