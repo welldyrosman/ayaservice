@@ -9,15 +9,21 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image as Image;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
 use stdClass;
+use Tymon\JWTAuth\JWTAuth;
 
 class PasienController extends Controller
 {
+    public function __construct(JWTAuth $jwt)
+    {
+        $this->jwt = $jwt;
+    }
     protected $path='app/photo_pasien';
     protected $publicpath='storage/app/photo_pasien';
     public function getbarcode($id){
@@ -280,6 +286,20 @@ class PasienController extends Controller
             return Tools::MyResponse(true,"Pasien Di Banned",$pasien,200);
         }
 
+    }
+    public function getbio(){
+        try{
+            $token = $this->jwt->getToken();
+            $user=Auth::user($token);
+            $pasein=Pasien::where('email', $user['email'])->first();
+            if(!$pasein){
+                throw new Exception("Cannot Found Pasien");
+            }
+            return $this->getpasienbyid($pasein->id);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
     public function getpasienbyid($id){
         $data=DB::select("select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien
