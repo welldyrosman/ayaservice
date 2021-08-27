@@ -41,7 +41,6 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->put('/api/v1/registrasi/enable/{id}','PasienController@disabled');
     $router->put('/api/v1/registrasi/disable/{id}','PasienController@enabled');
     $router->get('/api/v1/pasien','PasienController@getallpasien');
-    $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
 
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
     $router->post('/api/v1/staff/{id}','StaffController@create');
@@ -76,11 +75,13 @@ $router->get('/tools/todolist','TaskController@gettodolist');
 $router->get('/tools/tododone','TaskController@getsolved');
 $router->post('/tools/solvetask','TaskController@solvetask');
 $router->post('/tools/newtask','TaskController@createtask');
-
+$router->group(['middleware' => ['auth:api','auth:staff']], function () use ($router){
+    $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
+});
 $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->post('/api/v1/reservation','ReservasiController@bookonline');
     $router->get('/api/v1/myreservasi','ReservasiController@myreservation');
-    $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
+
 
 });
 
