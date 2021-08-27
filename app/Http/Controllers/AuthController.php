@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use stdClass;
 
 class AuthController extends Controller
@@ -46,12 +45,12 @@ class AuthController extends Controller
             $user->fill(['email_verified_at'=>Carbon::now()]);
             $user->save();
             DB::commit();
-            return Redirect::to('http://test.ayaklinik.id/verified');
+            return redirect()->to('http://test.ayaklinik.id/verified');
           //  return Tools::MyResponse(true,"Email Verified",$pasien,200);
         }catch(Exception $e){
             DB::rollback();
 
-            return Redirect::to('http://test.ayaklinik.id/not-verified');
+            return redirect()->to('http://test.ayaklinik.id/not-verified');
             // return Tools::MyResponse(false,$e,null,401);
         }
     }
