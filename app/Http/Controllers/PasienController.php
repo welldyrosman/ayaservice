@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
+use App\Mail\RegisterVer;
 use App\Models\Pasien;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image as Image;
 use Milon\Barcode\DNS1D;
@@ -70,7 +72,7 @@ class PasienController extends Controller
         if($pass!=$pass2){
             throw new Exception("Kombinasi Password Salah");
         }
-        if($data['photo_pasien']!=null){
+        if(key_exists('photo_pasien',$data) && $data['photo_pasien']!=null){
             $thumbnail = Str::random(34);
             $ext=$request->file('photo_pasien')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
@@ -153,12 +155,17 @@ class PasienController extends Controller
                 "password"=>app('hash')->make($data["password"])
             ];
             User::create($akun);
+            $this->registrationMail($pasien);
             DB::commit();
             return Tools::MyResponse(true,"OK",$pasien,200);
         }catch(Exception $e){
             DB::rollback();
             return Tools::MyResponse(false,$e,null,401);
         }
+    }
+    public function registrationMail($pasien){
+        Mail::to([$pasien->email])->send(new RegisterVer($pasien));
+        return new RegisterVer($pasien);
     }
     protected $filename;
     public function updatepasienoffline(Request $request,$id){
