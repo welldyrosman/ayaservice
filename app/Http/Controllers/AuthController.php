@@ -36,7 +36,7 @@ class AuthController extends Controller
             Tools::Checkpasien($id);
             $user=User::where('email',$pasien->email)->first();
             if(!$user){
-                throw new Exception("Cannot Found User");
+                throw new Exception("Cannot Found User".$pasien->email.$id);
             }
             if($user->email_verified_at!=null){
                 throw new Exception("Invalid Verify");
