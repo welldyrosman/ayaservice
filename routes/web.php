@@ -30,7 +30,7 @@ $router->get('/', function () use ($router) {
 
 
 $router->group(['middleware' => 'auth:staff'], function () use ($router){
-    $router->get('/api/v1/poli','PoliController@getall');
+
     $router->get('/api/v1/poli/{id}','PoliController@getid');
     $router->put('/api/v1/poli/{id}','PoliController@update');
     $router->delete('/api/v1/poli/{id}','PoliController@delete');
@@ -87,7 +87,7 @@ $router->get('/tools/tododone','TaskController@getsolved');
 $router->post('/tools/solvetask','TaskController@solvetask');
 $router->post('/tools/newtask','TaskController@createtask');
 
-
+$router->get('/api/v1/poli','PoliController@getall');
 $router->get('/tools/provinsi','AddressController@getprovinsi');
 $router->get('/tools/city/{id}','AddressController@getcity');
 $router->get('/tools/kec/{idprov}/{idkota}','AddressController@getkec');
