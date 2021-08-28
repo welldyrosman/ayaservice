@@ -7,6 +7,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\JWTAuth;
 use App\Helpers\Tools;
+use App\Models\MailErr;
 use App\Models\Pasien;
 use App\Models\Staff;
 use App\Models\User;
@@ -49,7 +50,7 @@ class AuthController extends Controller
           //  return Tools::MyResponse(true,"Email Verified",$pasien,200);
         }catch(Exception $e){
             DB::rollback();
-
+            MailErr::create(["err_msg"=>$e->getMessage()]);
             return redirect()->to('http://test.ayaklinik.id/not-verified');
             // return Tools::MyResponse(false,$e,null,401);
         }

@@ -87,6 +87,7 @@ $router->get('/tools/tododone','TaskController@getsolved');
 $router->post('/tools/solvetask','TaskController@solvetask');
 $router->post('/tools/newtask','TaskController@createtask');
 
+$router->get('/tools/mailerr','MailController@getmailerr');
 $router->get('/api/v1/poli','PoliController@getall');
 $router->get('/tools/provinsi','AddressController@getprovinsi');
 $router->get('/tools/city/{id}','AddressController@getcity');
