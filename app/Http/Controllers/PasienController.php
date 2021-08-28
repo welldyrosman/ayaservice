@@ -214,7 +214,7 @@ class PasienController extends Controller
                 $thumbnail = Str::random(34);
                 $ext=$request->file('photo_pasien')->getClientOriginalExtension();
                 $this->filename=$thumbnail.'.'.$ext;
-                $request->file('photo_pasien')->move(storage_path($this->path), $this->filename);
+                $request->file('photo_pasien')->move(storage_path($this->publicpath), $this->filename);
                 $data['photo_pasien']=$this->filename;
             }
             $pasien->fill($data);
