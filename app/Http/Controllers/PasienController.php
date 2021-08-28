@@ -208,7 +208,7 @@ class PasienController extends Controller
             if(key_exists('photo_pasien',$data)){
                // throw new Exception(storage_path());
                 if($pasien->photo_pasien!=null){
-                    $current_avatar_path = storage_path($this->publicpath. '/' .$pasien->photo_pasien) ;
+                    $current_avatar_path = storage_path($this->path. '/' .$pasien->photo_pasien) ;
                     if (file_exists($current_avatar_path)) {
                         unlink($current_avatar_path);
                     }
@@ -216,7 +216,8 @@ class PasienController extends Controller
                 $thumbnail = Str::random(34);
                 $ext=$request->file('photo_pasien')->getClientOriginalExtension();
                 $this->filename=$thumbnail.'.'.$ext;
-                $request->file('photo_pasien')->move(storage_path($this->publicpath), $this->filename);
+            //    throw new Exception(storage_path($this->publicpath));
+                $request->file('photo_pasien')->move(storage_path($this->path), $this->filename);
                 $data['photo_pasien']=$this->filename;
             }
             $pasien->fill($data);

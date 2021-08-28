@@ -89,7 +89,7 @@ class AuthController extends Controller
         ]);
 
         try {
-            if (!$token = $this->jwt->attempt($request->only('email', 'password'))) {
+            if (!$token = auth('api')->attempt($request->only('email', 'password'))) {
                throw new Exception("User Not Found");
             }
         } catch (TokenExpiredException $e) {
@@ -106,8 +106,11 @@ class AuthController extends Controller
         }
         try{
             $token=compact('token')['token'];
-            $user=Auth::user($token);
+            $user=Auth::guard('api')->user($token);
             $pasein=Pasien::where('email', $user['email'])->first();
+            if(!$pasein){
+                throw new Exception("Cannot found pasien".$user);
+            }
             if($pasein->status_akun!=1){
                 throw new Exception("Check your mail and Verify Your Account Please".$pasein->status_akun);
             }
