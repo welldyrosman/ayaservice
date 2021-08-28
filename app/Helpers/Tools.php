@@ -52,7 +52,7 @@ class Tools{
     public static function Checkpasien($id){
         $pasien=Pasien::find($id);
         if(!$pasien){
-            throw new Exception("Cannot Found Pasien");
+            throw new Exception("err:[".$id."]Cannot Found Pasien");
         }else{
             return $pasien;
         }
