@@ -89,7 +89,8 @@ class ScreeningController extends Controller
             ]);
             $reservasi->fill([
                 "medical_id"=>$medicalid,
-                "antrian_id"=> $antrian->id
+                "antrian_id"=> $antrian->id,
+                "status"=>3
             ]);
             $reservasi->save();
             DB::commit();
