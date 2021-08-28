@@ -142,7 +142,27 @@ class ReservasiController extends Controller
         $reason=$request->input('cancel_reason');
         return $this->changestatus($id,'2',$reason);
     }
-    public function myreservation(Request $request){
+    public function myreservation(){
+        try{
+
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('api')->user($token);
+            $pasien=Pasien::where('email', $user['email'])->first();
+            $reservasi=DB::select("
+            SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.*,m.dokter_id,d.nama as nama_dokter FROM u5621751_ayaklinik.reservasi r
+            left join u5621751_ayaklinik.poli p on r.poli_id=p.id
+            left join u5621751_ayaklinik.medical m on r.medical_id=m.id
+            left join u5621751_ayaklinik.dokter d on m.dokter_id=d.id
+            where r.status IN (1,3) and r.tgl_book>=curdate() and r.pasien_id='$pasien->id'
+            ;");
+
+            return Tools::MyResponse(true,"Query Reservation success",$reservasi,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function myreservationhist(Request $request){
         try{
             $this->validate($request,[
                 "rowsPerPage"=>"required",
@@ -156,29 +176,21 @@ class ReservasiController extends Controller
             $token = $this->jwt->getToken();
             $user= Auth::guard('api')->user($token);
             $pasien=Pasien::where('email', $user['email'])->first();
-            $reservasi=DB::select("
-            SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.*,m.dokter_id,d.nama as nama_dokter FROM u5621751_ayaklinik.reservasi r
-            left join u5621751_ayaklinik.poli p on r.poli_id=p.id
-            left join u5621751_ayaklinik.medical m on r.medical_id=m.id
-            left join u5621751_ayaklinik.dokter d on m.dokter_id=d.id
-            where r.status IN (1,3) and r.tgl_book>=curdate()
-            ;");
+
             $sql=" with t as( SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.poli,m.dokter_id,d.nama as nama_dokter FROM u5621751_ayaklinik.reservasi r
             left join u5621751_ayaklinik.poli p on r.poli_id=p.id
             left join u5621751_ayaklinik.medical m on r.medical_id=m.id
             left join u5621751_ayaklinik.dokter d on m.dokter_id=d.id
-            where r.status=2 or r.tgl_book<curdate()
+            where r.status=2 or r.tgl_book<curdate() and r.pasien_id='$pasien->id'
             )
             select * from t ";
             $reservasipast=DB::select("$sql $cmd $orderby $page");
-            $reservasidata=new stdClass();
-            $reservasidata->nextres=$reservasi;
+
             $data=new stdClass();
             $data->rows=$reservasipast;
             $resercount=DB::select("$sql");
             $data->count=count($resercount);
-            $reservasidata->nextpast=$data;
-            return Tools::MyResponse(true,"Query Reservation success",$reservasidata,200);
+            return Tools::MyResponse(true,"Query Reservation success",$data,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
