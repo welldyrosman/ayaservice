@@ -214,6 +214,10 @@ class ReservasiController extends Controller
             $data=$request->all();
             $poliid=$request->input('poli_id');
             $tglbook=$request->input('tgl_book');
+            $now=Carbon::now()->toDateString();
+            if($tglbook<$now){
+                throw new Exception("[".$now.$tglbook."]Cannot Book at Past Time");
+            }
             $token = $this->jwt->getToken();
             $user= Auth::guard('api')->user($token);
             $pasien=Pasien::where('email',$user['email'])->first();
