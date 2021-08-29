@@ -24,16 +24,27 @@ class AntrianController extends Controller{
     public function getscreen(){
         try{
             $poli=Poli::all();
+
             $data=new stdClass();
+            $onprocess=new stdClass();
             foreach($poli as $p){
                 $query="SELECT a.*,p.nama FROM u5621751_ayaklinik.antrian a
                 join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
-                where a.queue_date=current_date() and a.status in(1,2) and a.poli_id=2
+                where a.queue_date=current_date() and a.status in(1) and a.poli_id=$p->id
                 order by a.reg_time asc";
+                $query2="SELECT a.*,p.nama FROM u5621751_ayaklinik.antrian a
+                 join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+                 where a.queue_date=current_date() and a.status in(2) and a.poli_id=$p->id
+                 order by a.reg_time asc";
                 $antrislq=DB::select($query);
+                $process=DB::select($query2);
                 $data->{$p->id}=$antrislq;
+                $onprocess->{$p->id}=$process;
             }
-            return Tools::MyResponse(true,"Data Antrian",$data,200);
+            $ret=new stdClass();
+            $ret->queue=$data;
+            $ret->onprocess=$onprocess;
+            return Tools::MyResponse(true,"Data Antrian",$ret,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
