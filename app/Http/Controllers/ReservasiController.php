@@ -62,6 +62,15 @@ class ReservasiController extends Controller
         $reservasi=$this->gettodayreservasi(null);
         return Tools::MyResponse(true,"OK",$reservasi,200);
     }
+    public function notyetcheckin(){
+
+        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
+            join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+            join poli l on a.poli_id=l.id
+            where a.tgl_book=current_date() and a.role_id='1' and a.status='1'
+        ;");
+          return Tools::MyResponse(true,"OK",$reservasi,200);
+    }
     private function gettodayreservasi($roleid){
         $cmd=$roleid==null?"":"and a.role_id=$roleid";
         $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
@@ -132,13 +141,6 @@ class ReservasiController extends Controller
             return Tools::MyResponse(true,"Reservation Was Updated",$reservasi,200);
         }catch(Exception $e){
             DB::rollBack();
-            return Tools::MyResponse(false,$e,null,401);
-        }
-    }
-    public function checkin($id){
-        try{
-            return $this->changestatus($id,'3',null);
-        }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
     }
