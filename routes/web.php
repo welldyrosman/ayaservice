@@ -51,8 +51,10 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/checkin','ReservasiController@checkinoffline');
 
     $router->post('/api/v1/reservasioff','ReservasiController@checkinoffline');
-    $router->get('/api/v1/reservasiall','ReservasiController@getallreservation');
+  //  $router->get('/api/v1/reservasiall','ReservasiController@getallreservation');
     $router->get('/api/v1/reservasioff','ReservasiController@offreservasi');
+    $router->get('/api/v1/reservasitoday','ReservasiController@allreservasi');
+
     $router->get('/api/v1/reservasion','ReservasiController@onreservasi');
     $router->get('/api/v1/regdashboard','ReservasiController@dashboard');
 
