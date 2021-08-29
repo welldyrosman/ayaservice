@@ -28,8 +28,8 @@ class AntrianController extends Controller{
             foreach($poli as $p){
                 $query="SELECT a.*,p.nama FROM u5621751_ayaklinik.antrian a
                 join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
-                where cast(a.reg_time as date)=current_date() and status!=3 and poli_id=$p->id
-                order by a.reg_time";
+                where a.queue_date=current_date() and a.status in(1,2) and a.poli_id=2
+                order by a.reg_time asc";
                 $antrislq=DB::select($query);
                 $data->{$p->id}=$antrislq;
             }
