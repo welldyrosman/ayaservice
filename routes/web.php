@@ -87,6 +87,10 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->get('/api/v1/mybio','PasienController@getbio');
     $router->post('/api/v1/pasien/{id}','PasienController@updatepasienoffline');
 });
+
+$router->get('/api/v1/reservation/{id}','ReservasiController@getreservasibyid');
+
+
 $router->get('/tools/alltask','TaskController@getAllTask');
 $router->get('/tools/todolist','TaskController@gettodolist');
 $router->get('/tools/tododone','TaskController@getsolved');

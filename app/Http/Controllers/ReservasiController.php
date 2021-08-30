@@ -279,6 +279,9 @@ class ReservasiController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
-
+    public function getreservasibyid($id){
+        $reservasi=Reservasi::find($id);
+        return Tools::MyResponse(true,"OK",$reservasi,200);
+    }
 
 }
