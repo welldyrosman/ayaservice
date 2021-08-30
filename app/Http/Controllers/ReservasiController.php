@@ -280,8 +280,17 @@ class ReservasiController extends Controller
         }
     }
     public function getreservasibyid($id){
-        $reservasi=Reservasi::find($id);
-        return Tools::MyResponse(true,"OK",$reservasi,200);
+        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
+        join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+        join poli l on a.poli_id=l.id
+        where a.id=$id
+            ;");
+            if(!isset($reservasi[0])){
+                return Tools::MyResponse(false,"Data Reservasi Tidak Ditemukan",null,428);
+            }else{
+                return Tools::MyResponse(true,"OK",$reservasi[0],200);
+            }
+       // return Tools::MyResponse(true,"OK",$reservasi,200);
     }
 
 }
