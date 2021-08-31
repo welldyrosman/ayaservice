@@ -45,7 +45,7 @@ class AntrianController extends Controller{
                 $antrislq=DB::select($query);
                 $process=DB::select($query2);
                 $data->{$p->id}=$antrislq;
-                $onprocess->{$p->id}=count($process)<1?null:$process[0];
+                $onprocess->{$p->id}=count($process)<1?$p:$process[0];
             }
             $ret=new stdClass();
             $ret->queue=$data;
