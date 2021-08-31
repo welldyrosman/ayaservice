@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Poli;
+use App\Models\PoliInCharge;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
 class PoliController extends Controller
@@ -70,5 +72,41 @@ class PoliController extends Controller
         }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
+    }
+    public function createincharge(Request $request){
+        DB::beginTransaction();
+        try{
+            $this->validate($request,[
+                "poli_id"=>"required",
+                "praktek_date"=>"required",
+                "dokter_id"=>"required",
+            ]);
+            $data=$request->all();
+            Tools::CheckPoli($data["poli_id"]);
+            Tools::CheckDokter($data["dokter_id"]);
+            $now=Carbon::now()->toDateString();
+            if($data["praktek_date"]<$now){
+                throw new Exception("Cannot Set Dokter Before Today");
+            }
+            $policheck=PoliInCharge::where('poli_id',$data['poli_id'])->where('praktek_date',$data['praktek_date'])->first();
+            if($policheck){
+                throw new Exception("This Date Has Scheduled");
+            }
+            $poliincharge=PoliInCharge::create($data);
+            DB::commit();
+            return Tools::MyResponse(true,"Schedule Setted",$poliincharge,200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function getchargebydate($date){
+        $poliin=PoliInCharge::where('praktek_date',$date)->get();
+        return Tools::MyResponse(true,"Query Ok",$poliin,200);
+    }
+    public function gettodayincharge(){
+        $now=Carbon::now()->toDateString();
+        $poliin=PoliInCharge::where('praktek_date',$now)->get();
+        return Tools::MyResponse(true,"Query Ok",$poliin,200);
     }
 }

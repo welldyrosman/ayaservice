@@ -76,6 +76,12 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->delete('/api/v1/cosmetic/{id}','BarangController@deletecosmetic');
     $router->put('/api/v1/cancelreservasi/{id}','ReservasiController@cancelreservasi');
 
+
+    $router->post('/api/v1/schedule','PoliController@createincharge');
+    $router->get('/api/v1/scheduletoday','PoliController@gettodayincharge');
+    $router->get('/api/v1/schedule/{date}','PoliController@getchargebydate');
+
+
 });
 
 

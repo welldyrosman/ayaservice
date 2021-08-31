@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Dokter;
 use App\Models\MedicalForm;
 use App\Models\Medicalkind;
 use App\Models\Pasien;
@@ -47,6 +48,14 @@ class Tools{
             throw new Exception("Cannot Found Poli");
         }else{
             return $poli;
+        }
+    }
+    public static function CheckDokter($id){
+        $dokter=Dokter::find($id);
+        if(!$dokter){
+            throw new Exception("Cannot Found Dokter");
+        }else{
+            return $dokter;
         }
     }
     public static function Checkpasien($id){
