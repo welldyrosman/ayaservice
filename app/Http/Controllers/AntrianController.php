@@ -28,7 +28,7 @@ class AntrianController extends Controller{
             $data=new stdClass();
             $onprocess=new stdClass();
             foreach($poli as $p){
-                $query="SELECT a.*,p.nama,,p.tgl_lahir,p.jk,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
+                $query="SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
                 i.poli FROM u5621751_ayaklinik.antrian a
                 join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
                 join u5621751_ayaklinik.poli i on a.poli_id=i.id
