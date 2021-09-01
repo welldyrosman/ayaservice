@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Mail\RegisterVer;
+use App\Models\Medical;
 use App\Models\Pasien;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -360,5 +361,19 @@ class PasienController extends Controller
         }
     }
 
+    public function getmedhist($id){
+        try{
+            $medical=DB::select("select m.*,p.poli,d.nama as dokter,
+            (select CONCAT('REG',LPAD(id,6,'0')) from reservasi where medical_id=m.id) as code_reg
+            from medical m
+            join poli p on m.poli_id=p.id
+            left join dokter d on m.dokter_id=d.id
+            where m.pasien_id=$id");
+            return Tools::MyResponse(true,"OK",$medical,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     //
 }

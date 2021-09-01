@@ -44,7 +44,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->put('/api/v1/registrasi/disable/{id}','PasienController@enabled');
     $router->get('/api/v1/pasien','PasienController@getallpasien');
     $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
-
+    $router->get('/api/v1/pasien/medhist/{id}','PasienController@getmedhist');
 
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
     $router->post('/api/v1/staff/{id}','StaffController@create');
@@ -81,6 +81,13 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/scheduletoday','PoliController@gettodayincharge');
     $router->get('/api/v1/schedule/{date}','PoliController@getchargebydate');
 
+    $router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
+    $router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
+    $router->get('/api/v1/getscreening/{id}','ScreeningController@doktergetscreen');
+    $router->get('/api/v1/medicalform','MedicalformController@getall');
+    $router->post('/api/v1/medicalform','MedicalformController@create');
+
+    $router->get('/api/v1/medical/{id}','MedicalController@getmeddet');
 
 });
 
@@ -110,12 +117,9 @@ $router->get('/tools/city/{id}','AddressController@getcity');
 $router->get('/tools/kec/{idprov}/{idkota}','AddressController@getkec');
 $router->get('/tools/desa/{idprov}/{idkota}/{idkec}','AddressController@getdes');
 
-$router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
-$router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
-$router->get('/api/v1/getscreening/{id}','ScreeningController@doktergetscreen');
 
-$router->get('/api/v1/medicalform','MedicalformController@getall');
-$router->post('/api/v1/medicalform','MedicalformController@create');
+
+
 
 $router->get('/api/v1/medicalkind','MedicalkindController@getall');
 $router->post('/api/v1/medicalkind','MedicalkindController@create');

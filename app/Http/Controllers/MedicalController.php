@@ -7,6 +7,7 @@ use App\Models\Barang;
 use App\Models\CompositeItem;
 use App\Models\DetailResep;
 use App\Models\ItemOut;
+use App\Models\Labs;
 use App\Models\Medical;
 use App\Models\Poli;
 use App\Models\Resep;
@@ -78,6 +79,30 @@ class MedicalController extends Controller{
             $medical->save();
             return Tools::MyResponse(true,"Medical Data Has Been Saved",$medical,200);
         }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function getmeddet($id){
+        try{
+            $medical=new stdClass();
+            $medicalscren=DB::select("select s.*,k.nama as label_kind from medical m
+            left join medscreen s on m.id=s.medical_id
+            join medkind k on s.medkind_id=k.id
+            where m.id=$id");
+            $medicalform=DB::select("select m.*,p.poli,d.nama as dokter,u.nama as pasien,
+            (select CONCAT('REG',LPAD(id,6,'0')) from reservasi where medical_id=m.id) as code_reg
+            from medical m
+            join poli p on m.poli_id=p.id
+            left join dokter d on m.dokter_id=d.id
+            join pasiens u on m.pasien_id=u.id
+            where m.id=$id");
+            $labs=Labs::where('medical_id',$id)->first();
+            $medical->form=$medicalform;
+            $medical->screen=$medicalscren;
+            $medical->labs=$labs;
+            return Tools::MyResponse(true,"OK",$medical,200);
+        }
+        catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
     }
