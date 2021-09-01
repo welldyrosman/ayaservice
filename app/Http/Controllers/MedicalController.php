@@ -96,10 +96,15 @@ class MedicalController extends Controller{
             left join dokter d on m.dokter_id=d.id
             join pasiens u on m.pasien_id=u.id
             where m.id=$id");
+            $resep=DB::select("select r.*,d.iscomposite,d.qty,d.unit,d.harga,b.nama from resep r
+            left join resep_detail d on r.id=d.resep_id
+            left join barang b on d.barang_id=b.id and kind=1
+            where r.medical_id=$id");
             $labs=Labs::where('medical_id',$id)->first();
             $medical->form=$medicalform;
             $medical->screen=$medicalscren;
             $medical->labs=$labs;
+            $medical->resep=$resep;
             return Tools::MyResponse(true,"OK",$medical,200);
         }
         catch(Exception $e){
