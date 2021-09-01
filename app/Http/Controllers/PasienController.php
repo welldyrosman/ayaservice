@@ -47,13 +47,13 @@ class PasienController extends Controller
                 throw new Exception("Cannot Found Pasien");
             }
             $pdf = App::make('dompdf.wrapper');
-            $customPaper = array(0,0,300,200);
-            // $d = new DNS1D();
-            // $d->setStorPath(__DIR__.'/cache/');
-            // $ss=$d->getBarcodeHTML($id, 'EAN13',1,21,'#276071',false);
-            // $pasien->nopasien='AKP'.$pasien->id;
-            // $data = ['barcode' => $ss,'pasien'=>$pasien];
-            $pdf->loadView('Kartupasien');
+            $customPaper = array(0,0,243,155);
+            $d = new DNS1D();
+            $d->setStorPath(__DIR__.'/cache/');
+            $ss=$d->getBarcodeHTML($id, 'EAN13',1,21,'#276071',false);
+            $pasien->nopasien='AKP'.$pasien->id;
+            $data = ['barcode' => $ss,'pasien'=>$pasien];
+            $pdf->loadView('Kartupasien',$data);
             $pdf->setPaper($customPaper);
             return $pdf->stream('kuntul.pdf');
         }catch(Exception $e){
