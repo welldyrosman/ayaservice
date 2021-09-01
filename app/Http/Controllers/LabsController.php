@@ -57,13 +57,10 @@ class LabsController extends Controller
     }
     public function update(Request $request,$id){
         try{
-            $Labs=Labs::find($id);
+            $Labs= Labs::where('medical_id',$id)->first();
             if(!$Labs){
                 throw new Exception("Labs Tidak Ditemukan");
             }
-            $this->validate($request,[
-                'Labs' => 'required',
-                'ruangan' => 'required'],['required'=>':attribute cannot Empty']);
             $data=$request->all();
             $Labs->fill($data);
             $Labs->save();
