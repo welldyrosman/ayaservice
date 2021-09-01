@@ -90,6 +90,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/medical/{id}','MedicalController@getmeddet');
 
     $router->post('/api/v1/labs','LabsController@create');
+    $router->get('/api/v1/labs/{id}','LabsController@getid');
 
 });
 

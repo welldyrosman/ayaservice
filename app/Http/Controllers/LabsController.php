@@ -16,7 +16,7 @@ class LabsController extends Controller
     }
     public function getid($id){
        try{
-            $Labs=Labs::find($id);
+            $Labs=Labs::where('medical_id',$id)->first();
             if (!$Labs) {
                 throw new Exception("Hasil Lab tidak ditemukan");
             }
