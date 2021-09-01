@@ -85,7 +85,7 @@ class MedicalController extends Controller{
     public function getmeddet($id){
         try{
             $medical=new stdClass();
-            $medicalscren=DB::select("select s.*,k.nama as label_kind from medical m
+            $medicalscren=DB::select("select s.*,k.nama as label_kind,k.datatype from medical m
             left join medscreen s on m.id=s.medical_id
             join medkind k on s.medkind_id=k.id
             where m.id=$id");
