@@ -6,6 +6,7 @@ use App\Helpers\Tools;
 use App\Models\Dokter;
 use App\Models\Staff;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 class DokterController extends Controller
 {
@@ -31,6 +32,7 @@ class DokterController extends Controller
     protected $filename;
     public function create(Request $request){
         $data = $request->all();
+        DB::beginTransaction();
         try{
             $this->validate($request,[
                 'nama' => 'required',
@@ -47,6 +49,10 @@ class DokterController extends Controller
                 throw new Exception("Email was used by other dokter");
             }
             $thumbnail = Str::random(34);
+            $staff=Staff::where('email',$data['email'])->first();
+            if($staff){
+                throw new Exception("Email was used by other staff");
+            }
             $ext=$request->file('photo')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
             $request->file('photo')->move(storage_path($this->path), $this->filename);
@@ -60,12 +66,14 @@ class DokterController extends Controller
                 "role_id"=>2
             ];
             Staff::create($akundata);
+            DB::commit();
             return Tools::MyResponse(true,"OK",$Dokter,200);
         }catch(Exception $e){
             $current_avatar_path = storage_path($this->publicpath) . '/' .$this->filename;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
+            DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);
         }
     }
