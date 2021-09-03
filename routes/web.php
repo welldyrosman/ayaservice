@@ -83,11 +83,12 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
     $router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
-    $router->get('/api/v1/dokgetscreening/{id}','MedicalController@doktergetscreen');
     $router->get('/api/v1/medicalform','MedicalformController@getall');
     $router->post('/api/v1/medicalform','MedicalformController@create');
 
     $router->get('/api/v1/medical/{id}','MedicalController@getmeddet');
+    $router->get('/api/v1/dokgetscreening/{id}','MedicalController@doktergetscreen');
+    $router->get('/api/v1/dokdashboard','MedicalController@dashboard');
 
     $router->post('/api/v1/labs','LabsController@create');
     $router->get('/api/v1/labs/{id}','LabsController@getid');

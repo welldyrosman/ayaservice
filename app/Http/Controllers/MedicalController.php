@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use stdClass;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\JWTAuth;
 
 class MedicalController extends Controller{
     public function __construct(JWTAuth $jwt)
@@ -153,5 +153,35 @@ class MedicalController extends Controller{
             DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);
         }
+    }
+    private function graphicreservasi($poliid){
+        $graph=DB::select("
+        select  MONTHNAME(tgl_book) monthbook,count(id) as qty from reservasi
+        where poli_id=$poliid
+        group by MONTH(tgl_book),monthbook order by  MONTH(tgl_book) desc");
+        $arrdata=array();
+        $arrcat=array();
+        foreach($graph as $item){
+            array_push($arrcat,$item->monthbook);
+            array_push($arrdata,$item->qty);
+        }
+
+        return ["data"=>$arrdata,"category"=>$arrcat];
+    }
+    public function dashboard(){
+        $token = $this->jwt->getToken();
+        $user= Auth::guard('staff')->user($token);
+        $dokter=Dokter::where('email',$user->email)->first();
+        $poliid=$dokter->poli_id;
+        $data=new stdClass();
+        $currentproc=DB::select("select a.*,p.nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
+        left join pasiens p on a.pasien_id=p.id
+        where a.queue_date=current_date() and a.poli_id=$poliid and a.status=2");
+        $data->graph=$this->graphicreservasi($poliid);
+        $data->regqty=count(DB::select("select * from reservasi where tgl_book=current_date() and poli_id=$poliid"));
+        $data->waiting=count(DB::select("select * from antrian where queue_date=current_date() and poli_id=$poliid and status=1"));
+        $data->process=count($currentproc)<1?null:$currentproc[0];
+        $data->done=count(DB::select("select * from antrian where queue_date=current_date() and poli_id=$poliid and status in(3,4,5)"));
+        return Tools::MyResponse(true,"OK",$data,200);
     }
 }
