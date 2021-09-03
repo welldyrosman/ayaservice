@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Antrian;
+use App\Models\Dokter;
 use App\Models\Medical;
 use App\Models\MedicalScreen;
 use App\Models\Pasien;
@@ -111,13 +112,15 @@ class ScreeningController extends Controller
             $pasien=Pasien::find($antrian->pasien_id);
             $screendata=MedicalScreen::where('medical_id',$antrian->medical_id)->get();
             $medical=Medical::find($antrian->medical_id);
-
             $antrian->fill([
                 "status"=>"2"
             ]);
             $antrian->save();
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+            $dokter=Dokter::where('email',$user->email)->first();
             $medical->fill([
-                "dokter_id"=>1 //hardcode temporary
+                "dokter_id"=>$dokter->id //hardcode temporary
             ]);
             $medical->save();
             DB::commit();
