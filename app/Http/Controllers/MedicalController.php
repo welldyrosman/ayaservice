@@ -181,14 +181,18 @@ class MedicalController extends Controller{
         $dokter=Dokter::where('email',$user->email)->first();
         $poliid=$dokter->poli_id;
         $data=new stdClass();
+        $now=Carbon::now()->toDateString();
         $currentproc=DB::select("select a.*,p.nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
         left join pasiens p on a.pasien_id=p.id
-        where a.queue_date=current_date() and a.poli_id=$poliid and a.status=2");
+        where a.queue_date=$now and a.poli_id='$poliid' and a.status=2");
+
         $data->graph=$this->graphicreservasi($poliid);
-        $data->regqty=count(DB::select("select * from reservasi where tgl_book=current_date() and poli_id=$poliid"));
-        $data->waiting=count(DB::select("select * from antrian where queue_date=current_date() and poli_id=$poliid and status=1"));
+        $data->regqty=count(DB::select("select * from reservasi where tgl_book=$now and poli_id='$poliid'"));
+        $data->waiting=count(DB::select("select * from antrian where queue_date=$now and poli_id='$poliid' and status=1"));
         $data->process=count($currentproc)<1?null:$currentproc[0];
-        $data->done=count(DB::select("select * from antrian where queue_date=current_date() and poli_id=$poliid and status in(3,4,5)"));
+        $data->done=count(DB::select("select * from antrian where queue_date=$now and poli_id='$poliid' and status in(3,4,5)"));
+
+        $data->now=$now;
         return Tools::MyResponse(true,"OK",$data,200);
     }
 }
