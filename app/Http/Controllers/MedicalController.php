@@ -15,6 +15,7 @@ use App\Models\MedicalScreen;
 use App\Models\Pasien;
 use App\Models\Poli;
 use App\Models\Resep;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -135,7 +136,8 @@ class MedicalController extends Controller{
             $token = $this->jwt->getToken();
             $user= Auth::guard('staff')->user($token);
             $dokter=Dokter::where('email',$user->email)->first();
-            $cekantian=Antrian::where('poli_id',$dokter->poli_id)->where('status','2')->first();
+            $now=Carbon::now()->toDateString();
+            $cekantian=Antrian::where('poli_id',$dokter->poli_id)->where('status','2')->where('queue_date',$now)->first();
             if($cekantian&&$cekantian->id!=$id){
                 throw new Exception("Cannot Process More Than 1 Pasien");
             }

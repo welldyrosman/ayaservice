@@ -93,6 +93,14 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/labs','LabsController@create');
     $router->get('/api/v1/labs/{id}','LabsController@getid');
     $router->put('/api/v1/labs/{id}','LabsController@update');
+
+    $router->get('/api/v1/obatnc','BarangController@getnoncompositeobat');
+    $router->get('/api/v1/obat','BarangController@getallobat');
+    $router->get('/api/v1/obat/{id}','BarangController@getidobat');
+    $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
+    $router->post('/api/v1/obat','BarangController@createobat');
+    $router->put('/api/v1/obat/{id}','BarangController@updateobat');
+    $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
 });
 
 
@@ -143,13 +151,7 @@ $router->get('/api/v1/articleimg/{id}','ArticleController@get_image');
 $router->get('/api/v1/article','ArticleController@getall');
 $router->get('/api/v1/article/{id}','ArticleController@getid');
 
-$router->get('/api/v1/obatnc','BarangController@getnoncompositeobat');
-$router->get('/api/v1/obat','BarangController@getallobat');
-$router->get('/api/v1/obat/{id}','BarangController@getidobat');
-$router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
-$router->post('/api/v1/obat','BarangController@createobat');
-$router->put('/api/v1/obat/{id}','BarangController@updateobat');
-$router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
+
 
 $router->get('/api/v1/cetakkartu/{id}','PasienController@membercard');
 
