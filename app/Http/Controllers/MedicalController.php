@@ -132,6 +132,13 @@ class MedicalController extends Controller{
             if(!$antrian){
                 throw new Exception("Cannot Found Antrian");
             }
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+            $dokter=Dokter::where('email',$user->email)->first();
+            $cekantian=Antrian::where('poli_id',$dokter->poli_id)->where('status','2')->first();
+            if($cekantian&&$cekantian->id!=$id){
+                throw new Exception("Cannot Process More Than 1 Pasien");
+            }
             $pasien=Pasien::find($antrian->pasien_id);
             $screendata=MedicalScreen::where('medical_id',$antrian->medical_id)->get();
             $medical=Medical::find($antrian->medical_id);
@@ -139,9 +146,7 @@ class MedicalController extends Controller{
                 "status"=>"2"
             ]);
             $antrian->save();
-            $token = $this->jwt->getToken();
-            $user= Auth::guard('staff')->user($token);
-            $dokter=Dokter::where('email',$user->email)->first();
+
             $medical->fill([
                 "dokter_id"=>$dokter->id //hardcode temporary
             ]);
