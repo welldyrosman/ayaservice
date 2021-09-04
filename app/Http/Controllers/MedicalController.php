@@ -15,6 +15,7 @@ use App\Models\MedicalScreen;
 use App\Models\Pasien;
 use App\Models\Poli;
 use App\Models\Resep;
+use App\Models\Reservasi;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -28,86 +29,116 @@ class MedicalController extends Controller{
     {
         $this->jwt = $jwt;
     }
+    public function medicalsubmit(Request $request,$id){
+        DB::beginTransaction();
+        try{
+            $this->saveaction($request,$id);
+            $medical=Medical::find($id);
+            $medical->fill(['status'=>3]);
+            $medical->save();
+            $antrian=Antrian::where('medical_id',$id)->first();
+            $antrian->fill(['status'=>3]);
+            $antrian->save();
+            $resep=Resep::where('medical_id',$id)->first();
+            $resep->fill(['status'=>2]);
+            $resep->save();
+            $reservasi=Reservasi::where('medical_id',$id)->first();
+            $reservasi->fill(['status'=>5]);
+            $reservasi->save();
+            DB::commit();
+            return Tools::MyResponse(true,"Medical Data Has Been Saved",null,200);
+
+        }catch(Exception $e){
+            DB::rollBack();
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    private function saveaction(Request $request,$id){
+        $this->validate($request,[
+            "treatment_kind"=>"required",
+            "fee"=>"required",
+            "screenitems.*.id"=>"required",
+            "screenitems.*.medkind_id"=>"required",
+            "screenitems.*.medform_id"=>"required",
+            "screenitems.*.val_desc"=>"required",
+            "detail_resep.*.barang_id"=>"required",
+            "detail_resep.*.qty"=>"required",
+        ]);
+        $medical=Medical::find($id);
+        if(!$medical){
+            throw new Exception("Cannot Found Medical");
+        }
+        $resep=Resep::where('medical_id',$id)->first();
+        if(!$resep){
+            $resep=Resep::create([
+                "medical_id"=>$id,
+                "status"=>"1"
+            ]
+            );
+        }
+        $detail_resep=$request->input("detail_resep");
+        $resepid=$resep->id;
+        DetailResep::where('resep_id',$resepid)->delete();
+        foreach($detail_resep as $row){
+            Validator::make($row,[
+                "barang_id"=>"required",
+                "qty"=>"required",
+            ]);
+            $barangid=$row->barang_id;
+            $barang=Barang::find($barangid);
+            if(!$barang){
+                throw new Exception("Cannot Found Obat");
+            }
+            $row->resep_id=$resepid;
+            $row->harga=$barang->harga;
+            $row->isComposite=$barang->isComposite;
+            if($barang->isComposite){
+                $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
+                foreach($itemcomposite as $item){
+                    ItemOut::create([
+                        "resep_id"=>$resepid,
+                        "barang_id"=>$item['id'],
+                        "qty"=>$row['qty'],
+                        "compositeitem"=>true
+                    ]);
+                }
+            }else{
+                ItemOut::create([
+                    "resep_id"=>$resepid,
+                    "barang_id"=>$barangid,
+                    "qty"=>$row['qty'],
+                    "compositeitem"=>false
+                ]);
+            }
+            DetailResep::create(
+                [
+                    "resep_id"=>$resepid,
+                    "barang_id"=>$barangid,
+                    "iscomposite"=>$barang->isComposite,
+                    "qty"=>$row['qty'],
+                    "unit"=>$barang->harga
+                ]
+            );
+        }
+        $data=$request->all();
+        $screenitems=$data['screenitems'];
+        foreach($screenitems as $items){
+            $medcr=MedicalScreen::find($item->id);
+            $medcr->fill($item);
+            $medcr->save();
+        }
+        $medical->fill($data);
+        $medical->save();
+    }
     public function medicalsave(Request $request,$id){
         DB::beginTransaction();
         try{
-            $this->validate($request,[
-                "treatment_kind"=>"required",
-                "fee"=>"required",
-                "screenitems.*.id"=>"required",
-                "screenitems.*.medkind_id"=>"required",
-                "screenitems.*.medform_id"=>"required",
-                "screenitems.*.val_desc"=>"required",
-                "detail_resep.*.barang_id"=>"required",
-                "detail_resep.*.qty"=>"required",
-            ]);
-            $medical=Medical::find($id);
-            if(!$medical){
-                throw new Exception("Cannot Found Medical");
-            }
-            $resep=Resep::where('medical_id',$id)->first();
-            if(!$resep){
-                $resep=Resep::create([
-                    "medical_id"=>$id,
-                    "status"=>"1"
-                ]
-                );
-            }
-            $detail_resep=$request->input("detail_resep");
-            $resepid=$resep->id;
-            DetailResep::where('resep_id',$resepid)->delete();
-            foreach($detail_resep as $row){
-                Validator::make($row,[
-                    "barang_id"=>"required",
-                    "qty"=>"required",
-                ]);
-                $barangid=$row->barang_id;
-                $barang=Barang::find($barangid);
-                if(!$barang){
-                    throw new Exception("Cannot Found Obat");
-                }
-                $row->resep_id=$resepid;
-                $row->harga=$barang->harga;
-                $row->isComposite=$barang->isComposite;
-                if($barang->isComposite){
-                    $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
-                    foreach($itemcomposite as $item){
-                        ItemOut::create([
-                            "resep_id"=>$resepid,
-                            "barang_id"=>$item['id'],
-                            "qty"=>$row['qty'],
-                            "compositeitem"=>true
-                        ]);
-                    }
-                }else{
-                    ItemOut::create([
-                        "resep_id"=>$resepid,
-                        "barang_id"=>$barangid,
-                        "qty"=>$row['qty'],
-                        "compositeitem"=>false
-                    ]);
-                }
-                DetailResep::create(
-                    [
-                        "resep_id"=>$resepid,
-                        "barang_id"=>$barangid,
-                        "iscomposite"=>$barang->isComposite,
-                        "qty"=>$row['qty'],
-                        "unit"=>$barang->harga
-                    ]
-                );
-            }
-            $data=$request->all();
-            $screenitems=$data['screenitems'];
-            foreach($screenitems as $items){
-                $medcr=MedicalScreen::find($item->id);
-                $medcr->fill($item);
-                $medcr->save();
-            }
-            $medical->fill($data);
-            $medical->save();
-            return Tools::MyResponse(true,"Medical Data Has Been Saved",$medical,200);
+            $this->saveaction($request,$id);
+            DB::commit();
+            return Tools::MyResponse(true,"Medical Data Has Been Saved",null,200);
+
         }catch(Exception $e){
+            DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);
         }
     }
