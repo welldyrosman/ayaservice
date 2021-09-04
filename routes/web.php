@@ -89,6 +89,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/medical/{id}','MedicalController@getmeddet');
     $router->get('/api/v1/dokgetscreening/{id}','MedicalController@doktergetscreen');
     $router->get('/api/v1/dokdashboard','MedicalController@dashboard');
+    $router->put('/api/v1/medicalsave/{id}','MedicalController@medicalsave');
+
 
     $router->post('/api/v1/labs','LabsController@create');
     $router->get('/api/v1/labs/{id}','LabsController@getid');

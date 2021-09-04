@@ -57,39 +57,5 @@ class AntrianController extends Controller{
             return Tools::MyResponse(false,$e,null,401);
         }
     }
-    public function tomedical($id){
-        DB::beginTransaction();
-        try{
-            $antrian=Antrian::find($id);
-            if(!$antrian){
-                throw new Exception("Cannot Found Antrian");
-            }
-            $antrian->fill(["status"=>"2"]);
-            $antrian->save();
-            $token = $this->jwt->getToken();
-            $user= Auth::guard('staff')->user($token);
-            $dokter=Dokter::where('email',$user->email)->first();
-            $medic=[
-                "pasien_id"=>$antrian->pasien_id,
-                "poli_id"=>$antrian->poli_id,
-                "dokter_id"=>$dokter->id,
-                "status"=>"1"
-            ];
 
-            $medical=Medical::create($medic);
-            $resep=Resep::create([
-                "medical_id"=>$medical->id,
-                "status"=>"1"
-            ]);
-            $data=new stdClass();
-            $data->medic=$medical;
-            $data->resep=$resep;
-            DB::commit();
-            return Tools::MyResponse(true,"Execution OK",$data,200);
-        }
-        catch(Exception $e){
-            DB::rollBack();
-            return Tools::MyResponse(false,$e,null,401);
-        }
-    }
 }

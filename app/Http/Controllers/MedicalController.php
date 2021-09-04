@@ -32,6 +32,8 @@ class MedicalController extends Controller{
         DB::beginTransaction();
         try{
             $this->validate($request,[
+                "treatment_kind"=>"required",
+                "screenitems.*.id"=>"required",
                 "screenitems.*.medkind_id"=>"required",
                 "screenitems.*.medform_id"=>"required",
                 "screenitems.*.val_desc"=>"required",
@@ -42,7 +44,14 @@ class MedicalController extends Controller{
             if(!$medical){
                 throw new Exception("Cannot Found Medical");
             }
-            $resep=Resep::where('medical_id',$id);
+            $resep=Resep::where('medical_id',$id)->first();
+            if(!$resep){
+                $resep=Resep::create([
+                    "medical_id"=>$id,
+                    "status"=>"1"
+                ]
+                );
+            }
             $detail_resep=$request->input("detail_resep");
             $resepid=$resep->id;
             DetailResep::where('resep_id',$resepid)->delete();
@@ -53,6 +62,9 @@ class MedicalController extends Controller{
                 ]);
                 $barangid=$row->barang_id;
                 $barang=Barang::find($barangid);
+                if(!$barang){
+                    throw new Exception("Cannot Found Obat");
+                }
                 $row->resep_id=$resepid;
                 $row->harga=$barang->harga;
                 $row->isComposite=$barang->isComposite;
@@ -85,6 +97,12 @@ class MedicalController extends Controller{
                 );
             }
             $data=$request->all();
+            $screenitems=$data['screenitems'];
+            foreach($screenitems as $items){
+                $medcr=MedicalScreen::find($item->id);
+                $medcr->fill($item);
+                $medcr->save();
+            }
             $medical->fill($data);
             $medical->save();
             return Tools::MyResponse(true,"Medical Data Has Been Saved",$medical,200);
@@ -145,6 +163,10 @@ class MedicalController extends Controller{
             $medical=Medical::find($antrian->medical_id);
             $antrian->fill([
                 "status"=>"2"
+            ]);
+            Resep::create([
+                "medical_id"=>$antrian->medical_id,
+                "status"=>"1"
             ]);
             $antrian->save();
             $medical->fill([
