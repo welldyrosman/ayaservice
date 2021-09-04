@@ -29,6 +29,29 @@ class MedicalController extends Controller{
     {
         $this->jwt = $jwt;
     }
+    public function medicalcancel($id){
+        DB::beginTransaction();
+        try{
+            $medical=Medical::find($id);
+            $medical->fill(['status'=>1]);
+            $medical->save();
+            $antrian=Antrian::where('medical_id',$id)->first();
+            $antrian->fill(['status'=>1]);
+            $antrian->save();
+            $resep=Resep::where('medical_id',$id)->first();
+            $resep->fill(['status'=>1]);
+            $resep->save();
+            $reservasi=Reservasi::where('medical_id',$id)->first();
+            $reservasi->fill(['status'=>3]);
+            $reservasi->save();
+            DB::commit();
+            return Tools::MyResponse(true,"Medical Data Has Been Cancelled",null,200);
+
+        }catch(Exception $e){
+            DB::rollBack();
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     public function medicalsubmit(Request $request,$id){
         DB::beginTransaction();
         try{
