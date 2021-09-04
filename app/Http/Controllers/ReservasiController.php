@@ -19,7 +19,7 @@ class ReservasiController extends Controller
     public function __construct(JWTAuth $jwt)
     {
         $this->jwt = $jwt;
-
+        $this->now=Carbon::now()->toDateString();
     }
     public function getallreservation(Request $request){
         $this->validate($request,[
@@ -67,7 +67,7 @@ class ReservasiController extends Controller
         $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
             join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
             join poli l on a.poli_id=l.id
-            where a.tgl_book=current_date() and a.role_id='1' and a.status='1'
+            where a.tgl_book=ate() and a.role_id='1' and a.status='1'
         ;");
           return Tools::MyResponse(true,"OK",$reservasi,200);
     }
@@ -77,17 +77,17 @@ class ReservasiController extends Controller
         join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
         join poli l on a.poli_id=l.id
         left join labs ls on a.medical_id=ls.medical_id
-        where a.tgl_book=current_date() $cmd
+        where a.tgl_book='$this->now' $cmd
         ;");
          return $reservasi;
     }
     public function dashboard(){
         $data=new stdClass();
         $data->graph=$this->graphicreservasi();
-        $data->onregqty=count(DB::select("select * from reservasi where tgl_book=current_date() and role_id=1"));
-        $data->offregqty=count(DB::select("select * from reservasi where tgl_book=current_date() and role_id=2"));
-        $data->oncheckqty=count(DB::select("select * from reservasi where tgl_book=current_date() and role_id=1 and status=1"));
-        $data->queue=count(DB::select("select * from antrian where queue_date=current_date() and status=1 "));
+        $data->onregqty=count(DB::select("select * from reservasi where tgl_book='$this->now' and role_id=1"));
+        $data->offregqty=count(DB::select("select * from reservasi where tgl_book='$this->now' and role_id=2"));
+        $data->oncheckqty=count(DB::select("select * from reservasi where tgl_book='$this->now' and role_id=1 and status=1"));
+        $data->queue=count(DB::select("select * from antrian where queue_date='$this->now' and status=1 "));
 
         return Tools::MyResponse(true,"OK",$data,200);
     }
