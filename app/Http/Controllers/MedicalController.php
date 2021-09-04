@@ -181,8 +181,9 @@ class MedicalController extends Controller{
         $poliid=$dokter->poli_id;
         $data=new stdClass();
         $now=Carbon::now()->toDateString();
-        $currentproc=DB::select("select a.*,p.nama,p.tgl_lahir,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
+        $currentproc=DB::select("select a.*,pl.poli as poli,p.nama,p.tgl_lahir,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
         left join pasiens p on a.pasien_id=p.id
+        left join poli pl on a.poli_id=pl.id
         where a.queue_date='$now' and a.poli_id=$poliid and a.status=2");
         // if(count($currentproc)<1){
         //     throw new Exception($now.$poliid);
