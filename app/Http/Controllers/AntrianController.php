@@ -30,17 +30,17 @@ class AntrianController extends Controller{
             $now=Carbon::now()->toDateString();
             foreach($poli as $p){
                 $query="SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
-                i.poli FROM u5621751_ayaklinik.antrian a
-                join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
-                join u5621751_ayaklinik.poli i on a.poli_id=i.id
+                i.poli FROM antrian a
+                join pasiens p on a.pasien_id=p.id
+                join poli i on a.poli_id=i.id
                 where a.queue_date='$now' and a.status=1 and a.poli_id=$p->id
                 order by a.reg_time asc";
                 $query2="SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
-                i.poli,d.nama as dokter FROM u5621751_ayaklinik.antrian a
-                join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
-                join u5621751_ayaklinik.poli i on a.poli_id=i.id
-                join u5621751_ayaklinik.poli_incharge ic on a.poli_id=ic.poli_id and ic.praktek_date='$now'
-                join u5621751_ayaklinik.dokter d on ic.dokter_id=d.id
+                i.poli,d.nama as dokter FROM antrian a
+                join pasiens p on a.pasien_id=p.id
+                join poli i on a.poli_id=i.id
+                join poli_incharge ic on a.poli_id=ic.poli_id and ic.praktek_date='$now'
+                join dokter d on ic.dokter_id=d.id
                  where a.queue_date='$now' and a.status=2 and a.poli_id=$p->id
                  order by a.reg_time asc";
                 $antrislq=DB::select($query);

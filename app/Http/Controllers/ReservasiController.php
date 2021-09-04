@@ -64,8 +64,8 @@ class ReservasiController extends Controller
     }
     public function notyetcheckin(){
 
-        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
-            join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
+            join pasiens p on a.pasien_id=p.id
             join poli l on a.poli_id=l.id
             where a.tgl_book=ate() and a.role_id='1' and a.status='1'
         ;");
@@ -73,8 +73,8 @@ class ReservasiController extends Controller
     }
     private function gettodayreservasi($roleid){
         $cmd=$roleid==null?"":"and a.role_id=$roleid";
-        $reservasi=DB::select("SELECT ls.id as lab_id,a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
-        join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+        $reservasi=DB::select("SELECT ls.id as lab_id,a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
+        join pasiens p on a.pasien_id=p.id
         join poli l on a.poli_id=l.id
         left join labs ls on a.medical_id=ls.medical_id
         where a.tgl_book='$this->now' $cmd
@@ -157,10 +157,10 @@ class ReservasiController extends Controller
             $user= Auth::guard('api')->user($token);
             $pasien=Pasien::where('email', $user['email'])->first();
             $reservasi=DB::select("
-            SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.*,m.dokter_id,d.nama as nama_dokter FROM u5621751_ayaklinik.reservasi r
-            left join u5621751_ayaklinik.poli p on r.poli_id=p.id
-            left join u5621751_ayaklinik.medical m on r.medical_id=m.id
-            left join u5621751_ayaklinik.dokter d on m.dokter_id=d.id
+            SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.*,m.dokter_id,d.nama as nama_dokter FROM reservasi r
+            left join poli p on r.poli_id=p.id
+            left join medical m on r.medical_id=m.id
+            left join dokter d on m.dokter_id=d.id
             where r.status IN (1,3) and r.tgl_book>=curdate() and r.pasien_id='$pasien->id'
             ;");
 
@@ -185,10 +185,10 @@ class ReservasiController extends Controller
             $user= Auth::guard('api')->user($token);
             $pasien=Pasien::where('email', $user['email'])->first();
 
-            $sql=" with t as( SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.poli,m.dokter_id,d.nama as nama_dokter FROM u5621751_ayaklinik.reservasi r
-            left join u5621751_ayaklinik.poli p on r.poli_id=p.id
-            left join u5621751_ayaklinik.medical m on r.medical_id=m.id
-            left join u5621751_ayaklinik.dokter d on m.dokter_id=d.id
+            $sql=" with t as( SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.poli,m.dokter_id,d.nama as nama_dokter FROM reservasi r
+            left join poli p on r.poli_id=p.id
+            left join medical m on r.medical_id=m.id
+            left join dokter d on m.dokter_id=d.id
             where r.status=2 or r.tgl_book<curdate() and r.pasien_id='$pasien->id'
             )
             select * from t ";
@@ -281,8 +281,8 @@ class ReservasiController extends Controller
         }
     }
     public function getreservasibyid($id){
-        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM u5621751_ayaklinik.reservasi a
-        join u5621751_ayaklinik.pasiens p on a.pasien_id=p.id
+        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
+        join pasiens p on a.pasien_id=p.id
         join poli l on a.poli_id=l.id
         where a.id=$id
             ;");
