@@ -266,10 +266,10 @@ class MedicalController extends Controller{
         //     throw new Exception($now.$poliid);
         // }
         $data->graph=$this->graphicreservasi($poliid);
-        $data->regqty=count(DB::select("select * from reservasi where tgl_book=$now and poli_id='$poliid'"));
-        $data->waiting=count(DB::select("select * from antrian where queue_date=$now and poli_id='$poliid' and status=1"));
+        $data->regqty=count(DB::select("select * from reservasi where tgl_book='$now' and poli_id='$poliid'"));
+        $data->waiting=count(DB::select("select * from antrian where queue_date='$now' and poli_id='$poliid' and status=1"));
         $data->process=count($currentproc)<1?null:$currentproc[0];
-        $data->done=count(DB::select("select * from antrian where queue_date=$now and poli_id='$poliid' and status in(3,4,5)"));
+        $data->done=count(DB::select("select * from antrian where queue_date='$now' and poli_id='$poliid' and status in(3,4,5)"));
 
         $data->now=$now;
         return Tools::MyResponse(true,"OK",$data,200);
