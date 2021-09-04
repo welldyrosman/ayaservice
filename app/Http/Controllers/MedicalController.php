@@ -35,6 +35,8 @@ class MedicalController extends Controller{
                 "screenitems.*.medkind_id"=>"required",
                 "screenitems.*.medform_id"=>"required",
                 "screenitems.*.val_desc"=>"required",
+                "detail_resep.*.barang_id"=>"required",
+                "detail_resep.*.qty"=>"required",
             ]);
             $medical=Medical::find($id);
             if(!$medical){
@@ -145,7 +147,6 @@ class MedicalController extends Controller{
                 "status"=>"2"
             ]);
             $antrian->save();
-
             $medical->fill([
                 "dokter_id"=>$dokter->id //hardcode temporary
             ]);
@@ -180,7 +181,7 @@ class MedicalController extends Controller{
         $poliid=$dokter->poli_id;
         $data=new stdClass();
         $now=Carbon::now()->toDateString();
-        $currentproc=DB::select("select a.*,p.nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
+        $currentproc=DB::select("select a.*,p.nama,p.tgl_lahir,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
         left join pasiens p on a.pasien_id=p.id
         where a.queue_date='$now' and a.poli_id=$poliid and a.status=2");
         // if(count($currentproc)<1){
