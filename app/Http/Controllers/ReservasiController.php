@@ -63,11 +63,11 @@ class ReservasiController extends Controller
         return Tools::MyResponse(true,"OK",$reservasi,200);
     }
     public function notyetcheckin(){
-
-        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
+        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg
+            FROM reservasi a
             join pasiens p on a.pasien_id=p.id
             join poli l on a.poli_id=l.id
-            where a.tgl_book=ate() and a.role_id='1' and a.status='1'
+            where a.tgl_book='$this->now'  and a.role_id='1' and a.status='1'
         ;");
           return Tools::MyResponse(true,"OK",$reservasi,200);
     }
@@ -161,7 +161,7 @@ class ReservasiController extends Controller
             left join poli p on r.poli_id=p.id
             left join medical m on r.medical_id=m.id
             left join dokter d on m.dokter_id=d.id
-            where r.status IN (1,3) and r.tgl_book>=curdate() and r.pasien_id='$pasien->id'
+            where r.status IN (1,3) and r.tgl_book>='$this->now' and r.pasien_id='$pasien->id'
             ;");
 
             return Tools::MyResponse(true,"Query Reservation success",$reservasi,200);
@@ -189,7 +189,7 @@ class ReservasiController extends Controller
             left join poli p on r.poli_id=p.id
             left join medical m on r.medical_id=m.id
             left join dokter d on m.dokter_id=d.id
-            where r.status=2 or r.tgl_book<curdate() and r.pasien_id='$pasien->id'
+            where r.status=2 or r.tgl_book<'$this->now' and r.pasien_id='$pasien->id'
             )
             select * from t ";
             $reservasipast=DB::select("$sql $cmd $orderby $page");
