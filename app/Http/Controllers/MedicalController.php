@@ -32,12 +32,9 @@ class MedicalController extends Controller{
         DB::beginTransaction();
         try{
             $this->validate($request,[
-                "poli_id"=>"required",
-                "dokter_id"=>"required",
-                "pasien_id"=>"required",
-                "diagnosa"=>"required",
-                "treatment_kind"=>"required",
-                "detail_resep"=>"array"
+                "screenitems.*.medkind_id"=>"required",
+                "screenitems.*.medform_id"=>"required",
+                "screenitems.*.val_desc"=>"required",
             ]);
             $medical=Medical::find($id);
             if(!$medical){
@@ -176,6 +173,7 @@ class MedicalController extends Controller{
         return ["data"=>$arrdata,"category"=>$arrcat];
     }
     public function dashboard(){
+        try{
         $token = $this->jwt->getToken();
         $user= Auth::guard('staff')->user($token);
         $dokter=Dokter::where('email',$user->email)->first();
@@ -184,8 +182,10 @@ class MedicalController extends Controller{
         $now=Carbon::now()->toDateString();
         $currentproc=DB::select("select a.*,p.nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from antrian a
         left join pasiens p on a.pasien_id=p.id
-        where a.queue_date=$now and a.poli_id='$poliid' and a.status=2");
-
+        where a.queue_date='$now' and a.poli_id=$poliid and a.status=2");
+        // if(count($currentproc)<1){
+        //     throw new Exception($now.$poliid);
+        // }
         $data->graph=$this->graphicreservasi($poliid);
         $data->regqty=count(DB::select("select * from reservasi where tgl_book=$now and poli_id='$poliid'"));
         $data->waiting=count(DB::select("select * from antrian where queue_date=$now and poli_id='$poliid' and status=1"));
@@ -194,5 +194,9 @@ class MedicalController extends Controller{
 
         $data->now=$now;
         return Tools::MyResponse(true,"OK",$data,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
 }
