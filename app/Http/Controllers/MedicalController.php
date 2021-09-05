@@ -102,20 +102,17 @@ class MedicalController extends Controller{
         $detail_resep=$request->input("detail_resep");
         $resepid=$resep->id;
         DetailResep::where('resep_id',$resepid)->delete();
+        ItemOut::where('resep_id',$resepid)->delete();
         foreach($detail_resep as $row){
-            Validator::make($row,[
-                "barang_id"=>"required",
-                "qty"=>"required",
-            ]);
-            $barangid=$row->barang_id;
+            $barangid=$row['barang_id'];
             $barang=Barang::find($barangid);
             if(!$barang){
                 throw new Exception("Cannot Found Obat");
             }
-            $row->resep_id=$resepid;
-            $row->harga=$barang->harga;
-            $row->isComposite=$barang->isComposite;
-            if($barang->isComposite){
+            $row['resep_id']=$resepid;
+            $row['harga']=$barang->harga;
+            $row['iscomposite']=$barang->iscomposite;
+            if($barang->iscomposite!=0){
                 $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
                 foreach($itemcomposite as $item){
                     ItemOut::create([
@@ -146,8 +143,8 @@ class MedicalController extends Controller{
         $data=$request->all();
         $screenitems=$data['screenitems'];
         foreach($screenitems as $items){
-            $medcr=MedicalScreen::find($item->id);
-            $medcr->fill($item);
+            $medcr=MedicalScreen::find($items['id']);
+            $medcr->fill($items);
             $medcr->save();
         }
         $medical->fill($data);
@@ -219,10 +216,13 @@ class MedicalController extends Controller{
             $antrian->fill([
                 "status"=>"2"
             ]);
-            Resep::create([
-                "medical_id"=>$antrian->medical_id,
-                "status"=>"1"
-            ]);
+            $resep=Resep::where('medical_id',$antrian->medical_id)->first();
+            if(!$resep){
+                $resep=Resep::create([
+                    "medical_id"=>$antrian->medical_id,
+                    "status"=>"1"
+                 ]);
+            }
             $antrian->save();
             $medical->fill([
                 "dokter_id"=>$dokter->id //hardcode temporary
