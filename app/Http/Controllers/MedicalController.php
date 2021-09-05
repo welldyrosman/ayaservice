@@ -250,6 +250,26 @@ class MedicalController extends Controller{
 
         return ["data"=>$arrdata,"category"=>$arrcat];
     }
+    public function allreserve(){
+        try{
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+            $dokter=Dokter::where('email',$user->email)->first();
+            $poliid=$dokter->poli_id;
+            $now=Carbon::now()->toDateString();
+            $data=DB::select("SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
+            i.poli FROM antrian a
+            join pasiens p on a.pasien_id=p.id
+            join poli i on a.poli_id=i.id
+            where a.queue_date='$now' and a.poli_id='$poliid' and a.status!=0
+            order by a.reg_time asc
+      ");
+            return Tools::MyResponse(true,"OK",$data,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     public function done(){
         try{
             $token = $this->jwt->getToken();
