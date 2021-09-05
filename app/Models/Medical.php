@@ -13,5 +13,5 @@ class Medical extends Model
      * @var array
      */
     protected $fillable = [
-        'poli_id', 'dokter_id','pasien_id','diagnosa','status','treatment_kind','antrian_id'];
+        'poli_id', 'dokter_id','pasien_id','diagnosa','status','treatment_kind','antrian_id','fee'];
 }
