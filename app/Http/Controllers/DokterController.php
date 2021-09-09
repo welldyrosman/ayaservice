@@ -108,19 +108,21 @@ class DokterController extends Controller
                 'poli_id'=>'required',
                 'email'=>'required',
                 'desc'=>'required',
-                'photo'=>'required|image',
             ],['required'=>':attribute cannot Empty']);
-
-            $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
-            if (file_exists($current_avatar_path)) {
-              unlink($current_avatar_path);
-            }
-            $thumbnail = Str::random(34);
-            $ext=$request->file('photo')->getClientOriginalExtension();
-            $this->filename=$thumbnail.'.'.$ext;
-            $request->file('photo')->move(storage_path($this->path), $this->filename);
             $data=$request->all();
-            $data['photo']=$this->filename;
+            if(key_exists('photo',$data)){
+                $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
+                if (file_exists($current_avatar_path)) {
+                    unlink($current_avatar_path);
+                }
+
+                $thumbnail = Str::random(34);
+                $ext=$request->file('photo')->getClientOriginalExtension();
+                $this->filename=$thumbnail.'.'.$ext;
+                $request->file('photo')->move(storage_path($this->path), $this->filename);
+
+                $data['photo']=$this->filename;
+            }
             $Dokter->fill($data);
             $Dokter->save();
             return Tools::MyResponse(true,"Dokter Was Updated",$Dokter,200);
