@@ -56,18 +56,7 @@ class MedicalController extends Controller{
         DB::beginTransaction();
         try{
             $this->saveaction($request,$id);
-            $medical=Medical::find($id);
-            $medical->fill(['status'=>3]);
-            $medical->save();
-            $antrian=Antrian::where('medical_id',$id)->first();
-            $antrian->fill(['status'=>3]);
-            $antrian->save();
-            $resep=Resep::where('medical_id',$id)->first();
-            $resep->fill(['status'=>2]);
-            $resep->save();
-            $reservasi=Reservasi::where('medical_id',$id)->first();
-            $reservasi->fill(['status'=>5]);
-            $reservasi->save();
+            Tools::MedChangeStatus($id,3,3,2,5);
             DB::commit();
             return Tools::MyResponse(true,"Medical Data Has Been Saved",null,200);
 
