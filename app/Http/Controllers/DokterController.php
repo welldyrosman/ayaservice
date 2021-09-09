@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 class DokterController extends Controller
 {
-    protected $path='app\dokter_photo';
-    protected $publicpath='storage\dokter_photo';
+    protected $path='app/dokter_photo';
+    protected $publicpath='storage/app/dokter_photo';
     public function getall(){
         $Dokter=Dokter::all();
         return Tools::MyResponse(true,"OK",$Dokter,200);
@@ -55,7 +55,7 @@ class DokterController extends Controller
             }
             $ext=$request->file('photo')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
-            $request->file('photo')->move(storage_path($this->path), $this->filename);
+             $request->file('photo')->move(storage_path($this->publicpath), $this->filename);
             $data['photo']=$this->filename;
             $data['staff_id']=1;
             $Dokter = Dokter::create($data);
@@ -69,7 +69,7 @@ class DokterController extends Controller
             DB::commit();
             return Tools::MyResponse(true,"OK",$Dokter,200);
         }catch(Exception $e){
-            $current_avatar_path = storage_path($this->publicpath) . '/' .$this->filename;
+            $current_avatar_path = storage_path($this->path. '/' .$this->filename) ;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
@@ -83,7 +83,7 @@ class DokterController extends Controller
             if (!$Dokter) {
                 throw new Exception("Dokter tidak ditemukan");
             }
-            $current_avatar_path = storage_path($this->publicpath) . '/' .$Dokter->photo;
+            $current_avatar_path = storage_path($this->path. '/' .$Dokter->photo) ;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
@@ -111,14 +111,14 @@ class DokterController extends Controller
                 'photo'=>'required|image',
             ],['required'=>':attribute cannot Empty']);
 
-            $current_avatar_path = storage_path($this->publicpath) . '/' .$Dokter->photo;
+            $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
             $thumbnail = Str::random(34);
             $ext=$request->file('photo')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
-            $request->file('photo')->move(storage_path($this->path), $this->filename);
+            $request->file('photo')->move(storage_path($this->publicpath), $this->filename);
             $data=$request->all();
             $data['photo']=$this->filename;
             $Dokter->fill($data);
