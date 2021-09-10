@@ -115,19 +115,23 @@ class Tools{
         $rowsPerPage=$request->input('rowsPerPage');
         return "LIMIT $rowsPerPage OFFSET $offset";
     }
-    public static function MedChangeStatus($id,$medical_status,$antrian_status,$resep_status,$reservasi_status){
-            $medical=Medical::find($id);
-            $medical->fill(['status'=>$medical_status]);
-            $medical->save();
-            $antrian=Antrian::where('medical_id',$id)->first();
-            $antrian->fill(['status'=>$antrian_status]);
-            $antrian->save();
-            $resep=Resep::where('medical_id',$id)->first();
+    public static function MedChangeStatus($rid,$medical_status,$antrian_status,$resep_status,$reservasi_status){
+            $resep=Resep::find($rid);
+            if($resep->medical_id){
+                $id=$resep->medical_id;
+                $medical=Medical::find($id);
+                $medical->fill(['status'=>$medical_status]);
+                $medical->save();
+                $antrian=Antrian::where('medical_id',$id)->first();
+                $antrian->fill(['status'=>$antrian_status]);
+                $antrian->save();
+                $reservasi=Reservasi::where('medical_id',$id)->first();
+                $reservasi->fill(['status'=>$reservasi_status]);
+                $reservasi->save();
+            }
             $resep->fill(['status'=>$resep_status]);
             $resep->save();
-            $reservasi=Reservasi::where('medical_id',$id)->first();
-            $reservasi->fill(['status'=>$reservasi_status]);
-            $reservasi->save();
+
     }
 }
 ?>

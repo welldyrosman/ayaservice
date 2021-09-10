@@ -125,7 +125,8 @@ class MedicalController extends Controller{
                     "barang_id"=>$barangid,
                     "iscomposite"=>$barang->isComposite,
                     "qty"=>$row['qty'],
-                    "unit"=>$barang->harga
+                    "unit"=>$barang->unit,
+                    "harga"=>$barang->harga
                 ]
             );
         }

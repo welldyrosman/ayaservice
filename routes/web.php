@@ -110,7 +110,10 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->post('/api/v1/apotekcheck','ApotekController@submitcheck');
     $router->get('/api/v1/listapotek','ApotekController@gettodaylist');
+
+
     $router->post('/api/v1/paymentsubmit','KasirController@submittrans');
+    $router->get('/api/v1/paymentlist','KasirController@gettodaylist');
 });
 
 
