@@ -109,6 +109,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->delete('/api/v1/obat/{id}','BarangController@deleteobat');
 
     $router->post('/api/v1/apotekcheck','ApotekController@submitcheck');
+    $router->get('/api/v1/listapotek','ApotekController@gettodaylist');
     $router->post('/api/v1/paymentsubmit','KasirController@submittrans');
 });
 
