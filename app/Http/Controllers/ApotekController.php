@@ -28,9 +28,12 @@ class ApotekController extends Controller
             $id=$data["resep_id"];
             $items=$request->input("preorder");
             foreach($items as $item){
-                //$resepdetail=DetailResep::
+                $resepdetail=DetailResep::where('resep_id')->where('barang_id',$item['barang_id'])->first();
+                $resepdetail->fill([
+                    "ispreorder"=>1
+                ]);
+                $resepdetail->save();
             }
-
             Tools::MedChangeStatus($id,3,3,2,5);
             DB::commit();
             return Tools::MyResponse(true,"OK",null,200);
