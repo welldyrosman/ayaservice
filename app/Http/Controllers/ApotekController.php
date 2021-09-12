@@ -28,7 +28,7 @@ class ApotekController extends Controller
             $id=$data["resep_id"];
             $items=$request->input("preorder");
             foreach($items as $item){
-                $resepdetail=DetailResep::where('resep_id')->where('barang_id',$item['barang_id'])->first();
+                $resepdetail=DetailResep::where('resep_id',$id)->where('barang_id',$item['barang_id'])->first();
                 $resepdetail->fill([
                     "ispreorder"=>1
                 ]);
