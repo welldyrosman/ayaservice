@@ -56,7 +56,8 @@ class MedicalController extends Controller{
         DB::beginTransaction();
         try{
             $this->saveaction($request,$id);
-            Tools::MedChangeStatus($id,3,3,2,5);
+            $resep=Resep::where('medical_id',$id);
+            Tools::MedChangeStatus($resep->id,3,3,2,5);
             DB::commit();
             return Tools::MyResponse(true,"Medical Data Has Been Saved",null,200);
 
