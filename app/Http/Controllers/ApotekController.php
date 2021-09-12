@@ -34,7 +34,7 @@ class ApotekController extends Controller
                 ]);
                 $resepdetail->save();
             }
-            Tools::MedChangeStatus($id,3,3,2,5);
+            Tools::MedChangeStatus($id,4,4,3,6);
             DB::commit();
             return Tools::MyResponse(true,"OK",null,200);
         }catch(Exception $e){
