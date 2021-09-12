@@ -133,14 +133,8 @@ class MedicalController extends Controller{
         $data=$request->all();
         $screenitems=$data['screenitems'];
         foreach($screenitems as $items){
-            if($item['id']==null){
-                MedicalScreen::create([
-                     "medical_id"=>$id,
-                     "poli_id"=>$id,
-                     "medkind_id"=>$id,
-                     "val_desc"=>$id,
-                     //"staff_id"=>$user
-                ]);
+            if($items['id']==null){
+                MedicalScreen::create($items);
             }else{
                 $medcr=MedicalScreen::find($items['id']);
                 $medcr->fill($items);
