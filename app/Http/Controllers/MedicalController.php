@@ -72,7 +72,7 @@ class MedicalController extends Controller{
             "screenitems.*.id"=>"required",
             "screenitems.*.medkind_id"=>"required",
             "screenitems.*.medform_id"=>"required",
-            "screenitems.*.val_desc"=>"required",
+           // "screenitems.*.val_desc"=>"required",
             "detail_resep.*.barang_id"=>"required",
             "detail_resep.*.qty"=>"required",
         ]);
