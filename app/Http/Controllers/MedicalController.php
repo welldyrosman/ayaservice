@@ -209,9 +209,6 @@ class MedicalController extends Controller{
             $pasien=Pasien::find($antrian->pasien_id);
             $screendata=MedicalScreen::where('medical_id',$antrian->medical_id)->get();
             $medical=Medical::find($antrian->medical_id);
-            $antrian->fill([
-                "status"=>"2"
-            ]);
             $resep=Resep::where('medical_id',$antrian->medical_id)->first();
             if(!$resep){
                 $resep=Resep::create([
@@ -219,11 +216,11 @@ class MedicalController extends Controller{
                     "status"=>"1"
                  ]);
             }
-            $antrian->save();
             $medical->fill([
                 "dokter_id"=>$dokter->id //hardcode temporary
             ]);
             $medical->save();
+            Tools::MedChangeStatus($resep->id,2,2,1,4);
             DB::commit();
             $ret=$this->detailmed($antrian->medical_id);
             return Tools::MyResponse(true,"OK",$ret,200);
