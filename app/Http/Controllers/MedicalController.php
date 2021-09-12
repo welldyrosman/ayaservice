@@ -134,6 +134,7 @@ class MedicalController extends Controller{
         $screenitems=$data['screenitems'];
         foreach($screenitems as $items){
             if($items['id']==null){
+                $items['medical_id']=$id;
                 MedicalScreen::create($items);
             }else{
                 $medcr=MedicalScreen::find($items['id']);
