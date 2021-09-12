@@ -69,7 +69,7 @@ class MedicalController extends Controller{
         $this->validate($request,[
             "treatment_kind"=>"required",
             "fee"=>"required",
-            "screenitems.*.id"=>"required",
+            // "screenitems.*.id"=>"required",
             "screenitems.*.medkind_id"=>"required",
             "screenitems.*.medform_id"=>"required",
            // "screenitems.*.val_desc"=>"required",
