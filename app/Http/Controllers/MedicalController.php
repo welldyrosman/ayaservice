@@ -154,7 +154,7 @@ class MedicalController extends Controller{
     }
     private function detailmed($id){
         $medical=new stdClass();
-        $medicalscren=DB::select("select f.*,f.id as medform_id,s.val_desc,k.nama as label_kind,k.datatype from medical m
+        $medicalscren=DB::select("select f.poli_id,f.medkind_id,f.dokter_only,s.created_at,s.updated_at,s.id,f.id as medform_id,s.val_desc,k.nama as label_kind,k.datatype from medical m
         join medform f on m.poli_id=f.poli_id
         left join medscreen s on f.id=s.medform_id and s.medical_id=m.id
         join medkind k on f.medkind_id=k.id
