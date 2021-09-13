@@ -35,7 +35,7 @@ class KasirController extends Controller
                 $medicalfee=$medid->fee;
             }
             $totalobat=DB::select("select sum(harga*qty) total from resep_detail r where r.resep_id=$id");
-            $bruto=$totalobat[0]['total'];
+            $bruto=$totalobat[0]->total;
             $totalnet=$bruto+$medicalfee-$resep->dicount;
             if($money<$totalnet){
                 throw new Exception("Payment Failed");
