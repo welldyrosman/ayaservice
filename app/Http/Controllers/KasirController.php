@@ -43,8 +43,7 @@ class KasirController extends Controller
             $resep->fill([
                 "pay_amt"=>$money
             ]);
-            $resep->obat();
-
+            $resep->save();
             Tools::MedChangeStatus($id,4,4,3,6);
             DB::commit();
             return Tools::MyResponse(true,"OK",["rest"=>$money-$totalnet],200);
