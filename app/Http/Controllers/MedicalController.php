@@ -108,7 +108,7 @@ class MedicalController extends Controller{
                     ItemOut::create([
                         "resep_id"=>$resepid,
                         "barang_id"=>$item['id'],
-                        "qty"=>$row['qty'],
+                        "qty"=>$item['qty']*$row['qty'],
                         "compositeitem"=>true
                     ]);
                 }
