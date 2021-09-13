@@ -24,7 +24,6 @@ class AntrianController extends Controller{
     public function getscreen(){
         try{
             $poli=Poli::all();
-
             $data=new stdClass();
             $onprocess=new stdClass();
             $now=Carbon::now()->toDateString();
@@ -46,6 +45,12 @@ class AntrianController extends Controller{
                 $antrislq=DB::select($query);
                 $process=DB::select($query2);
                 $data->{$p->id}=$antrislq;
+                if(count($process)<1){
+                    $schedule=DB::select("select ic.*,d.nama from poli_incharge ic join dokter d on ic.dokter_id=d.id
+                    where ic.poli_id='$p->id' and ic.praktek_date='$now'
+                    ");
+                    $p->dokter=count($schedule)<1?"Belum Diatur":$schedule[0]->nama;
+                }
                 $onprocess->{$p->id}=count($process)<1?$p:$process[0];
             }
             $ret=new stdClass();
