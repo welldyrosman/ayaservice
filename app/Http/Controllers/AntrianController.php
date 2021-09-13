@@ -49,7 +49,7 @@ class AntrianController extends Controller{
                     $schedule=DB::select("select ic.*,d.nama from poli_incharge ic join dokter d on ic.dokter_id=d.id
                     where ic.poli_id='$p->id' and ic.praktek_date='$now'
                     ");
-                    $p->dokter=count($schedule)<1?"Belum Diatur":$schedule[0]->nama;
+                    $p->dokter=count($schedule)<1?"Closed":$schedule[0]->nama;
                 }
                 $onprocess->{$p->id}=count($process)<1?$p:$process[0];
             }
