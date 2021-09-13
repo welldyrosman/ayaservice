@@ -83,10 +83,10 @@ class MedicalController extends Controller{
         }
         $resep=Resep::where('medical_id',$id)->first();
         if(!$resep){
-            $resep=Resep::create([
-                "medical_id"=>$id,
-                "status"=>"1"
-            ]
+                $resep=Resep::create([
+                    "medical_id"=>$id,
+                    "status"=>"1"
+                ]
             );
         }
         $detail_resep=$request->input("detail_resep");
@@ -136,7 +136,13 @@ class MedicalController extends Controller{
         foreach($screenitems as $items){
             if($items['id']==null){
                 $items['medical_id']=$id;
-                MedicalScreen::create($items);
+                $medcrcek=MedicalScreen::where('medform_id',$items['medform_id'])->where('medical_id',$items['medical_id'])->first();
+                if($medcrcek==null){
+                    MedicalScreen::create($items);
+                }else{
+                    $medcrcek->fill($items);
+                    $medcrcek->save();
+                }
             }else{
                 $medcr=MedicalScreen::find($items['id']);
                 $medcr->fill($items);
@@ -207,8 +213,6 @@ class MedicalController extends Controller{
             if($cekantian&&$cekantian->id!=$id){
                 throw new Exception("Cannot Process More Than 1 Pasien");
             }
-            $pasien=Pasien::find($antrian->pasien_id);
-            $screendata=MedicalScreen::where('medical_id',$antrian->medical_id)->get();
             $medical=Medical::find($antrian->medical_id);
             $resep=Resep::where('medical_id',$antrian->medical_id)->first();
             if(!$resep){
