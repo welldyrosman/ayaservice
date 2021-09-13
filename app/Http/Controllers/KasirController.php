@@ -8,6 +8,7 @@ use App\Models\Resep;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class KasirController extends Controller
@@ -57,5 +58,25 @@ class KasirController extends Controller
         left join medical m on r.medical_id=m.id
         left join pasiens p on m.pasien_id=p.id where cast(r.created_at as date)='$this->now' and r.status=3");
         return Tools::MyResponse(true,"OK",$med,200);
+    }
+    public function getpayitem($id){
+        $getresep=DB::select("select r.*,rd.barang_id,rd.qty,rd.unit,rd.harga,rd.harga*rd.qty as subtot,
+        b.nama
+        from resep r
+        left join resep_detail rd on r.id=rd.resep_id
+        join barang b on rd.barang_id=b.id
+        where r.id=20
+        ");
+        $resep=Resep::find($id);
+        $fee=0;
+        if($resep->medical_id){
+            $medical=Medical::find($resep->medical_id);
+            $fee=$medical->fee;
+        }
+        $ret=new stdClass();
+        $ret->resep=$resep;
+        $ret->fee=$fee;
+        $ret->detail_resep=$getresep;
+        return Tools::MyResponse(true,"OK",$ret,200);
     }
 }

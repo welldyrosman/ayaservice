@@ -117,6 +117,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->post('/api/v1/paymentsubmit','KasirController@submittrans');
     $router->get('/api/v1/paymentlist','KasirController@gettodaylist');
+    $router->get('/api/v1/paymentitem/{id}','KasirController@getpayitem');
+
 });
 
 
