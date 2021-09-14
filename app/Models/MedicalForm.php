@@ -13,6 +13,6 @@ class MedicalForm extends Model
      * @var array
      */
     protected $fillable = [
-        'poli_id', 'medkind_id','dokter_only'
+        'formkind_id', 'medkind_id','dokter_only'
     ];
 }

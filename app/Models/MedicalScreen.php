@@ -13,6 +13,6 @@ class MedicalScreen extends Model
      * @var array
      */
     protected $fillable = [
-        'medical_id', 'poli_id','medkind_id','medform_id','val_desc','staff_id'
+        'medical_id', 'poli_id','formkind_id','medkind_id','medform_id','val_desc','staff_id'
     ];
 }

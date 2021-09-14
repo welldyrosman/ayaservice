@@ -23,7 +23,7 @@ class ScreeningController extends Controller
     }
     private function getform($id){
         $data=DB::select("SELECT f.*,k.nama,k.datatype,f.id as medform_id FROM medform f
-        join medkind k on f.medkind_id=k.id where f.poli_id=$id
+        join medkind k on f.medkind_id=k.id where f.formkind_id=$id
     ;");
         return $data;
     }
@@ -44,6 +44,7 @@ class ScreeningController extends Controller
         try{
             $this->validate($request,[
                 "reservasi_id"=>"required",
+                "formkind_id"=>"required",
                 "screenitems.*.medkind_id"=>"required",
                 "screenitems.*.medform_id"=>"required",
                 "screenitems.*.val_desc"=>"required",
@@ -53,14 +54,15 @@ class ScreeningController extends Controller
                 throw new Exception($reservasi);
             }
             $token = $this->jwt->getToken();
-            //$user= Auth::guard('staff')->user($token);
+            $user= Auth::guard('staff')->user($token);
             $poliid=$reservasi->poli_id;
             $pasienid=$reservasi->pasien_id;
             $medicaldata=[
                 "poli_id"=>$poliid,
                 "pasien_id"=>$pasienid,
                 "status"=>"1",
-              //  "staff_id"=>$user->id
+                "staff_id"=>$user->id,
+                "formkind_id"=>$data["formkind_id"]
             ];
             $medical=Medical::create($medicaldata);
             $medicalid=$medical->id;
@@ -73,7 +75,8 @@ class ScreeningController extends Controller
                 if($medcr!=null){
                     throw new Exception("Cannot Input Same Item in one Form");
                 }
-              //  $items["staff_id"]=$user->id;
+                $items["formkind_id"]=$data["formkind_id"];
+                $items["staff_id"]=$user->id;
                 MedicalScreen::create($items);
             }
             if($reservasi->medical_id!=null){
@@ -108,10 +111,10 @@ class ScreeningController extends Controller
             if(!$antrian){
                 throw new Exception("Cannot Found Antrian");
             }
-            $getform=$this->getform($antrian->poli_id);
+            $medical=Medical::find($antrian->medical_id);
+            $getform=$this->getform($medical->formkind_id);
             $pasien=Pasien::find($antrian->pasien_id);
             $screendata=MedicalScreen::where('medical_id',$antrian->medical_id)->get();
-            $medical=Medical::find($antrian->medical_id);
             $antrian->fill([
                 "status"=>"2"
             ]);

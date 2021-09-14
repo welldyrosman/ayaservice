@@ -7,11 +7,28 @@ use App\Models\Poli;
 use App\Models\Staff;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\JWTAuth;
+
 class StaffController extends Controller
 {
+     public function __construct(JWTAuth $jwt)
+    {
+        $this->jwt = $jwt;
+
+    }
     public function getall(){
         $poli=Staff::all();
         return Tools::MyResponse(true,"OK",$poli,200);
+    }
+    public function staffchangepass(Request $request){
+        try{
+            $this->validate($request,[]);
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+        }catch(Exception $e){
+
+        }
     }
     public function getid($id){
        try{
