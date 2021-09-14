@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Antrian;
 use App\Models\Dokter;
+use App\Models\Formkind;
 use App\Models\Medical;
 use App\Models\MedicalScreen;
 use App\Models\Pasien;
@@ -20,6 +21,10 @@ class ScreeningController extends Controller
     public function __construct(JWTAuth $jwt)
     {
         $this->jwt = $jwt;
+    }
+    public function getFormkind($id){
+        $data=Formkind::where('poli_id',$id)->get();
+        return Tools::MyResponse(true,"OK",$data,200);
     }
     private function getform($id){
         $data=DB::select("SELECT f.*,k.nama,k.datatype,f.id as medform_id FROM medform f

@@ -86,6 +86,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
     $router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
+    $router->get('/api/v1/formkind/{id}','ScreeningController@getFormkind');
+
     $router->get('/api/v1/medicalform','MedicalformController@getall');
     $router->post('/api/v1/medicalform','MedicalformController@create');
 
