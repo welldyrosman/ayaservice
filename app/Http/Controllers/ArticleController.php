@@ -89,17 +89,20 @@ class ArticleController extends Controller
                 'thumbnail_img'=>'required|image',
             ],['required'=>':attribute cannot Empty']);
 
-
-            $current_avatar_path = storage_path($this->path) . '/' .$Article->thumbnail_img;
-            if (file_exists($current_avatar_path)) {
-              unlink($current_avatar_path);
-            }
-            $thumbnail = Str::random(34);
-            $ext=$request->file('thumbnail_img')->getClientOriginalExtension();
-            $this->filename=$thumbnail.'.'.$ext;
-            $request->file('thumbnail_img')->move(storage_path($this->path), $this->filename);
             $data=$request->all();
-            $data['thumbnail_img']=$this->filename;
+            $current_avatar_path = storage_path($this->path) . '/' .$Article->thumbnail_img;
+            if(key_exists('thumbnail_img',$data)){
+                if (file_exists($current_avatar_path)) {
+                unlink($current_avatar_path);
+                }
+
+                $thumbnail = Str::random(34);
+                $ext=$request->file('thumbnail_img')->getClientOriginalExtension();
+                $this->filename=$thumbnail.'.'.$ext;
+                $request->file('thumbnail_img')->move(storage_path($this->path), $this->filename);
+
+                $data['thumbnail_img']=$this->filename;
+            }
             $Article->fill($data);
             $Article->save();
             return Tools::MyResponse(true,"Article Was Updated",$Article,200);

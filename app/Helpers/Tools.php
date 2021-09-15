@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Antrian;
+use App\Models\Barang;
 use App\Models\Dokter;
 use App\Models\Medical;
 use App\Models\MedicalForm;
@@ -60,6 +61,17 @@ class Tools{
             throw new Exception("Cannot Found Dokter");
         }else{
             return $dokter;
+        }
+    }
+    public static function CheckObat($id){
+        $barang=Barang::find($id);
+        if(!$barang){
+            throw new Exception("Cannot Found Product");
+        }else{
+            if($barang->kind!=1){
+                throw new Exception("Hanya Boleh Memasukan Jenis Obat");
+            }
+            return $barang;
         }
     }
     public static function Checkpasien($id){

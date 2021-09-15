@@ -121,6 +121,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/paymentlist','KasirController@gettodaylist');
     $router->get('/api/v1/paymentitem/{id}','KasirController@getpayitem');
 
+    $router->post('/api/v1/obat-in','BarangInController@barangin');
 });
 
 
