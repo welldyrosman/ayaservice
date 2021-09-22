@@ -102,7 +102,7 @@ class MedicalController extends Controller{
             $row['resep_id']=$resepid;
             $row['harga']=$barang->harga;
             $row['iscomposite']=$barang->iscomposite;
-            if($barang->iscomposite!=0){
+            if($barang->iscomposite){
                 $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
                 foreach($itemcomposite as $item){
                     ItemOut::create([
