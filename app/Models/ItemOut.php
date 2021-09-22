@@ -13,6 +13,6 @@ class ItemOut extends Model
      * @var array
      */
     protected $fillable = [
-        'resep_id', 'barang_id'
+        'resep_id', 'barang_id','qty','compositeitem'
     ];
 }
