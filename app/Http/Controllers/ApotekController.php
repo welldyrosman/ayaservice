@@ -7,7 +7,9 @@ use App\Models\DetailResep;
 use App\Models\MedicalScreen;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 use Tymon\JWTAuth\JWTAuth;
 
 class ApotekController extends Controller
@@ -15,6 +17,8 @@ class ApotekController extends Controller
     public function __construct(JWTAuth $jwt)
     {
         $this->jwt = $jwt;
+        $token = $this->jwt->getToken();
+        $this->user= Auth::guard('staff')->user($token);
         $this->now=Carbon::now()->toDateString();
     }
     public function submitcheck(Request $request){
@@ -48,4 +52,5 @@ class ApotekController extends Controller
         left join pasiens p on m.pasien_id=p.id where cast(r.created_at as date)='$this->now' and r.status=2");
         return Tools::MyResponse(true,"OK",$med,200);
     }
+
 }

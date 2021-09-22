@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Barang;
+use App\Models\BarangIn;
 use App\Models\CompositeItem;
 use App\Models\Poli;
 use Illuminate\Support\Facades\DB;
@@ -119,12 +120,15 @@ class BarangController extends Controller
             if (!$barang) {
                 throw new Exception("Barang tidak ditemukan");
             }
-
             if($barang->iscomposite=="0"){
                 $haveparent=CompositeItem::where('barang_id',$id)->get();
                 if(count($haveparent)>0){
                     throw new Exception("this item is used by other item as composite item");
                 }
+            }
+            $barangin=BarangIn::where('barang_id',$id)->get();
+            if(count($barangin)>1){
+                throw new Exception("this item used by other data");
             }
             $barang->delete();
             DB::commit();

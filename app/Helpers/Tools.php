@@ -90,14 +90,14 @@ class Tools{
             return null;
         }
     }
-    public static function CheckMedkindinForm($medkindid,$poli,$medformid){
+    public static function CheckMedkindinForm($medkindid,$formkind_id,$medformid){
         $medkind=Medicalkind::find($medkindid);
         if(!$medkind){
             throw new Exception("cannot found Medical Kind");
         }
-        $medform=MedicalForm::where('medkind_id',$medkindid)->where('poli_id',$poli)->first();
+        $medform=MedicalForm::where('medkind_id',$medkindid)->where('formkind_id',$formkind_id)->first();
         if(!$medform){
-            throw new Exception("cannot found form in ".$poli.$medkindid);
+            throw new Exception("cannot found form in ".$formkind_id.$medkindid);
         }
         if($medform->id!=$medformid){
             throw new Exception("Form ID not match with poli and medkind");

@@ -75,7 +75,7 @@ class ScreeningController extends Controller
             foreach($screenitems as $items){
                 $items["medical_id"]=$medicalid;
                 $items["poli_id"]=$poliid;
-                Tools::CheckMedkindinForm($items["medkind_id"],$poliid,$items["medform_id"]);
+                Tools::CheckMedkindinForm($items["medkind_id"],$data["formkind_id"],$items["medform_id"]);
                 $medcr=MedicalScreen::where('medical_id',$medicalid)->where('medkind_id',$items["medkind_id"])->first();
                 if($medcr!=null){
                     throw new Exception("Cannot Input Same Item in one Form");
