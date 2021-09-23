@@ -60,6 +60,11 @@ class ApotekController extends Controller
         select * from inventories";
         return $sql;
     }
+    public function stockofname(){
+        $sql=$this->stockquery();
+        $data=DB::select($sql);
+        return Tools::MyResponse(true,"OK",$data,200);
+    }
     private function getemptyitem(){
         $sql=$this->stockquery().' where stock<1;';
         $data=DB::select($sql);
