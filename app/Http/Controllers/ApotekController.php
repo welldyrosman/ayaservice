@@ -83,6 +83,22 @@ class ApotekController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+    private function querypreorder(){
+        $sql="select r.created_at as buy_time,b.nama,rd.* from resep_detail rd
+            join resep r on rd.resep_id=r.id
+            join barang b on rd.barang_id=b.id
+            where ispreorder=1";
+        $data=DB::select($sql);
+        return $data;
+    }
+    public function getpreorder(){
+        try{
+            $data=$this->querypreorder();
+            return Tools::MyResponse(true,"OK",$data,200);
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     public function showwarnitem(){
         try{
             $data=$this->getwarnitem();
@@ -95,11 +111,32 @@ class ApotekController extends Controller
         try{
             $data=new stdClass();
             $data->empty=count($this->getemptyitem());
-            $data->preorder=10;
+            $data->preorder=count($this->querypreorder());
             $data->emptywarning=count($this->getwarnitem());
             $data->needprepare=10;
             return Tools::MyResponse(true,"OK",$data,200);
         }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function takepreorderitem($id){
+        DB::beginTransaction();
+        try{
+            $item=DetailResep::find($id);
+            if($item && $item->ispreorder){
+                $item->fill([
+                    "ispreorder"=>0,
+                    "preodr_staff"=>$this->user->id
+                ]);
+                $item->save();
+            }else{
+                throw new Exception("this not preorder item");
+            }
+            DB::commit();
+            return Tools::MyResponse(true,"OK",$item,200);
+        }
+        catch(Exception $e){
+            DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);
         }
     }

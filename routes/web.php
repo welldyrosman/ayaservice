@@ -119,6 +119,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/getemptyitem','ApotekController@showemptyitem');
     $router->get('/api/v1/getwarnitem','ApotekController@showwarnitem');
     $router->get('/api/v1/stockitem','ApotekController@stockofname');
+    $router->get('/api/v1/getpreorder','ApotekController@getpreorder');
+    $router->put('/api/v1/takemissitem/{id}','ApotekController@takepreorderitem');
 
 
     $router->post('/api/v1/paymentsubmit','KasirController@submittrans');

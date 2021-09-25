@@ -13,6 +13,6 @@ class DetailResep extends Model
      * @var array
      */
     protected $fillable = [
-        'resep_id', 'barang_id','isComposite','qty','unit','harga','ispreorder'
+        'resep_id', 'barang_id','isComposite','qty','unit','harga','ispreorder','preodr_staff'
     ];
 }
