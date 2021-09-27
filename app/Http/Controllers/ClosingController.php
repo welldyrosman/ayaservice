@@ -22,12 +22,19 @@ class ClosingController extends Controller
         $this->user= Auth::guard('staff')->user($token);
         $this->now=Carbon::now()->toDateString();
     }
-    private $sql="
-        with sumresep as (
-            select sum(rd.qty*rd.harga) as total,r.id,r.medical_id from resep r
-            join resep_detail rd on r.id=rd.resep_id
+    private function sqlresep($status){
+        $cmd="";
+        if($status==4){
+            $cmd.=" where r.status=4";
+        }
+        return "with sumresep as (
+            select ifnull(sum(rd.qty*rd.harga),0) as total,r.id,r.medical_id from resep r
+            left join resep_detail rd on r.id=rd.resep_id
+            $cmd
             group by r.id,r.medical_id
-        ),
+        ),".$this->sql;
+    }
+    private $sql="
         sumall as(
             select s.*,m.fee,s.total+m.fee as grand_total from sumresep s
             left join medical m on s.medical_id=m.id
@@ -46,8 +53,8 @@ class ClosingController extends Controller
         )";
     public function calcclosing(Request $request){
         try{
-            $inoutsql=" select *,in_amt-hand_over_amt as wait_hand_over from in_out";
-            $sql=DB::select($this->sql.$inoutsql);
+            $inoutsql=" select *,in_amt-over_amt as wait_hand_over from in_out";
+            $sql=DB::select($this->sqlresep(4).$inoutsql);
             return Tools::MyResponse(true,"OK",$sql,200);
 
         }catch(Exception $e){
@@ -57,9 +64,8 @@ class ClosingController extends Controller
     public function createhandover(){
         DB::beginTransaction();
         try{
-
             $sumoversql="select sum(total+fee) as total from recap";
-            $sumdata=DB::select($this->sql.$sumoversql);
+            $sumdata=DB::select($this->sqlresep(4).$sumoversql);
             if($sumdata[0]->total==null){
                 throw new Exception("No Data Need Caclculate");
             }
@@ -83,7 +89,7 @@ class ClosingController extends Controller
             }
             ClosingDetail::where("closing_id",$closing->id)->delete();
             $sumdetail="select * from recap";
-            $detdata=DB::select($this->sql.$sumdetail);
+            $detdata=DB::select($this->sqlresep(4).$sumdetail);
             foreach($detdata as $data){
                 ClosingDetail::create([
                     "closing_id"=>$closing->id,
