@@ -104,15 +104,24 @@ class MedicalController extends Controller{
             $row['iscomposite']=$barang->iscomposite;
             if($barang->iscomposite){
                 $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
+                if(count($itemcomposite)<1){
+                    throw new Exception($barang->id);
+                }
                 foreach($itemcomposite as $item){
+                    // if(!$item['id']){
+                    //     throw new Exception(json_encode($item));
+                    // }
                     ItemOut::create([
                         "resep_id"=>$resepid,
-                        "barang_id"=>$item['id'],
+                        "barang_id"=>$item['barang_id'],
                         "qty"=>$item['qty']*$row['qty'],
                         "compositeitem"=>true
                     ]);
                 }
             }else{
+                if(!$barangid){
+                    throw new Exception($barang->id);
+                }
                 ItemOut::create([
                     "resep_id"=>$resepid,
                     "barang_id"=>$barangid,
