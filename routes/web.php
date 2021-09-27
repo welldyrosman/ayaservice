@@ -139,6 +139,15 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
 
     $router->get('/api/v1/report/dailyincome','ReportController@dailyincomereport');
+
+    $router->post('/api/v1/handover','ClosingController@createhandover');
+    $router->get('/api/v1/handover','ClosingController@handoverlist');
+    $router->put('/api/v1/handover/{id}','ClosingController@gethandover');
+    $router->get('/api/v1/handover/{id}','ClosingController@detailGenerate');
+
+    $router->get('/api/v1/currenthandover','ClosingController@calcclosing');
+
+
 });
 
 

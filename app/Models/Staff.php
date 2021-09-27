@@ -31,6 +31,9 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
     protected $hidden = [
         'password',
     ];
+    public function closings() {
+        return $this->hasMany('App\Models\Closing');
+    }
     public function getJWTIdentifier()
     {
         return $this->getKey();
