@@ -26,7 +26,6 @@ class AuthController extends Controller
 
     public function __construct(JWTAuth $jwt)
     {
-
         $this->jwt = $jwt;
     }
     public function verify($id){

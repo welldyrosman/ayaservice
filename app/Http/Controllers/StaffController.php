@@ -8,6 +8,7 @@ use App\Models\Staff;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\JWTAuth;
 
 class StaffController extends Controller
@@ -90,6 +91,45 @@ class StaffController extends Controller
             $staff->save();
             return Tools::MyResponse(true,"Staff Was Updated",$staff,200);
         }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function changepass(Request $request){
+        DB::beginTransaction();
+        try{
+            $this->validate($request,[
+                "old_password"=>"required",
+                "new_password"=>"required",
+                "retype_password"=>"required",
+            ]);
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+            $staff=Staff::find($user->id);
+            $data=$request->all();
+            // throw new Exception(
+            //     json_encode(
+            //         [
+            //             "old_pass"=>$staff->password,
+            //             "new_pass"=>app('hash')->make($data["old_password"])
+            //         ]
+            //     )
+            // );
+            if(!Hash::check($data["old_password"],$staff->password)){
+                throw new Exception("Check your old password");
+            }else if(Hash::check($data["new_password"],$staff->password)){
+                throw new Exception("New Password Cannot same with before");
+            }else if($data["new_password"]!=$data["retype_password"]){
+                throw new Exception("New Password doesnt match");
+            }else{
+                $staff->fill([
+                    "password"=>app('hash')->make($data["new_password"])
+                ]);
+                $staff->save();
+                DB::commit();
+            }
+            return Tools::MyResponse(true,"OK",$staff,200);
+        }catch(Exception $e){
+            DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);
         }
     }
