@@ -126,7 +126,10 @@ class ClosingController extends Controller
         DB::beginTransaction();
         try{
             $closing=Closing::find($id);
-            if(!$closing||$closing->status!="1"){
+            if(!$closing){
+                throw new Exception("Cannot Found Rekap");
+            }
+            if($closing->status!="1"){
                 throw new Exception("Cannot Receive Before Rekap");
             }
             $closing->fill(["status"=>"2","receive_time"=>Carbon::now()]);
