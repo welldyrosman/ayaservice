@@ -136,6 +136,9 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/layanan','LayananController@create');
     $router->put('/api/v1/layanan/{id}','LayananController@update');
     $router->delete('/api/v1/layanan/{id}','LayananController@delete');
+
+
+    $router->get('/api/v1/report/dailyincome','ReportController@dailyincomereport');
 });
 
 

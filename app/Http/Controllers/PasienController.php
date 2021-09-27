@@ -320,27 +320,11 @@ class PasienController extends Controller
             "rowsPerPage"=>"required",
             "page"=>"required"
         ]);
-        $offset=$request->input('page')-1;
-        $rowsPerPage=$request->input('rowsPerPage');
+        $page=Tools::GenPagingQueryStr($request);
         $filter=$request->input('filter');
         $sort=$request->input('sort');
-        $cmd="";
-        if($filter){
-            foreach($filter as $key=>$value){
-                // if($key=="kode_pasien"){
-                //     // $digit=str_replace("AKP","", strtoupper($value));
-                //     // $value=is_numeric($digit)?intval($digit):"z";
-                //     $key="id";
-                // }
-                $cmd.=" AND $key LIKE '%$value%' ";
-            }
-        }
-        $orderby="";
-        if($sort||$sort!=""){
-            $pieces = explode(",", $sort);
-            $col=$pieces[0]=="kode_pasien"?"id":$pieces[0];
-            $orderby.=" order by $col $pieces[1]";
-        }
+        $cmd=Tools::GenFilterQueryStr($filter);
+        $orderby=Tools::GenSortQueryStr($sort);
         try{
             $pasien=DB::select("with t as(
                 select p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota
@@ -348,7 +332,7 @@ class PasienController extends Controller
                 from pasiens p
                 join t_propinsi pv on p.prov=pv.id
                 join t_kota kt on p.kota=kt.id_kota and p.prov=kt.id_prov
-                )select * from t where 1=1 $cmd $orderby LIMIT $rowsPerPage OFFSET $offset");
+                )select * from t where 1=1 $cmd $orderby $page");
             $data=new stdClass();
             $data->rows=$pasien;
             $data->count=Pasien::all()->count();
