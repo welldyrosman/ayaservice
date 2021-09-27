@@ -106,14 +106,6 @@ class StaffController extends Controller
             $user= Auth::guard('staff')->user($token);
             $staff=Staff::find($user->id);
             $data=$request->all();
-            // throw new Exception(
-            //     json_encode(
-            //         [
-            //             "old_pass"=>$staff->password,
-            //             "new_pass"=>app('hash')->make($data["old_password"])
-            //         ]
-            //     )
-            // );
             if(!Hash::check($data["old_password"],$staff->password)){
                 throw new Exception("Check your old password");
             }else if(Hash::check($data["new_password"],$staff->password)){

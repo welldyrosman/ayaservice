@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image as Image;
@@ -356,6 +357,37 @@ class PasienController extends Controller
             return Tools::MyResponse(true,"OK",$medical,200);
         }
         catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function changepass(Request $request){
+        DB::beginTransaction();
+        try{
+            $this->validate($request,[
+                "old_password"=>"required",
+                "new_password"=>"required",
+                "retype_password"=>"required",
+            ]);
+            $token = $this->jwt->getToken();
+            $userid= Auth::guard('api')->user($token);
+            $user=User::find($userid->id);
+            $data=$request->all();
+            if(!Hash::check($data["old_password"],$user->password)){
+                throw new Exception("Check your old password");
+            }else if(Hash::check($data["new_password"],$user->password)){
+                throw new Exception("New Password Cannot same with before");
+            }else if($data["new_password"]!=$data["retype_password"]){
+                throw new Exception("New Password doesnt match");
+            }else{
+                $user->fill([
+                    "password"=>app('hash')->make($data["new_password"])
+                ]);
+                $user->save();
+                DB::commit();
+            }
+            return Tools::MyResponse(true,"OK",$user,200);
+        }catch(Exception $e){
+            DB::rollBack();
             return Tools::MyResponse(false,$e,null,401);
         }
     }

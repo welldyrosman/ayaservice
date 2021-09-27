@@ -46,6 +46,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
     $router->get('/api/v1/pasien/medhist/{id}','PasienController@getmedhist');
 
+
+
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
 
     $router->post('/api/v1/staff/{id}','StaffController@create');
@@ -160,6 +162,8 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->get('/api/v1/myreservasihist','ReservasiController@myreservationhist');
     $router->get('/api/v1/mybio','PasienController@getbio');
     $router->post('/api/v1/pasien/{id}','PasienController@updatepasienoffline');
+
+    $router->put('/api/v1/pasien/changepass','PasienController@changepass');
 });
 
 $router->get('/api/v1/reservation/{id}','ReservasiController@getreservasibyid');
