@@ -67,7 +67,6 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->delete('/api/v1/article/{id}','ArticleController@delete');
     $router->post('/api/v1/article/{id}','ArticleController@update');
 
-    $router->get('/api/v1/dokter','DokterController@getall');
     $router->get('/api/v1/dokter/{id}','DokterController@getid');
     $router->post('/api/v1/dokter','DokterController@create');
     $router->delete('/api/v1/dokter/{id}','DokterController@delete');
@@ -128,6 +127,15 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/paymentitem/{id}','KasirController@getpayitem');
 
     $router->post('/api/v1/obat-in','BarangInController@barangin');
+
+
+
+
+    $router->get('/api/v1/layanan','LayananController@getall');
+    $router->get('/api/v1/layanan/{id}','LayananController@getid');
+    $router->post('/api/v1/layanan','LayananController@create');
+    $router->put('/api/v1/layanan/{id}','LayananController@update');
+    $router->delete('/api/v1/layanan/{id}','LayananController@delete');
 });
 
 
@@ -206,6 +214,7 @@ $router->get('/mail', function() {
 // });
 
 
+$router->get('/api/v1/dokter','DokterController@getall');
 
 
 $router->get('/key', function() {
