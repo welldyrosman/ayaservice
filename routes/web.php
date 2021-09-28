@@ -135,7 +135,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
 
 
-    $router->get('/api/v1/layanan','LayananController@getall');
+
     $router->get('/api/v1/layanan/{id}','LayananController@getid');
     $router->post('/api/v1/layanan','LayananController@create');
     $router->put('/api/v1/layanan/{id}','LayananController@update');
@@ -165,7 +165,8 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
 
     $router->put('/api/v1/pasien/changepass','PasienController@changepass');
 });
-
+$router->get('/api/v1/dokter','DokterController@getall');
+$router->get('/api/v1/layanan','LayananController@getall');
 $router->get('/api/v1/reservation/{id}','ReservasiController@getreservasibyid');
 
 
@@ -232,7 +233,7 @@ $router->get('/mail', function() {
 // });
 
 
-$router->get('/api/v1/dokter','DokterController@getall');
+
 
 
 $router->get('/key', function() {

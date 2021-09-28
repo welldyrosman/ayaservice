@@ -8,8 +8,17 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 class LayananController extends Controller
 {
-    public function getall(){
-        $Layanan=Layanan::all();
+    public function getall(Request $request){
+        $this->validate($request,[
+            "rowsPerPage"=>"required",
+            "page"=>"required"
+        ]);
+        $page=Tools::GenPagingQueryStr($request);
+        $filter=$request->input('filter');
+        $sort=$request->input('sort');
+        $cmd=Tools::GenFilterQueryStr($filter);
+        $orderby=Tools::GenSortQueryStr($sort);
+        $Layanan=DB::select(" select * from ourservice where 1=1 $cmd $orderby $page");
         return Tools::MyResponse(true,"OK",$Layanan,200);
     }
     public function getid($id){

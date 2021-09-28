@@ -94,6 +94,14 @@ class StaffController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+    public function resetpass(Request $request){
+        try{
+            $this->validate($request,["id"]);
+        }catch(Exception $e){
+
+        }
+
+    }
     public function changepass(Request $request){
         DB::beginTransaction();
         try{
