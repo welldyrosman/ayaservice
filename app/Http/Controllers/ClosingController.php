@@ -105,6 +105,13 @@ class ClosingController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+    public function needclosinglist(Request $request){
+        $sql="select *,CONCAT('TRX',LPAD(id,6,'0')) as kode_trans from sumall
+        where id not in(
+            select resep_id from closing_detail)";
+        $detdata=DB::select($this->sqlresep(4).$sql);
+        return Tools::MyResponse(true,"OK",$detdata,200);
+    }
     public function handoverlist(Request $request){
         $closing=Closing::with(["staff"])->get();
         return Tools::MyResponse(true,"OK",$closing,200);

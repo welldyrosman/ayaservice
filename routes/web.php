@@ -150,6 +150,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/handover/{id}','ClosingController@detailGenerate');
 
     $router->get('/api/v1/currenthandover','ClosingController@calcclosing');
+    $router->get('/api/v1/needclosinglist','ClosingController@needclosinglist');
 
 
 });
