@@ -10,6 +10,7 @@ use App\Models\Poli;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Validator;
+use stdClass;
 
 class BarangController extends Controller
 {
@@ -24,15 +25,32 @@ class BarangController extends Controller
         $barang=Barang::where('kind',$kind)->where('iscomposite',false)->get();
         return Tools::MyResponse(true,"OK",$barang,200);
     }
-    private function getall($kind){
-        $barang=Barang::where('kind',$kind)->get();
-        return Tools::MyResponse(true,"OK",$barang,200);
+    private function getall(Request $request, $kind){
+        try{
+            $this->validate($request,[
+                "rowsPerPage"=>"required",
+                "page"=>"required"
+            ]);
+            $page=Tools::GenPagingQueryStr($request);
+            $filter=$request->input('filter');
+            $sort=$request->input('sort');
+            $cmd=Tools::GenFilterQueryStr($filter);
+            $orderby=Tools::GenSortQueryStr($sort);
+            $all=Barang::where('kind',$kind)->get();
+            $barang=DB::select("select * from barang  where kind='$kind' $cmd $orderby $page");
+            $data=new stdClass();
+            $data->rows=$barang;
+            $data->count=count($all);
+            return Tools::MyResponse(true,"OK",$data,200);
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
-    public function getallobat(){
-        return $this->getall(1);
+    public function getallobat(Request $request){
+        return $this->getall($request,1);
     }
-    public function getallcosmetic(){
-        return $this->getall(2);
+    public function getallcosmetic(Request $request){
+        return $this->getall($request,2);
     }
     public function getidobat($id){
         return $this->getid($id,1);
