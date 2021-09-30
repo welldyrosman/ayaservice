@@ -66,14 +66,13 @@ class ClosingController extends Controller
         try{
             $sumoversql="select sum(total+fee) as total from recap";
             $sumdata=DB::select($this->sqlresep(4).$sumoversql);
-            if($sumdata[0]->total==null){
+            if(!$sumdata[0]->total){
                 throw new Exception("No Data Need Caclculate");
             }
-
             $closing=Closing::whereNotIn("status",[2,0])->first();
             if($closing){
                 $closing->fill([
-                    "closing_amt"=>$sumdata[0]["total"],
+                    "closing_amt"=>$sumdata[0]->total,
                     "closing_date"=>Carbon::now(),
                     "staff_id"=>$this->user->id,
                     "status"=>"1"
