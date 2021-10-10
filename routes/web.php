@@ -152,7 +152,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/currenthandover','ClosingController@calcclosing');
     $router->get('/api/v1/needclosinglist','ClosingController@needclosinglist');
 
-
+    $router->get('/api/v1/resepall','POSController@getresep');
+    $router->post('/api/v1/reseppos','POSController@savepos');
 });
 
 

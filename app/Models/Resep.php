@@ -13,6 +13,9 @@ class Resep extends Model
      * @var array
      */
     protected $fillable = [
-        'resep_time', 'staff_id','status','medical_id','discount'
+        'resep_time', 'staff_id','status','medical_id','discount','transtype','cust_nm','phone_no','pasien_id'
     ];
+    public function detailresep() {
+        return $this->hasMany('App\Models\DetailResep');
+    }
 }
