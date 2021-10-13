@@ -89,7 +89,14 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->get('/api/v1/screeningform/{id}','ScreeningController@screening');
     $router->post('/api/v1/submitscreen','ScreeningController@submitscreening');
+
     $router->get('/api/v1/formkind/{id}','ScreeningController@getFormkind');
+
+    $router->get('/api/v1/formkindid/{id}','FormkindController@getid');
+    $router->get('/api/v1/formkind','FormkindController@getall');
+    $router->post('/api/v1/formkind','FormkindController@create');
+    $router->delete('/api/v1/formkind/{id}','FormkindController@delete');
+    $router->put('/api/v1/formkind/{id}','FormkindController@update');
 
     $router->get('/api/v1/medicalform','MedicalformController@getall');
     $router->post('/api/v1/medicalform','MedicalformController@create');

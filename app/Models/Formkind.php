@@ -15,4 +15,7 @@ class Formkind extends Model
     protected $fillable = [
         'poli_id', 'kind_nm'
     ];
+    public function poli() {
+        return $this->belongsTo('App\Models\Poli');
+    }
 }

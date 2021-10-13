@@ -40,10 +40,7 @@ class POSController extends Controller
                 $dataresep["cust_nm"]=$data["cust_nm"];
                 $dataresep["phone_no"]=$data["phone_no"];
             }
-            $resep=Resep::create([
-                "status"=>"1",
-                "transtype"=>$transtype,
-            ]);
+            $resep=Resep::create($dataresep);
             $resepid=$resep->id;
             DetailResep::where('resep_id',$resepid)->delete();
             ItemOut::where('resep_id',$resepid)->delete();
