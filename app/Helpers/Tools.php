@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Antrian;
 use App\Models\Barang;
 use App\Models\Dokter;
+use App\Models\Formkind;
 use App\Models\Medical;
 use App\Models\MedicalForm;
 use App\Models\Medicalkind;
@@ -53,6 +54,14 @@ class Tools{
             throw new Exception("Cannot Found Poli");
         }else{
             return $poli;
+        }
+    }
+    public static function Checkformkind($id){
+        $Formkind=Formkind::find($id);
+        if(!$Formkind){
+            throw new Exception("Cannot Found Medical form");
+        }else{
+            return $Formkind;
         }
     }
     public static function CheckDokter($id){

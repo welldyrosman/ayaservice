@@ -5,12 +5,13 @@ use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Medicalform;
 use App\Models\Medicalkind;
+use App\Models\MedicalScreen;
 use Illuminate\Support\Facades\DB;
 use Exception;
 class MedicalformController extends Controller
 {
-    public function getall(){
-        $Medicalform=Medicalform::all();
+    public function getall($id){
+        $Medicalform=Medicalform::where('formkind_id',$id)->get();
         return Tools::MyResponse(true,"OK",$Medicalform,200);
     }
     public function getid($id){
@@ -29,15 +30,16 @@ class MedicalformController extends Controller
         $data = $request->all();
         try{
             $this->validate($request,[
-            'poli_id' => 'required',
+            'formkind_id' => 'required',
             'medkind_id' => 'required',
             ],['required'=>':attribute cannot Empty']);
             $medkind=Medicalkind::find($data['medkind_id']);
-            Tools::CheckPoli($data['poli_id']);
+            Tools::Checkformkind($data['formkind_id']);
             if(!$medkind){
                 throw new Exception("Cannot Found Medical Kind");
             }
             $Medicalform = Medicalform::create($data);
+
             return Tools::MyResponse(true,"OK",$Medicalform,200);
         }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
@@ -48,6 +50,10 @@ class MedicalformController extends Controller
             $Medicalform = Medicalform::find($id);
             if (!$Medicalform) {
                 throw new Exception("Medical kind tidak ditemukan");
+            }
+            $medscreen=MedicalScreen::where('formkind_id',$id)->get();
+            if(count($medscreen)>0){
+                throw new Exception("this form has been used, cannot delete");
             }
             $Medicalform->delete();
             return Tools::MyResponse(true,"Medicalform Was Deleted",null,200);

@@ -98,8 +98,9 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->delete('/api/v1/formkind/{id}','FormkindController@delete');
     $router->put('/api/v1/formkind/{id}','FormkindController@update');
 
-    $router->get('/api/v1/medicalform','MedicalformController@getall');
+    $router->get('/api/v1/medicalform/{id}','MedicalformController@getall');
     $router->post('/api/v1/medicalform','MedicalformController@create');
+    $router->delete('/api/v1/medicalform/{id}','MedicalformController@delete');
 
     $router->get('/api/v1/medical/{id}','MedicalController@getmeddet');
     $router->get('/api/v1/dokgetscreening/{id}','MedicalController@doktergetscreen');
