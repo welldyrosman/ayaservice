@@ -11,12 +11,12 @@ use Exception;
 class MedicalformController extends Controller
 {
     public function getall($id){
-        $Medicalform=Medicalform::where('formkind_id',$id)->get();
+        $Medicalform=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
         return Tools::MyResponse(true,"OK",$Medicalform,200);
     }
     public function getid($id){
        try{
-            $Medicalform=Medicalform::find($id);
+            $Medicalform=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
             if (!$Medicalform) {
                 throw new Exception("Medical kind tidak ditemukan");
             }
