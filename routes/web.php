@@ -94,6 +94,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->get('/api/v1/formkindid/{id}','FormkindController@getid');
     $router->get('/api/v1/formkind','FormkindController@getall');
+    $router->get('/api/v1/formkind/unselect/{id}','FormkindController@getunselect');
     $router->post('/api/v1/formkind','FormkindController@create');
     $router->delete('/api/v1/formkind/{id}','FormkindController@delete');
     $router->put('/api/v1/formkind/{id}','FormkindController@update');

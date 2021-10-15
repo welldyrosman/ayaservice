@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Formkind;
 use App\Models\MedicalForm;
+use App\Models\Medicalkind;
 use App\Models\Poli;
 use Exception;
 use Illuminate\Support\Str;
@@ -56,6 +57,18 @@ class FormkindController extends Controller
             }
             $Formkind->delete();
             return Tools::MyResponse(true,"Formkind Was Deleted",null,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function getunselect($id){
+        try{
+            $Medicalkind = Medicalkind::whereNotIn('id',MedicalForm::select('medkind_id')->where('formkind_id',$id))->get();
+            if (!$Medicalkind) {
+                throw new Exception("Medicalkind tidak ditemukan");
+            }
+            return Tools::MyResponse(true,"OK",$Medicalkind,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
