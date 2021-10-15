@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
-use App\Models\Medicalform;
-use App\Models\Medicalkind;
+use App\Models\MedicalForm;
+use App\Models\MedicalKind;
 use App\Models\MedicalScreen;
 use Illuminate\Support\Facades\DB;
 use Exception;
