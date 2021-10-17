@@ -4,23 +4,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\MedicalForm;
-use App\Models\MedicalKind;
+use App\Models\Medicalkind;
 use App\Models\MedicalScreen;
 use Illuminate\Support\Facades\DB;
 use Exception;
-class MedicalformController extends Controller
+class MedicalFormController extends Controller
 {
     public function getall($id){
-        $Medicalform=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
-        return Tools::MyResponse(true,"OK",$Medicalform,200);
+        $MedicalForm=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
+        return Tools::MyResponse(true,"OK",$MedicalForm,200);
     }
     public function getid($id){
        try{
-            $Medicalform=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
-            if (!$Medicalform) {
+            $MedicalForm=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
+            if (!$MedicalForm) {
                 throw new Exception("Medical kind tidak ditemukan");
             }
-            return Tools::MyResponse(true,"OK",$Medicalform,200);
+            return Tools::MyResponse(true,"OK",$MedicalForm,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
@@ -38,25 +38,25 @@ class MedicalformController extends Controller
             if(!$medkind){
                 throw new Exception("Cannot Found Medical Kind");
             }
-            $Medicalform = Medicalform::create($data);
+            $MedicalForm = MedicalForm::create($data);
 
-            return Tools::MyResponse(true,"OK",$Medicalform,200);
+            return Tools::MyResponse(true,"OK",$MedicalForm,200);
         }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
     }
     public function delete($id){
         try{
-            $Medicalform = Medicalform::find($id);
-            if (!$Medicalform) {
+            $MedicalForm = MedicalForm::find($id);
+            if (!$MedicalForm) {
                 throw new Exception("Medical kind tidak ditemukan");
             }
             $medscreen=MedicalScreen::where('formkind_id',$id)->get();
             if(count($medscreen)>0){
                 throw new Exception("this form has been used, cannot delete");
             }
-            $Medicalform->delete();
-            return Tools::MyResponse(true,"Medicalform Was Deleted",null,200);
+            $MedicalForm->delete();
+            return Tools::MyResponse(true,"MedicalForm Was Deleted",null,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
@@ -64,17 +64,17 @@ class MedicalformController extends Controller
     }
     public function update(Request $request,$id){
         try{
-            $Medicalform=Medicalform::find($id);
-            if(!$Medicalform){
-                throw new Exception("Medicalform Tidak Ditemukan");
+            $MedicalForm=MedicalForm::find($id);
+            if(!$MedicalForm){
+                throw new Exception("MedicalForm Tidak Ditemukan");
             }
             $this->validate($request,[
-                'Medicalform' => 'required',
+                'MedicalForm' => 'required',
                 'ruangan' => 'required'],['required'=>':attribute cannot Empty']);
             $data=$request->all();
-            $Medicalform->fill($data);
-            $Medicalform->save();
-            return Tools::MyResponse(true,"Medicalform Was Updated",$Medicalform,200);
+            $MedicalForm->fill($data);
+            $MedicalForm->save();
+            return Tools::MyResponse(true,"MedicalForm Was Updated",$MedicalForm,200);
         }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
