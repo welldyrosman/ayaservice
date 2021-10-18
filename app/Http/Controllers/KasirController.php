@@ -7,6 +7,7 @@ use App\Models\Medical;
 use App\Models\Resep;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -40,8 +41,11 @@ class KasirController extends Controller
             if($money<$totalnet){
                 throw new Exception("Payment Failed");
             }
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
             $resep->fill([
-                "pay_amt"=>$money
+                "pay_amt"=>$money,
+                "staff_id"=>$user->id
             ]);
             $resep->save();
             Tools::MedChangeStatus($id,5,5,4,7);
