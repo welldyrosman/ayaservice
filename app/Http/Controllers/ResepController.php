@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Resep;
 use Illuminate\Support\Facades\DB;
+use Exception;
 class ResepController extends Controller
 {
     public function getall(Request $request){

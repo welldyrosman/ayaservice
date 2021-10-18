@@ -16,6 +16,12 @@ class Resep extends Model
         'resep_time', 'staff_id','status','medical_id','discount','transtype','cust_nm','phone_no','pasien_id'
     ];
     public function detailresep() {
-        return $this->hasMany('App\Models\DetailResep');
+        return $this->hasMany(DetailResep::class);
+    }
+    public function medical() {
+        return $this->belongsTo(Medical::class);
+    }
+    public function staff() {
+        return $this->belongsTo(Staff::class);
     }
 }

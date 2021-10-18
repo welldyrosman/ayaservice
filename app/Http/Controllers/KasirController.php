@@ -82,4 +82,5 @@ class KasirController extends Controller
         $ret->detail_resep=$getresep;
         return Tools::MyResponse(true,"OK",$ret,200);
     }
+
 }
