@@ -79,7 +79,7 @@ class AdminController extends Controller
                 "graph"=>["catagories"=>$catagaories,"data"=>$datagraph],
                 "pie"=>["series"=>$series,"labels"=>$labels],
                 "pasien"=>$pasien,
-                "amt"=>DB::select("select ifnull(sum(closing_amt),0)amt from closing where cast(created_at as date)=current_date() and status=2")
+                "amt"=>DB::select("select if null(sum(closing_amt),0)amt from closing where cast(created_at as date)=current_date() and status=2")
             ];
             return Tools::MyResponse(true,"OK",$data,200);
         }catch(Exception $e){

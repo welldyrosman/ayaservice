@@ -168,6 +168,12 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->get('/api/v1/resepall','POSController@getresep');
     $router->post('/api/v1/reseppos','POSController@savepos');
+
+    $router->put('/api/v1/testimoni/publish/{id}','TestimoniController@publish');
+    $router->put('/api/v1/testimoni/unpublish/{id}','TestimoniController@unpublish');
+    $router->get('/api/v1/testimoni','TestimoniController@getalltesti');
+    $router->post('/api/v1/testimoni/staff','TestimoniController@create');
+    $router->delete('/api/v1/testimoni/staff/{id}','TestimoniController@delete');
 });
 
 
@@ -179,11 +185,18 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
     $router->get('/api/v1/mybio','PasienController@getbio');
     $router->post('/api/v1/pasien/{id}','PasienController@updatepasienoffline');
 
+    $router->post('/api/v1/testimoni/pasien','TestimoniController@givetesti');
+    $router->delete('/api/v1/testimoni/pasien/{id}','TestimoniController@deletepasien');
+
     $router->put('/api/v1/pasien/changepass','PasienController@changepass');
 });
 $router->get('/api/v1/dokter','DokterController@getall');
 $router->get('/api/v1/layanan','LayananController@getall');
 $router->get('/api/v1/reservation/{id}','ReservasiController@getreservasibyid');
+
+
+$router->get('/api/v1/testimoni/{id}','TestimoniController@gettetibyid');
+$router->get('/api/v1/testimonipublish','TestimoniController@gettestipublish');
 
 
 $router->get('/tools/alltask','TaskController@getAllTask');
