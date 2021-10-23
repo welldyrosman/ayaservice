@@ -138,7 +138,7 @@ class ClosingController extends Controller
     public function detailGenerateUnclose(){
         try{
             $detailtrans=DB::select("
-select cd.*,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing c
+select cd.*,CONCAT('TRX',LPAD(cd.resep_id,6,'0')) as trans_kode from closing c
 join closing_detail cd on c.id=cd.closing_id
 where c.status=1");
             if(count($detailtrans)<1){
