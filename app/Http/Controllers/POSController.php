@@ -97,6 +97,15 @@ class POSController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+    public function getresepbyid($id){
+        try
+       {
+           $resep=Resep::where('id',$id)->with(["detailresep"])->get();
+        return Tools::MyResponse(true,"OK",$resep,200);
+    } catch(Exception $e){
+        return Tools::MyResponse(false,$e,null,401);
+    }
+    }
     public function getresep(){
         $resep=Resep::with(["detailresep"])->get();
         return Tools::MyResponse(true,"OK",$resep,200);

@@ -168,8 +168,9 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/currenthandover','ClosingController@calcclosing');
     $router->get('/api/v1/needclosinglist','ClosingController@needclosinglist');
 
-    $router->get('/api/v1/resepall','POSController@getresep');
+    $router->get('/api/v1/resep','POSController@getresep');
     $router->post('/api/v1/reseppos','POSController@savepos');
+    $router->get('/api/v1/resep/{id}','POSController@getresepbyid');
 
     $router->put('/api/v1/testimoni/publish/{id}','TestimoniController@publish');
     $router->put('/api/v1/testimoni/unpublish/{id}','TestimoniController@unpublish');
