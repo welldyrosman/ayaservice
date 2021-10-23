@@ -25,7 +25,7 @@ class POSController extends Controller
             $transtype=$data["transtype"];
 
             $dataresep=[
-                "status"=>"1",
+                "status"=>"3",
                 "transtype"=>$transtype];
             if($transtype=="2"){
                 $this->validate($request,[
