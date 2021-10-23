@@ -56,6 +56,15 @@ class KasirController extends Controller
             return Tools::MyResponse(false,$e,null,401);
        }
     }
+    public function getdetailcomposite($barangid,$resepid){
+        try{
+            $dt=DB::select("select b.*,o.qty from barang_out o
+            join barang b on o.barang_id=b.id where o.barang_id=$barangid and o.resep_id=$resepid");
+            return Tools::MyResponse(true,"OK",$dt,200);
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+       }
+    }
     public function gettodaylist(){
         $med=DB::select("select r.*,CONCAT('MED-',LPAD(r.id,6,'0')) as kode_trans,p.nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
         left join medical m on r.medical_id=m.id

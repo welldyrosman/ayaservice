@@ -187,7 +187,7 @@ class MedicalController extends Controller{
         left join dokter d on m.dokter_id=d.id
         join pasiens u on m.pasien_id=u.id
         where m.id=$id");
-        $resep=DB::select("select b.id,d.iscomposite,d.qty,d.unit,b.harga,b.nama from resep r
+        $resep=DB::select("select b.id,b.iscomposite,d.qty,d.unit,b.harga,b.nama from resep r
         join resep_detail d on r.id=d.resep_id
         join barang b on d.barang_id=b.id and kind=1
         where r.medical_id=$id");
