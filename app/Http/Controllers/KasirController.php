@@ -66,7 +66,8 @@ class KasirController extends Controller
        }
     }
     public function gettodaylist(){
-        $med=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,p.nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
+        $med=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
+        case when p.id is not null then p.nama else cust_nm end as nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
         left join medical m on r.medical_id=m.id
         left join pasiens p on m.pasien_id=p.id where cast(r.created_at as date)='$this->now' and r.status=3");
         return Tools::MyResponse(true,"OK",$med,200);
