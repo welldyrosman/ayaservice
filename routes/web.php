@@ -218,6 +218,8 @@ $router->get('/tools/desa/{idprov}/{idkota}/{idkec}','AddressController@getdes')
 
 $router->get('/api/v1/medicalkind','MedicalkindController@getall');
 $router->post('/api/v1/medicalkind','MedicalkindController@create');
+$router->delete('/api/v1/medicalkind/{id}','MedicalkindController@delete');
+
 
 $router->get('/api/v1/screen','AntrianController@getscreen');
 
