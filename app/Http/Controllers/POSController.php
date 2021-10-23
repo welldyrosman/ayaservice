@@ -89,6 +89,7 @@ class POSController extends Controller
                     ]
                 );
             }
+            DB::commit();
             return Tools::MyResponse(true,"Medical Data Has Been Saved",null,200);
         }
         catch(Exception $e){
