@@ -42,9 +42,9 @@ class ClosingController extends Controller
         in_out as(
             select
                 (select sum(grand_total) as in_amt from sumall) as in_amt,
-                (select ifnull(sum(closing_amt),0) as total_in from closing) as over_amt,
-                (select ifnull(sum(closing_amt),0) as total_in from closing where status=1) as recap_over_amt,
-                (select ifnull(sum(closing_amt),0) as total_in from closing where status=2) as hand_over_amt
+                (select sum(ifnull(closing_amt,0)) as total_in from closing) as over_amt,
+                (select sum(ifnull(closing_amt,0)) as total_in from closing where status=1) as recap_over_amt,
+                (select sum(ifnull(closing_amt,0)) as total_in from closing where status=2) as hand_over_amt
                 from dual
         ),
         recap as (
