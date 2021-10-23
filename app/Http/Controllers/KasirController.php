@@ -69,11 +69,12 @@ class KasirController extends Controller
         $med=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
         case when r.medical_id is not null then p.nama
         when r.medical_id is null and r.pasien_id is not null then p2.nama
-        else r.cust_nm end as nama,
+        else r.cust_nm end as nama,s.nama_staff
         CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
         left join medical m on r.medical_id=m.id
         left join pasiens p on m.pasien_id=p.id
         left join pasiens p2 on r.pasien_id=p2.id
+        left join staff s on r.staff_id=s.id
         where cast(r.created_at as date)='$this->now' and r.status=3");
         return Tools::MyResponse(true,"OK",$med,200);
     }
