@@ -182,7 +182,7 @@ class MedicalController extends Controller{
         where m.id=$id");
         $medicalform=DB::select("
         select m.*,p.poli,d.nama as dokter,u.nama as pasien,
-        (select CONCAT('TRX',LPAD(id,6,'0')) from resep where medical_id=m.id) as code_reg
+        (select CONCAT('TRX',LPAD(id,6,'0')) from resep where medical_id=m.id) as code_trans
         from medical m
         join poli p on m.poli_id=p.id
         left join dokter d on m.dokter_id=d.id
