@@ -132,9 +132,10 @@ class Tools{
         return $orderby;
     }
     public static function GenPagingQueryStr(Request $request){
-        $offset=$request->input('page')-1;
+        $offset=$request->input('page');
         $rowsPerPage=$request->input('rowsPerPage');
-        return "LIMIT $rowsPerPage OFFSET $offset";
+        $page=($offset*$rowsPerPage)-$rowsPerPage;
+        return "LIMIT  $rowsPerPage OFFSET $page";
     }
     public static function MedChangeStatus($rid,$medical_status,$antrian_status,$resep_status,$reservasi_status){
             $resep=Resep::find($rid);
