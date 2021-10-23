@@ -8,10 +8,17 @@ use App\Models\DetailResep;
 use App\Models\ItemOut;
 use App\Models\Resep;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
+use Tymon\JWTAuth\JWTAuth;
 
 class POSController extends Controller
 {
+    public function __construct(JWTAuth $jwt)
+    {
+        $this->jwt = $jwt;
+    }
     public function savepos(Request $request){
         DB::beginTransaction();
         try{
@@ -23,9 +30,11 @@ class POSController extends Controller
             ]);
             $data=$request->all();
             $transtype=$data["transtype"];
-
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
             $dataresep=[
                 "status"=>"3",
+                "staff_id"=>$user->id,
                 "transtype"=>$transtype];
             if($transtype=="2"){
                 $this->validate($request,[
@@ -100,11 +109,20 @@ class POSController extends Controller
     public function getresepbyid($id){
         try
        {
-           $resep=Resep::where('id',$id)->with(["detailresep"])->get();
-        return Tools::MyResponse(true,"OK",$resep,200);
-    } catch(Exception $e){
-        return Tools::MyResponse(false,$e,null,401);
-    }
+        $resep=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
+        case when p.id is not null then p.nama else cust_nm end as nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
+        left join pasiens p on r.pasien_id=p.id where r.id=$id");
+          // $resep=Resep::where('id',$id)->with(["detailresep.barang"])->first();
+           $deatail=DB::select("select rd.*,b.nama from resep_detail rd
+           join barang b on rd.barang_id=b.id where rd.resep_id=$id
+           ");
+           $data=new stdClass();
+           $data->form=$resep;
+           $data->resep=$deatail;
+            return Tools::MyResponse(true,"OK",$data,200);
+        } catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
     public function getresep(){
         $resep=Resep::with(["detailresep"])->get();

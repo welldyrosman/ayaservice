@@ -180,8 +180,9 @@ class MedicalController extends Controller{
         left join medscreen s on f.id=s.medform_id and s.medical_id=m.id
         join medkind k on f.medkind_id=k.id
         where m.id=$id");
-        $medicalform=DB::select("select m.*,p.poli,d.nama as dokter,u.nama as pasien,
-        (select CONCAT('REG',LPAD(id,6,'0')) from reservasi where medical_id=m.id) as code_reg
+        $medicalform=DB::select("
+        select m.*,p.poli,d.nama as dokter,u.nama as pasien,
+        (select CONCAT('TRX',LPAD(r.id,6,'0')) from resep where medical_id=m.id) as code_reg
         from medical m
         join poli p on m.poli_id=p.id
         left join dokter d on m.dokter_id=d.id

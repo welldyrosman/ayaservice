@@ -15,6 +15,9 @@ class DetailResep extends Model
     protected $fillable = [
         'resep_id', 'barang_id','isComposite','qty','unit','harga','ispreorder','preodr_staff'
     ];
+    public function barang() {
+        return $this->belongsTo('App\Models\Barang');
+    }
     public function reseps() {
         return $this->belongsTo('App\Models\Resep');
     }
