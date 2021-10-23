@@ -109,9 +109,18 @@ class POSController extends Controller
     public function getresepbyid($id){
         try
        {
-        $resep=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
-        case when p.id is not null then p.nama else cust_nm end as nama,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
-        left join pasiens p on r.pasien_id=p.id where r.id=$id");
+        $resep=DB::select("
+        select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
+        case when r.medical_id is not null then p.nama
+        when r.medical_id is null and r.pasien_id is not null then p2.nama
+        else r.cust_nm end as nama,
+        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama_staff
+        from resep r
+        left join medical m on r.medical_id=m.id
+        left join pasiens p on r.pasien_id=p.id
+        left join pasiens p2 on r.pasien_id=p2.id
+        left join staff s on r.staff_id=s.id
+        where r.id=$id");
           // $resep=Resep::where('id',$id)->with(["detailresep.barang"])->first();
            $deatail=DB::select("select rd.*,b.nama from resep_detail rd
            join barang b on rd.barang_id=b.id where rd.resep_id=$id
