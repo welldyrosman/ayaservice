@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Medicalkind;
+use App\Models\MedicalScreen;
 use Illuminate\Support\Facades\DB;
 use Exception;
 class MedicalkindController extends Controller
@@ -42,6 +43,10 @@ class MedicalkindController extends Controller
             $Medicalkind = Medicalkind::find($id);
             if (!$Medicalkind) {
                 throw new Exception("Medical kind tidak ditemukan");
+            }
+            $medscreen=MedicalScreen::where('medkind_id',$id)->first();
+            if($medscreen){
+                throw new Exception("tidak bisa hapus medical kind yang sedang digunakan");
             }
             $Medicalkind->delete();
             return Tools::MyResponse(true,"Medicalkind Was Deleted",null,200);

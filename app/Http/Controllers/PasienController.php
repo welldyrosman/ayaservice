@@ -328,12 +328,18 @@ class PasienController extends Controller
         $orderby=Tools::GenSortQueryStr($sort);
         try{
             $pasien=DB::select("with t as(
-                select p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota
+                select
+                case when u.id is not null and u.email_verified_at is null then 0
+                when u.id is null then 1
+                when u.id is not null and u.email_verified_at is not null then 1 end as active_user
+                ,
+                p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota
                 ,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien
                 from pasiens p
+                left join users u on p.email=u.email
                 join t_propinsi pv on p.prov=pv.id
                 join t_kota kt on p.kota=kt.id_kota and p.prov=kt.id_prov
-                )select * from t where 1=1 $cmd $orderby $page");
+            )select * from t where 1=1 $cmd $orderby $page");
             $data=new stdClass();
             $data->rows=$pasien;
             $data->count=Pasien::all()->count();
