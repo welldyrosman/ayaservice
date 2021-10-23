@@ -116,17 +116,38 @@ class ClosingController extends Controller
         return Tools::MyResponse(true,"OK",$closing,200);
     }
     public function detailGenerate($id){
-        $detailtrans=DB::select("
-            with sumresep as(
-            select sum(rd.qty*rd.harga) as total,r.id,r.medical_id from resep r
-                join resep_detail rd on r.id=rd.resep_id
-                group by r.id,r.medical_id
-            ) select *,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing_detail cd
-            join sumresep sr on cd.resep_id=sr.id where cd.closing_id=$id");
-        if($detailtrans[0]->total==null){
-            throw new Exception("Cannot Founf Closing Data");
+        try{
+            $detailtrans=DB::select("
+                with sumresep as(
+                select sum(rd.qty*rd.harga) as total,r.id,r.medical_id from resep r
+                    join resep_detail rd on r.id=rd.resep_id
+                    group by r.id,r.medical_id
+                ) select *,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing_detail cd
+                join sumresep sr on cd.resep_id=sr.id where cd.closing_id=$id");
+            if(count($detailtrans)<1){
+                throw new Exception("No Closing data");
+            }
+            if($detailtrans[0]->total==null){
+                throw new Exception("Cannot Founf Closing Data");
+            }
+            return Tools::MyResponse(true,"OK",$detailtrans,200);
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
         }
-        return Tools::MyResponse(true,"OK",$detailtrans,200);
+    }
+    public function detailGenerateUnclose(){
+        try{
+            $detailtrans=DB::select("
+select cd.*,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing c
+join closing_detail cd on c.id=cd.closing_id
+where c.status=1");
+            if(count($detailtrans)<1){
+                throw new Exception("No Closing data");
+            }
+            return Tools::MyResponse(true,"OK",$detailtrans,200);
+        }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
     }
     public function gethandover($id){
         DB::beginTransaction();
