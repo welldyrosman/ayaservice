@@ -30,7 +30,11 @@ class ResepController extends Controller
             when r.medical_id is null and r.pasien_id is not null then p2.nama
             else r.cust_nm end as nama,
             CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
-            s.nama as nama_staff
+
+            case when r.transtype=1 then p.no_telp
+            when r.transtype=2 then p2.no_telp
+            else r.phone_no end as no_telp,
+            s.nama as nama_staff,dr.total as grand_total
             from resep r
             left join sumd dr on r.id=dr.resep_id
             left join medical m on r.medical_id=m.id
