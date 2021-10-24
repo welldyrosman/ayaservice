@@ -117,7 +117,7 @@ class POSController extends Controller
         CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama as nama_staff
         from resep r
         left join medical m on r.medical_id=m.id
-        left join pasiens p on r.pasien_id=p.id
+        left join pasiens p on m.pasien_id=p.id
         left join pasiens p2 on r.pasien_id=p2.id
         left join staff s on r.staff_id=s.id
         where r.id=$id");
