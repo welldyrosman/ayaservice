@@ -117,12 +117,16 @@ class POSController extends Controller
         case when r.transtype=1 then p.no_telp
         when r.transtype=2 then p2.no_telp
         else r.phone_no end as no_telp,
-        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama as nama_staff
+        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama as nama_staff,
+        rd.grand_total
         from resep r
         left join medical m on r.medical_id=m.id
         left join pasiens p on m.pasien_id=p.id
         left join pasiens p2 on r.pasien_id=p2.id
         left join staff s on r.staff_id=s.id
+        left join (
+            select sum(qty*harga) as grand_total,resep_id from resep_detail group by resep_id
+            )rd on rd.resep_id=r.id
         where r.id=$id");
           // $resep=Resep::where('id',$id)->with(["detailresep.barang"])->first();
            $deatail=DB::select("select rd.*,b.nama from resep_detail rd
