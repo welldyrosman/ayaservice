@@ -114,7 +114,7 @@ class POSController extends Controller
         case when r.medical_id is not null then p.nama
         when r.medical_id is null and r.pasien_id is not null then p2.nama
         else r.cust_nm end as nama,
-        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama_staff
+        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama as nama_staff
         from resep r
         left join medical m on r.medical_id=m.id
         left join pasiens p on r.pasien_id=p.id
