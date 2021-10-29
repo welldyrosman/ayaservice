@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Dokter;
+use App\Models\Medical;
 use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -83,6 +84,10 @@ class DokterController extends Controller
             if (!$Dokter) {
                 throw new Exception("Dokter tidak ditemukan");
             }
+            $med=Medical::where("dokter_id",$Dokter->id)->first();
+            if($med){
+                throw new Exception("Tidak bisa Delete, Dokter Sudah Punya Riwayat Melayani");
+            }
             $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
@@ -94,6 +99,7 @@ class DokterController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+
     public function update(Request $request,$id){
         try{
             $Dokter=Dokter::find($id);

@@ -75,6 +75,9 @@ class AuthController extends Controller
         }
         $token=compact('token')['token'];
         $user= Auth::guard('staff')->user($token);
+        if($user->stop_mk=='Y'){
+            throw new Exception("This Account is Banned");
+        }
         $data=[
             "data"=>$user,
             "token"=>$token

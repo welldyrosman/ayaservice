@@ -20,7 +20,7 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
      * @var array
      */
     protected $fillable = [
-        'nama', 'email','password','role_id'
+        'nama', 'email','password','role_id','stop_mk'
     ];
 
     /**

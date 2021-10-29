@@ -62,14 +62,29 @@ class StaffController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
-    public function delete($id){
+    public function disabled($id){
         try{
             $staff = Staff::find($id);
             if (!$staff) {
                 throw new Exception("Staff tidak ditemukan");
             }
-            $staff->delete();
-            return Tools::MyResponse(true,"Staff Was Deleted",null,200);
+            $staff->fill(["stop_mk"=>"Y"]);
+            $staff->save();
+            return Tools::MyResponse(true,"Staff Was Disabled",null,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function enabled($id){
+        try{
+            $staff = Staff::find($id);
+            if (!$staff) {
+                throw new Exception("Staff tidak ditemukan");
+            }
+            $staff->fill(["stop_mk"=>"N"]);
+            $staff->save();
+            return Tools::MyResponse(true,"Staff Was Enabled",null,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
