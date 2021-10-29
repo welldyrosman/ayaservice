@@ -16,4 +16,7 @@ class Dokter extends Model
         'nama', 'tempat','tgl_lahir','pendidikan','poli_id',
         'email','desc','photo'
     ];
+    public function poli() {
+        return $this->belongsTo(Poli::class);
+    }
 }
