@@ -195,6 +195,12 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
 
     $router->put('/api/v1/pasien/changepass','PasienController@changepass');
 });
+
+$router->get('gethashstaff',function(){
+    return app('hash')->make('pass@#123');
+});
+
+
 $router->get('/api/v1/dokter','DokterController@getall');
 $router->get('/api/v1/layanan','LayananController@getall');
 $router->get('/api/v1/reservation/{id}','ReservasiController@getreservasibyid');

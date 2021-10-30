@@ -56,7 +56,7 @@ class DokterController extends Controller
             }
             $ext=$request->file('photo')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
-            $request->file('photo')->move(storage_path($this->path), $this->filename);
+            $request->file('photo')->move(storage_path($this->publicpath), $this->filename);
             $data['photo']=$this->filename;
             $data['staff_id']=1;
             $Dokter = Dokter::create($data);
@@ -70,7 +70,7 @@ class DokterController extends Controller
             DB::commit();
             return Tools::MyResponse(true,"OK",$Dokter,200);
         }catch(Exception $e){
-            $current_avatar_path = storage_path($this->path) . '/' .$this->filename;
+            $current_avatar_path = storage_path($this->publicpath) . '/' .$this->filename;
             if (file_exists($current_avatar_path)) {
               unlink($current_avatar_path);
             }
