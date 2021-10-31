@@ -49,6 +49,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/special','SpecialpayController@getspeciallist');
     $router->put('/api/v1/setspecial/{id}','SpecialpayController@setspecial');
     $router->get('/api/v1/special/{id}','SpecialpayController@getspcialbyid');
+    $router->put('/api/v1/processspecial/{id}','SpecialpayController@specialpay');
+
 
     //http://localhost:8000/api/v1/setspecial
 
@@ -91,6 +93,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->post('/api/v1/schedule','PoliController@createincharge');
     $router->get('/api/v1/scheduletoday','PoliController@gettodayincharge');
+    $router->get('/api/v1/scheduleall','PoliController@getincharge');
     $router->get('/api/v1/schedule/{date}','PoliController@getchargebydate');
 
     $router->get('/api/v1/screeningform/{id}','ScreeningController@screening');

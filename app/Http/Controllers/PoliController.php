@@ -109,4 +109,8 @@ class PoliController extends Controller
         $poliin=PoliInCharge::where('praktek_date',$now)->get();
         return Tools::MyResponse(true,"Query Ok",$poliin,200);
     }
+    public function getincharge(){
+        $poliin=PoliInCharge::all();
+        return Tools::MyResponse(true,"Query Ok",$poliin,200);
+    }
 }
