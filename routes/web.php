@@ -46,7 +46,11 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/pasien/{id}','PasienController@getpasienbyid');
     $router->get('/api/v1/pasien/medhist/{id}','PasienController@getmedhist');
 
+    $router->get('/api/v1/special','SpecialpayController@getspeciallist');
+    $router->put('/api/v1/setspecial/{id}','SpecialpayController@setspecial');
+    $router->get('/api/v1/special/{id}','SpecialpayController@getspcialbyid');
 
+    //http://localhost:8000/api/v1/setspecial
 
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
 

@@ -70,6 +70,7 @@ class MedicalController extends Controller{
         $this->validate($request,[
             "treatment_kind"=>"required",
             "fee"=>"required",
+            "special"=>"required",
             // "screenitems.*.id"=>"required",
             "screenitems.*.medkind_id"=>"required",
             "screenitems.*.medform_id"=>"required",
@@ -89,6 +90,9 @@ class MedicalController extends Controller{
                 ]
             );
         }
+
+
+
         $detail_resep=$request->input("detail_resep");
         $resepid=$resep->id;
         DetailResep::where('resep_id',$resepid)->delete();
@@ -141,6 +145,13 @@ class MedicalController extends Controller{
             );
         }
         $data=$request->all();
+        if($data["special"]==1){
+            try{
+                $this->validate($request,["payamt"=>"required"]);
+            }catch(Exception $e){
+                throw new Exception("Input Special Case Amount");
+            }
+        }
         $screenitems=$data['screenitems'];
         foreach($screenitems as $items){
             if($items['id']==null){
