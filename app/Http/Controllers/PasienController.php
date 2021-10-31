@@ -334,7 +334,7 @@ class PasienController extends Controller
                 when u.id is not null and u.email_verified_at is not null then 1 end as active_user
                 ,
                 p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota
-                ,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien
+                ,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,u.id user_id
                 from pasiens p
                 left join users u on p.email=u.email
                 join t_propinsi pv on p.prov=pv.id
