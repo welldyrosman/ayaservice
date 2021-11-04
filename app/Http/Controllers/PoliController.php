@@ -110,7 +110,7 @@ class PoliController extends Controller
         return Tools::MyResponse(true,"Query Ok",$poliin,200);
     }
     public function getincharge(){
-        $poliin=PoliInCharge::all();
+        $poliin=PoliInCharge::with('dokter')->get();
         return Tools::MyResponse(true,"Query Ok",$poliin,200);
     }
 }

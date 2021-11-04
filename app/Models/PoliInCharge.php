@@ -15,4 +15,7 @@ class PoliInCharge extends Model
     protected $fillable = [
         'poli_id', 'praktek_date','dokter_id','staff_id'
     ];
+    public function dokter() {
+        return $this->belongsTo(Dokter::class);
+    }
 }
