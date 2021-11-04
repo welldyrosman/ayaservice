@@ -28,7 +28,7 @@ class KasirController extends Controller
             ]);
             $data=$request->all();
             $id=$data["resep_id"];
-            $money=$data["payamt"];
+            $money=$data["pay_amt"];
             $medicalfee=0;
             $resep=Resep::find($id);
             if($resep->medical_id){
