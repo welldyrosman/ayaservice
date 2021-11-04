@@ -24,7 +24,7 @@ class KasirController extends Controller
        try{
             $this->validate($request,[
                 "resep_id"=>"required",
-                "payamt"=>"required"
+                "pay_amt"=>"required"
             ]);
             $data=$request->all();
             $id=$data["resep_id"];
@@ -44,7 +44,7 @@ class KasirController extends Controller
             $token = $this->jwt->getToken();
             $user= Auth::guard('staff')->user($token);
             $resep->fill([
-                "payamt"=>$money,
+                "pay_amt"=>$money,
                 "staff_id"=>$user->id
             ]);
             $resep->save();
