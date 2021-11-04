@@ -34,7 +34,7 @@ class ClosingController extends Controller
             ,r.id,r.medical_id,r.special from resep r
             left join resep_detail rd on r.id=rd.resep_id
             $cmd
-            group by r.id,r.medical_id.r.special
+            group by r.id,r.medical_id,r.special
         ),".$this->sql;
     }
     private $sql="
