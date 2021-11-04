@@ -38,8 +38,14 @@ class KasirController extends Controller
             $totalobat=DB::select("select sum(harga*qty) total from resep_detail r where r.resep_id=$id");
             $bruto=$totalobat[0]->total;
             $totalnet=$bruto+$medicalfee-$resep->dicount;
+            if($resep->special==1){
+                if($money<$resep->payamt){
+                    throw new Exception("Payment Failed");
+                }
+            }else{
             if($money<$totalnet){
                 throw new Exception("Payment Failed");
+            }
             }
             $token = $this->jwt->getToken();
             $user= Auth::guard('staff')->user($token);
