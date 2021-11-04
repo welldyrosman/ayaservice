@@ -207,7 +207,7 @@ class MedicalController extends Controller{
         $medical->form=$medicalform;
         $medical->screen=$medicalscren;
         $medical->labs=$labs;
-        $medical->transaksi=Resep::where('medical_id',$id)->get();
+        $medical->transaksi=Resep::where('medical_id',$id)->first();
         $medical->resep=$resep;
         return $medical;
     }
