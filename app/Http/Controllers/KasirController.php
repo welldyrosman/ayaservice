@@ -24,11 +24,11 @@ class KasirController extends Controller
        try{
             $this->validate($request,[
                 "resep_id"=>"required",
-                "pay_amt"=>"required"
+                "payamt"=>"required"
             ]);
             $data=$request->all();
             $id=$data["resep_id"];
-            $money=$data["pay_amt"];
+            $money=$data["payamt"];
             $medicalfee=0;
             $resep=Resep::find($id);
             if($resep->medical_id){
@@ -44,7 +44,7 @@ class KasirController extends Controller
             $token = $this->jwt->getToken();
             $user= Auth::guard('staff')->user($token);
             $resep->fill([
-                "pay_amt"=>$money,
+                "payamt"=>$money,
                 "staff_id"=>$user->id
             ]);
             $resep->save();
