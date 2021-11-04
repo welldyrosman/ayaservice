@@ -84,9 +84,17 @@ class ApotekController extends Controller
         }
     }
     private function querypreorder(){
-        $sql="select r.created_at as buy_time,b.nama,rd.* from resep_detail rd
+        $sql="select r.created_at as buy_time,b.nama,rd.*,
+        CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
+        case when r.medical_id is not null then p.nama
+        when r.medical_id is null and r.pasien_id is not null then p2.nama
+        else r.cust_nm end as nama
+            from resep_detail rd
             join resep r on rd.resep_id=r.id
             join barang b on rd.barang_id=b.id
+            left join medical m on r.medical_id=m.id
+            left join pasiens p on m.pasien_id=p.id
+            left join pasiens p2 on r.pasien_id=p2.id
             where ispreorder=1";
         $data=DB::select($sql);
         return $data;
