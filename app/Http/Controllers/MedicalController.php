@@ -148,6 +148,12 @@ class MedicalController extends Controller{
         if($data["special"]==1){
             try{
                 $this->validate($request,["payamt"=>"required"]);
+                $resep->fill(
+                    ["special"=>$data["special"],
+                        "payamt"=>$data["payamt"]
+                    ]
+                );
+                $resep->save();
             }catch(Exception $e){
                 throw new Exception("Input Special Case Amount");
             }
