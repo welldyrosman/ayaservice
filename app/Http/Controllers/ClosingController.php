@@ -28,15 +28,20 @@ class ClosingController extends Controller
             $cmd.=" where r.status=4";
         }
         return "with sumresep as (
-            select ifnull(sum(rd.qty*rd.harga),0) as total,r.id,r.medical_id from resep r
+            select
+            case when r.special=1 then r.payamt
+            else ifnull(sum(rd.qty*rd.harga),0) end as total
+            ,r.id,r.medical_id,r.special from resep r
             left join resep_detail rd on r.id=rd.resep_id
             $cmd
-            group by r.id,r.medical_id
+            group by r.id,r.medical_id.r.special
         ),".$this->sql;
     }
     private $sql="
         sumall as(
-            select s.*,m.fee,s.total+m.fee as grand_total from sumresep s
+            select s.*,m.fee,
+            case when s.special=1 then s.total
+            else s.total+m.fee end as grand_total from sumresep s
             left join medical m on s.medical_id=m.id
         ),
         in_out as(
