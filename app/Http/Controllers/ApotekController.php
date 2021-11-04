@@ -88,7 +88,7 @@ class ApotekController extends Controller
         CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
         case when r.medical_id is not null then p.nama
         when r.medical_id is null and r.pasien_id is not null then p2.nama
-        else r.cust_nm end as nama
+        else r.cust_nm end as nama_pasien
             from resep_detail rd
             join resep r on rd.resep_id=r.id
             join barang b on rd.barang_id=b.id
