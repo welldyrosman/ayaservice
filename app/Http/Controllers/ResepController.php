@@ -34,7 +34,9 @@ class ResepController extends Controller
             case when r.transtype=1 then p.no_telp
             when r.transtype=2 then p2.no_telp
             else r.phone_no end as no_telp,
-            s.nama as nama_staff,dr.total as grand_total
+            s.nama as nama_staff,
+            case when r.special=1 then r.payamt
+            else ifnull(sum(rd.qty*rd.harga),0) end as grand_total
             from resep r
             left join sumd dr on r.id=dr.resep_id
             left join medical m on r.medical_id=m.id
