@@ -47,9 +47,9 @@ class ClosingController extends Controller
         in_out as(
             select
                 (select sum(grand_total) as in_amt from sumall) as in_amt,
-                (select sum(ifnull(closing_amt,0)) as total_in from closing) as over_amt,
-                (select sum(ifnull(closing_amt,0)) as total_in from closing where status=1) as recap_over_amt,
-                (select sum(ifnull(closing_amt,0)) as total_in from closing where status=2) as hand_over_amt
+                (select ifnull(sum(ifnull(closing_amt,0)),0) as total_in from closing) as over_amt,
+                (select ifnull(sum(ifnull(closing_amt,0)),0) as total_in from closing where status=1) as recap_over_amt,
+                (select ifnull(sum(ifnull(closing_amt,0)),0) as total_in from closing where status=2) as hand_over_amt
                 from dual
         ),
         recap as (
@@ -69,7 +69,7 @@ class ClosingController extends Controller
     public function createhandover(){
         DB::beginTransaction();
         try{
-            $sumoversql="select sum(total+fee) as total from recap";
+            $sumoversql="select sum(grand_total) as total from recap";
             $sumdata=DB::select($this->sqlresep(4).$sumoversql);
             if(!$sumdata[0]->total){
                 throw new Exception("No Data Need Caclculate");
