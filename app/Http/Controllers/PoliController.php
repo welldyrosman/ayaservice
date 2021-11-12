@@ -14,6 +14,10 @@ class PoliController extends Controller
         $poli=Poli::all();
         return Tools::MyResponse(true,"OK",$poli,200);
     }
+    public function getactive(){
+        $poli=Poli::where('stop_mk',0)->get();
+        return Tools::MyResponse(true,"OK",$poli,200);
+    }
     public function getid($id){
        try{
             $poli=Poli::find($id);
@@ -40,6 +44,34 @@ class PoliController extends Controller
             $poli = Poli::create($data);
             return Tools::MyResponse(true,"OK",$poli,200);
         }catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function enable($id){
+        try{
+            $poli = Poli::find($id);
+            if (!$poli) {
+                throw new Exception("Poli tidak ditemukan");
+            }
+            $poli->fill(["stop_mk"=>0]);
+            $poli->save();
+            return Tools::MyResponse(true,"Poli Was Update",null,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function disable($id){
+        try{
+            $poli = Poli::find($id);
+            if (!$poli) {
+                throw new Exception("Poli tidak ditemukan");
+            }
+            $poli->fill(["stop_mk"=>1]);
+            $poli->save();
+            return Tools::MyResponse(true,"Poli Was Update",null,200);
+        }
+        catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
         }
     }

@@ -13,7 +13,7 @@ class DetailResep extends Model
      * @var array
      */
     protected $fillable = [
-        'resep_id', 'barang_id','isComposite','qty','unit','harga','ispreorder','preodr_staff'
+        'resep_id', 'barang_id','isComposite','qty','unit','harga','ispreorder','preodr_staff','eat_qty','day_qty','takaran_id'
     ];
     public function barang() {
         return $this->belongsTo('App\Models\Barang');

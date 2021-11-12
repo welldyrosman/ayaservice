@@ -13,6 +13,6 @@ class Poli extends Model
      * @var array
      */
     protected $fillable = [
-        'poli', 'ruangan'
+        'poli', 'ruangan','stop_mk'
     ];
 }
