@@ -36,8 +36,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->delete('/api/v1/poli/{id}','PoliController@delete');
     $router->post('/api/v1/poli','PoliController@create');
     $router->get('/api/v1/poliall','PoliController@getall');
-    $router->put('/api/v1/poli/enable','PoliController@enable');
-    $router->put('/api/v1/poli/disable','PoliController@disable');
+    $router->put('/api/v1/poli/enable/{id}','PoliController@enable');
+    $router->put('/api/v1/poli/disable/{id}','PoliController@disable');
 
     $router->post('/api/v1/registrasi','PasienController@addpasienoffline');
     $router->post('/api/v1/registrasi/{id}','PasienController@updatepasienoffline');
