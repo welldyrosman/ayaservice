@@ -139,6 +139,8 @@ class MedicalController extends Controller{
                     "barang_id"=>$barangid,
                     "iscomposite"=>$barang->isComposite,
                     "qty"=>$row['qty'],
+                    "eat_qty"=>$row['eat_qty'],
+                    "takaran_id"=>$row['takaran_id'],
                     "unit"=>$barang->unit,
                     "harga"=>$barang->harga
                 ]
@@ -206,9 +208,12 @@ class MedicalController extends Controller{
         left join dokter d on m.dokter_id=d.id
         join pasiens u on m.pasien_id=u.id
         where m.id=$id");
-        $resep=DB::select("select b.id,b.iscomposite,d.qty,d.unit,b.harga,b.nama,r.id as resep_id,d.ispreorder,r.payamt,r.special from resep r
+        $resep=DB::select("select b.id,b.iscomposite,d.qty,d.unit,b.harga,b.nama,r.id as resep_id,d.ispreorder,r.payamt,r.special
+        ,k.takaran
+        from resep r
         left join resep_detail d on r.id=d.resep_id
         join barang b on d.barang_id=b.id and kind=1
+        left join takaran k on d.takaran_id=k.id
         where r.medical_id=$id");
         $labs=Labs::where('medical_id',$id)->first();
         $medical->form=$medicalform;
