@@ -57,16 +57,18 @@ class DokterController extends Controller
             $ext=$request->file('photo')->getClientOriginalExtension();
             $this->filename=$thumbnail.'.'.$ext;
             $request->file('photo')->move(storage_path($this->publicpath), $this->filename);
-            $data['photo']=$this->filename;
-            $data['staff_id']=1;
-            $Dokter = Dokter::create($data);
+
             $akundata=[
                 "nama"=>$data['nama'],
                 "email"=>$data["email"],
                 "password"=>app('hash')->make("Dokter@#123"),
                 "role_id"=>2
             ];
-            Staff::create($akundata);
+            $staff=Staff::create($akundata);
+            $data['photo']=$this->filename;
+            $data['isdokter']=1;
+            $data['staff_id']=$staff->id;
+            $Dokter = Dokter::create($data);
             DB::commit();
             return Tools::MyResponse(true,"OK",$Dokter,200);
         }catch(Exception $e){

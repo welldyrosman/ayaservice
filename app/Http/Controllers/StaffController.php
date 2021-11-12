@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
+use App\Models\Dokter;
 use App\Models\Poli;
 use App\Models\Staff;
 use Illuminate\Support\Facades\DB;
@@ -50,13 +51,20 @@ class StaffController extends Controller
                 'nama' => 'required',
                 'email' => 'required',
             ],['required'=>':attribute cannot Empty']);
+
             $data['password']=app('hash')->make('pass@#123');
             $data['role_id']=$id;
             $cek=Staff::where('email',$data['email'])->first();
+
             if($cek!=null){
                 throw new Exception("email was exist");
             }
             $staff = Staff::create($data);
+            $dokter=Dokter::create([
+                "staff_id"=>$staff->id,
+                "nama"=>$staff->nama,
+                "isdokter"=>2
+            ]);
             return Tools::MyResponse(true,"OK",$staff,200);
         }catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);
