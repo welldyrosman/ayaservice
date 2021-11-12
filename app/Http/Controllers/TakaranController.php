@@ -17,7 +17,7 @@ class TakaranController extends Controller
        try{
             $takaran=Takaran::find($id);
             if (!$takaran) {
-                throw new Exception("Pasien tidak ditemukan");
+                throw new Exception("Takaran tidak ditemukan");
             }
             return Tools::MyResponse(true,"OK",$takaran,200);
         }
@@ -40,7 +40,7 @@ class TakaranController extends Controller
         try{
             $takaran = Takaran::find($id);
             if (!$takaran) {
-                throw new Exception("Pasien tidak ditemukan");
+                throw new Exception("Takaran tidak ditemukan");
             }
             $takaran->delete();
             return Tools::MyResponse(true,"Takaran Was Deleted",null,200);
@@ -56,8 +56,7 @@ class TakaranController extends Controller
                 throw new Exception("Takaran Tidak Ditemukan");
             }
             $this->validate($request,[
-                'takaran' => 'required',
-                'ruangan' => 'required'],['required'=>':attribute cannot Empty']);
+                'takaran' => 'required'],['required'=>':attribute cannot Empty']);
             $data=$request->all();
             $takaran->fill($data);
             $takaran->save();

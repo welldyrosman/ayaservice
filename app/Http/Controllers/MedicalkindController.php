@@ -62,8 +62,8 @@ class MedicalkindController extends Controller
                 throw new Exception("Medicalkind Tidak Ditemukan");
             }
             $this->validate($request,[
-                'Medicalkind' => 'required',
-                'ruangan' => 'required'],['required'=>':attribute cannot Empty']);
+                'nama' => 'required',
+                'group_id' => 'required'],['required'=>':attribute cannot Empty']);
             $data=$request->all();
             $Medicalkind->fill($data);
             $Medicalkind->save();
