@@ -14,7 +14,7 @@ class DokterController extends Controller
     protected $path='app/dokter_photo';
     protected $publicpath='storage/app/dokter_photo';
     public function getall(){
-        $Dokter=Dokter::with('poli')->get();
+        $Dokter=Dokter::with('poli')->where('isdokter',1)->get();
         return Tools::MyResponse(true,"OK",$Dokter,200);
     }
     public function getid($id){

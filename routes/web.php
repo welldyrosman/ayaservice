@@ -243,7 +243,7 @@ $router->delete('/api/v1/medicalkind/{id}','MedicalkindController@delete');
 
 
 $router->get('/api/v1/screen','AntrianController@getscreen');
-
+$router->get('/api/v1/screen2','AntrianController@getscreen2');
 
 $router->post('/auth/v1/login', 'AuthController@loginPost');
 $router->post('/auth/v1/login2', 'AuthController@loginstaff');

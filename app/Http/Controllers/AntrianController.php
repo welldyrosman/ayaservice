@@ -21,7 +21,7 @@ class AntrianController extends Controller{
         $this->jwt = $jwt;
 
     }
-    public function getscreen(){
+    public function getscreen2(){
         $now=Carbon::now()->toDateString();
         $med=KasirController::querypayment($now);
         $apk=ApotekController::queryapotek($now);
@@ -31,7 +31,7 @@ class AntrianController extends Controller{
         ];
         return Tools::MyResponse(true,"Data Antrian",$ret,200);
     }
-    public function getscreen2(){
+    public function getscreen(){
         try{
             $poli=Poli::all();
             $data=new stdClass();
