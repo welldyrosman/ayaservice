@@ -60,6 +60,10 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
 
     $router->post('/api/v1/takaran','TakaranController@create');
+    $router->get('/api/v1/takaran','TakaranController@getall');
+    $router->put('/api/v1/takaran/{id}','TakaranController@update');
+    $router->get('/api/v1/takaran/{id}','TakaranController@getid');
+    $router->delete('/api/v1/takaran/{id}','TakaranController@delete');
 
     $router->post('/api/v1/staff/{id}','StaffController@create');
     $router->get('/api/v1/staff','StaffController@getall');
