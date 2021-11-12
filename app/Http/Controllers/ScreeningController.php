@@ -27,8 +27,8 @@ class ScreeningController extends Controller
         return Tools::MyResponse(true,"OK",$data,200);
     }
     private function getform($id){
-        $data=DB::select("SELECT f.*,k.nama,k.datatype,f.id as medform_id FROM medform f
-        join medkind k on f.medkind_id=k.id where f.formkind_id=$id
+        $data=DB::select("SELECT f.*,k.nama,k.datatype,f.id as medform_id,k.group_id FROM medform f
+        join medkind k on f.medkind_id=k.id where f.formkind_id=$id group by k.group_id asc
     ;");
         return $data;
     }
