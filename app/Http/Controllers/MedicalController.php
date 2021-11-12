@@ -194,12 +194,13 @@ class MedicalController extends Controller{
     }
     private function detailmed($id){
         $medical=new stdClass();
-        $medicalscren=DB::select("select f.formkind_id,f.medkind_id,f.dokter_only,s.created_at,s.updated_at,s.id,f.id as medform_id,s.val_desc,k.nama as label_kind,k.datatype
+        $medicalscren=DB::select("select f.formkind_id,f.medkind_id,f.dokter_only,s.created_at,s.updated_at,s.id,f.id as medform_id
+        ,s.val_desc,k.nama as label_kind,k.datatype,k.group_id
         from medical m
         join medform f on m.formkind_id=f.formkind_id
         left join medscreen s on f.id=s.medform_id and s.medical_id=m.id
         join medkind k on f.medkind_id=k.id
-        where m.id=$id");
+        where m.id=$id order by k.group_id asc");
         $medicalform=DB::select("
         select m.*,p.poli,d.nama as dokter,u.nama as pasien,
         (select CONCAT('TRX',LPAD(id,6,'0')) from resep where medical_id=m.id) as code_trans
