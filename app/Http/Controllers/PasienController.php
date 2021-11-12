@@ -53,7 +53,7 @@ class PasienController extends Controller
             $d = new DNS1D();
             $d->setStorPath(__DIR__.'/cache/');
             $ss=$d->getBarcodeHTML($id, 'EAN13',1,21,'#276071',false);
-            $pasien->nopasien='AKP'.$pasien->id;
+            $pasien->nopasien='AK'.$pasien->id;
             $data = ['barcode' => $ss,'pasien'=>$pasien];
             $pdf->loadView('Kartupasien',$data);
             $pdf->setPaper($customPaper);
@@ -307,7 +307,7 @@ class PasienController extends Controller
         }
     }
     public function getpasienbyid($id){
-        $data=DB::select("select *,CONCAT('AKP',LPAD(id,4,'0')) as kode_pasien
+        $data=DB::select("select *,CONCAT('AK',LPAD(id,4,'0')) as kode_pasien
         ,(select max(created_at) as last_time from medical where pasien_id=pasiens.id) as last_time
         from pasiens where id=$id");
         if(!isset($data[0])){
@@ -334,7 +334,7 @@ class PasienController extends Controller
                 when u.id is not null and u.email_verified_at is not null then 1 end as active_user
                 ,
                 p.id,p.nama,p.created_at,p.no_telp,p.email,p.jk,CONCAT(kt.nama,'-',pv.nama)  as kota
-                ,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,u.id user_id
+                ,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,u.id user_id
                 from pasiens p
                 left join users u on p.email=u.email
                 join t_propinsi pv on p.prov=pv.id

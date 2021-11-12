@@ -34,7 +34,7 @@ class ReservasiController extends Controller
         try{
             $pasien=DB::select("with t as
             (
-                select CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,p.nama,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,
+                select CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,p.nama,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,
                 r.*,l.poli
                 from reservasi r
                 join pasiens p on r.pasien_id=p.id
@@ -63,7 +63,7 @@ class ReservasiController extends Controller
         return Tools::MyResponse(true,"OK",$reservasi,200);
     }
     public function notyetcheckin(){
-        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg
+        $reservasi=DB::select("SELECT a.*,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg
             FROM reservasi a
             join pasiens p on a.pasien_id=p.id
             join poli l on a.poli_id=l.id
@@ -73,7 +73,7 @@ class ReservasiController extends Controller
     }
     private function gettodayreservasi($roleid){
         $cmd=$roleid==null?"":"and a.role_id=$roleid";
-        $reservasi=DB::select("SELECT ls.id as lab_id,a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
+        $reservasi=DB::select("SELECT ls.id as lab_id,a.*,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
         join pasiens p on a.pasien_id=p.id
         join poli l on a.poli_id=l.id
         left join labs ls on a.medical_id=ls.medical_id
@@ -281,7 +281,7 @@ class ReservasiController extends Controller
         }
     }
     public function getreservasibyid($id){
-        $reservasi=DB::select("SELECT a.*,CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
+        $reservasi=DB::select("SELECT a.*,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,l.poli,p.nama,p.ktpno,CONCAT('REG',LPAD(a.id,6,'0')) as code_reg  FROM reservasi a
         join pasiens p on a.pasien_id=p.id
         join poli l on a.poli_id=l.id
         where a.id=$id

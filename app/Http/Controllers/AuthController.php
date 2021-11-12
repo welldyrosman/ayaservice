@@ -117,7 +117,7 @@ class AuthController extends Controller
             if($pasein->status_akun!=1){
                 throw new Exception("Check your mail and Verify Your Account Please".$pasein->status_akun);
             }
-            $pasein->kode_pasien='AKP'.str_pad($pasein->id,4,"0");
+            $pasein->kode_pasien='AK'.str_pad($pasein->id,4,"0");
             $data=[
                 "data"=>$pasein,
                 "token"=>$token

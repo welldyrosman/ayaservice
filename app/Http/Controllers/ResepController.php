@@ -29,7 +29,7 @@ class ResepController extends Controller
             case when r.medical_id is not null then p.nama
             when r.medical_id is null and r.pasien_id is not null then p2.nama
             else r.cust_nm end as nama,
-            CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,
+            CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,
 
             case when r.transtype=1 then p.no_telp
             when r.transtype=2 then p2.no_telp

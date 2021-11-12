@@ -117,7 +117,7 @@ class POSController extends Controller
         case when r.transtype=1 then p.no_telp
         when r.transtype=2 then p2.no_telp
         else r.phone_no end as no_telp,
-        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama as nama_staff,
+        CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,m.fee,s.nama as nama_staff,
         rd.grand_total
         from resep r
         left join medical m on r.medical_id=m.id

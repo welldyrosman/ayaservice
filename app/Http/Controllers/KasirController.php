@@ -76,7 +76,7 @@ class KasirController extends Controller
         case when r.medical_id is not null then p.nama
         when r.medical_id is null and r.pasien_id is not null then p2.nama
         else r.cust_nm end as nama,s.nama as nama_staff,
-        CONCAT('AKP',LPAD(p.id,4,'0')) as kode_pasien from resep r
+        CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien from resep r
         left join medical m on r.medical_id=m.id
         left join pasiens p on m.pasien_id=p.id
         left join pasiens p2 on r.pasien_id=p2.id
