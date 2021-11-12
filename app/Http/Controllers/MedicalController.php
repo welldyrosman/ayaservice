@@ -139,9 +139,9 @@ class MedicalController extends Controller{
                     "barang_id"=>$barangid,
                     "iscomposite"=>$barang->isComposite,
                     "qty"=>$row['qty'],
-                    "eat_qty"=>$row['eat_qty'],
-                    "day_qty"=>$row['day_qty'],
-                    "takaran_id"=>$row['takaran_id'],
+                    "eat_qty"=>$row['eat_qty']?$row['eat_qty']:0,
+                    "day_qty"=>$row['day_qty']?$row['day_qty']:0,
+                    "takaran_id"=>$row['takaran_id']?$row['takaran_id']:null,
                     "unit"=>$barang->unit,
                     "harga"=>$barang->harga
                 ]
