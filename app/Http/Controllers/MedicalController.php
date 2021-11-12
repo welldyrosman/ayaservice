@@ -140,6 +140,7 @@ class MedicalController extends Controller{
                     "iscomposite"=>$barang->isComposite,
                     "qty"=>$row['qty'],
                     "eat_qty"=>$row['eat_qty'],
+                    "day_qty"=>$row['day_qty'],
                     "takaran_id"=>$row['takaran_id'],
                     "unit"=>$barang->unit,
                     "harga"=>$barang->harga
