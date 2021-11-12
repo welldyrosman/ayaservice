@@ -56,6 +56,8 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
 
     $router->put('/api/v1/checkin/{id}','ReservasiController@checkin');
 
+    $router->post('/api/v1/takaran','TakaranController@create');
+
     $router->post('/api/v1/staff/{id}','StaffController@create');
     $router->get('/api/v1/staff','StaffController@getall');
     $router->put('/api/v1/staff/changepass','StaffController@changepass');

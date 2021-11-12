@@ -85,7 +85,7 @@ class KasirController extends Controller
         return $med;
     }
     public function gettodaylist(){
-      $med=$this->querypayment($this->now);
+        $med=$this->querypayment($this->now);
         return Tools::MyResponse(true,"OK",$med,200);
     }
     public function getpayitem($id){
