@@ -63,7 +63,8 @@ class StaffController extends Controller
             $dokter=Dokter::create([
                 "staff_id"=>$staff->id,
                 "nama"=>$staff->nama,
-                "isdokter"=>2
+                "isdokter"=>2,
+                "poli_id"=>2
             ]);
             return Tools::MyResponse(true,"OK",$staff,200);
         }catch(Exception $e){
