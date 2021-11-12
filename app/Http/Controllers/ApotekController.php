@@ -148,10 +148,14 @@ class ApotekController extends Controller
             return Tools::MyResponse(false,$e,null,401);
         }
     }
-    public function gettodaylist(){
+    public static function queryapotek($date){
         $med=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,p.nama,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien from resep r
         left join medical m on r.medical_id=m.id
-        left join pasiens p on m.pasien_id=p.id where cast(r.created_at as date)='$this->now' and r.status=2");
+        left join pasiens p on m.pasien_id=p.id where cast(r.created_at as date)='$date' and r.status=2");
+        return $med;
+    }
+    public function gettodaylist(){
+        $med=$this->queryapotek($this->now);
         return Tools::MyResponse(true,"OK",$med,200);
     }
 

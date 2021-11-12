@@ -30,7 +30,7 @@ class MedicalkindController extends Controller
         try{
             $this->validate($request,[
             'nama' => 'required',
-            'datatype' => 'required',
+            'group_id'=>'required'
             ],['required'=>':attribute cannot Empty']);
             $Medicalkind = Medicalkind::create($data);
             return Tools::MyResponse(true,"OK",$Medicalkind,200);

@@ -13,6 +13,6 @@ class Medicalkind extends Model
      * @var array
      */
     protected $fillable = [
-        'nama', 'datatype','unit'
+        'nama', 'datatype','unit','group_id'
     ];
 }

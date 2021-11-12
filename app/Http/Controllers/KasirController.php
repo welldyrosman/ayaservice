@@ -71,7 +71,7 @@ class KasirController extends Controller
             return Tools::MyResponse(false,$e,null,401);
        }
     }
-    public function gettodaylist(){
+    public static function querypayment($date){
         $med=DB::select("select r.*,CONCAT('TRX',LPAD(r.id,6,'0')) as kode_trans,
         case when r.medical_id is not null then p.nama
         when r.medical_id is null and r.pasien_id is not null then p2.nama
@@ -81,7 +81,11 @@ class KasirController extends Controller
         left join pasiens p on m.pasien_id=p.id
         left join pasiens p2 on r.pasien_id=p2.id
         left join staff s on r.staff_id=s.id
-        where cast(r.created_at as date)='$this->now' and r.status=3");
+        where cast(r.created_at as date)='$date' and r.status=3");
+        return $med;
+    }
+    public function gettodaylist(){
+      $med=$this->querypayment($this->now);
         return Tools::MyResponse(true,"OK",$med,200);
     }
     public function getpayitem($id){

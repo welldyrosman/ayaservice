@@ -22,6 +22,16 @@ class AntrianController extends Controller{
 
     }
     public function getscreen(){
+        $now=Carbon::now()->toDateString();
+        $med=KasirController::querypayment($now);
+        $apk=ApotekController::queryapotek($now);
+        $ret=[
+            "payment_queue"=>$med,
+            "apotik_queue"=>$apk
+        ];
+        return Tools::MyResponse(true,"Data Antrian",$ret,200);
+    }
+    public function getscreen2(){
         try{
             $poli=Poli::all();
             $data=new stdClass();
