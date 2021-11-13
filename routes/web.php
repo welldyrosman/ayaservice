@@ -215,7 +215,7 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
 $router->get('gethashstaff',function(){
     return app('hash')->make('pass@#123');
 });
-
+//$router->post('/api/v1/staff/{id}','StaffController@create');
 
 $router->get('/api/v1/dokter','DokterController@getall');
 $router->get('/api/v1/layanan','LayananController@getall');
