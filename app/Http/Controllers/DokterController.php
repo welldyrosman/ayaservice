@@ -83,9 +83,11 @@ class DokterController extends Controller
     public function delete($id){
         try{
             $Dokter = Dokter::find($id);
+
             if (!$Dokter) {
                 throw new Exception("Dokter tidak ditemukan");
             }
+            $staff = Staff::where('email',$Dokter->email)->first();
             $med=Medical::where("dokter_id",$Dokter->id)->first();
             if($med){
                 throw new Exception("Tidak bisa Delete, Dokter Sudah Punya Riwayat Melayani");
@@ -96,6 +98,7 @@ class DokterController extends Controller
                     unlink($current_avatar_path);
                 }
             }
+            $staff->delete();
             $Dokter->delete();
             return Tools::MyResponse(true,"Dokter Was Deleted",null,200);
         }
