@@ -117,7 +117,7 @@ class Tools{
         $cmd="";
         if($filter){
             foreach($filter as $key=>$value){
-                $cmd.=" AND $key LIKE '%$value%' ";
+                $cmd.=" AND UPPER($key) LIKE UPPER('%$value%')";
             }
         }
         return $cmd;

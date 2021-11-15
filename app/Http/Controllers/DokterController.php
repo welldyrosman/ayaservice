@@ -90,9 +90,11 @@ class DokterController extends Controller
             if($med){
                 throw new Exception("Tidak bisa Delete, Dokter Sudah Punya Riwayat Melayani");
             }
-            $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
-            if (file_exists($current_avatar_path)) {
-              unlink($current_avatar_path);
+            if($Dokter->isdokter==1){
+                $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
+                if (file_exists($current_avatar_path)) {
+                    unlink($current_avatar_path);
+                }
             }
             $Dokter->delete();
             return Tools::MyResponse(true,"Dokter Was Deleted",null,200);
