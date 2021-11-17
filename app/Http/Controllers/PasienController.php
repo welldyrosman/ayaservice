@@ -64,9 +64,11 @@ class PasienController extends Controller
     }
     private function insertdatapasien($request,$data){
         $ktp=$request->input('ktpno');
-        $cek=Pasien::where('ktpno',$ktp)->first();
-        if($cek!=null){
-            throw new Exception("No KTP ini telah terdaftar, silahkan lakukan Login");
+        if($ktp){
+            $cek=Pasien::where('ktpno',$ktp)->first();
+            if($cek!=null){
+                throw new Exception("No KTP ini telah terdaftar, silahkan lakukan Login");
+            }
         }
         $pass=$request->input("password");
         $pass2=$request->input("password2");
@@ -96,7 +98,6 @@ class PasienController extends Controller
         try{
             $data = $request->all();
             $this->validate($request,[
-                'ktpno' => 'required',
                 'nama' => 'required',
                 'tempat_lahir' => 'required',
                 'tgl_lahir' => 'required',
