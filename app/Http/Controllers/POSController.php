@@ -129,8 +129,10 @@ class POSController extends Controller
             )rd on rd.resep_id=r.id
         where r.id=$id");
           // $resep=Resep::where('id',$id)->with(["detailresep.barang"])->first();
-           $deatail=DB::select("select rd.*,b.nama from resep_detail rd
-           join barang b on rd.barang_id=b.id where rd.resep_id=$id
+           $deatail=DB::select("select rd.*,b.nama,t.takaran from resep_detail rd
+           join barang b on rd.barang_id=b.id
+           left join takaran t rd.takaran_id=t.id
+           where rd.resep_id=$id
            ");
            $data=new stdClass();
            $data->form=$resep;
