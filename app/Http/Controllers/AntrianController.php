@@ -43,6 +43,7 @@ class AntrianController extends Controller{
                 join pasiens p on a.pasien_id=p.id
                 join poli i on a.poli_id=i.id
                 where a.queue_date='$now' and a.status=1 and a.poli_id=$p->id
+                and i.stop_mk=0
                 order by a.reg_time asc";
                 $query2="SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,
                 i.poli,d.nama as dokter FROM antrian a
