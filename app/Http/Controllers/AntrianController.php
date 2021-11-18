@@ -33,7 +33,7 @@ class AntrianController extends Controller{
     }
     public function getscreen(){
         try{
-            $poli=Poli::all();
+            $poli=Poli::where('stop_mk',0)->get();
             $data=new stdClass();
             $onprocess=new stdClass();
             $now=Carbon::now()->toDateString();
