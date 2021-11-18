@@ -14,7 +14,7 @@ class Dokter extends Model
      */
     protected $fillable = [
         'nama', 'tempat','tgl_lahir','pendidikan','poli_id',
-        'email','desc','photo','staff_id'
+        'email','desc','photo','staff_id','isdokter'
     ];
     public function poli() {
         return $this->belongsTo(Poli::class);

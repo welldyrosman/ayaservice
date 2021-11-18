@@ -55,6 +55,35 @@ class AuthController extends Controller
             // return Tools::MyResponse(false,$e,null,401);
         }
     }
+    public  function loginaybe(Request $request){
+        try{
+            $this->validate($request, [
+                'email'    => 'required|email|max:255',
+                'password' => 'required',
+            ]);
+            if (!$token = auth('aybe')->attempt($request->only('email', 'password'))){
+                throw new Exception("User Not Found");
+            };
+        } catch (TokenExpiredException $e) {
+            return Tools::MyResponse(false,$e,null,401);
+        } catch (TokenInvalidException $e) {
+            return Tools::MyResponse(false,$e,null,401);
+        } catch (JWTException $e) {
+            return Tools::MyResponse(false,$e,null,401);
+        } catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+        $token=compact('token')['token'];
+        $user= Auth::guard('aybe')->user($token);
+        if($user->stop_mk=='Y'){
+            throw new Exception("This Account is Banned");
+        }
+        $data=[
+            "data"=>$user,
+            "token"=>$token
+        ];
+        return Tools::MyResponse(true,'OK',$data,200);
+    }
     public  function loginstaff(Request $request){
         try{
             $this->validate($request, [
@@ -75,11 +104,12 @@ class AuthController extends Controller
         }
         $token=compact('token')['token'];
         $user= Auth::guard('staff')->user($token);
+        $users=Staff::with('dokter')->find($user->id);
         if($user->stop_mk=='Y'){
             throw new Exception("This Account is Banned");
         }
         $data=[
-            "data"=>$user,
+            "data"=>$users,
             "token"=>$token
         ];
         return Tools::MyResponse(true,'OK',$data,200);

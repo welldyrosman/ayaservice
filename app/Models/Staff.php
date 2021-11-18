@@ -22,7 +22,9 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
     protected $fillable = [
         'nama', 'email','password','role_id','stop_mk'
     ];
-
+    public function dokter() {
+        return $this->belongsTo(Dokter::class,"email","email");
+    }
     /**
      * The attributes excluded from the model's JSON form.
      *
