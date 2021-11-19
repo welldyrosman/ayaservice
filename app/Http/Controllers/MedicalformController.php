@@ -53,10 +53,6 @@ class MedicalFormController extends Controller
             if (!$MedicalForm) {
                 throw new Exception("Medical kind tidak ditemukan");
             }
-            $medscreen=MedicalScreen::where('formkind_id',$id)->get();
-            if(count($medscreen)>0){
-                throw new Exception("this form has been used, cannot delete");
-            }
             $MedicalForm->delete();
             return Tools::MyResponse(true,"MedicalForm Was Deleted",null,200);
         }
