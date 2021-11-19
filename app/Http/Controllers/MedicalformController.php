@@ -12,7 +12,7 @@ class MedicalFormController extends Controller
 {
     public function getall($id){
         $MedicalForm=DB::select("
-        select m.formkind_id,m.medkind_id  as id,m.medkind_id,m.nama ,m.id as medform_id
+        select m.formkind_id,m.medkind_id  as id,m.medkind_id,k.nama ,m.id as medform_id
         from medform m
         join medkind k on k.id=m.medkind_id
         where m.formkind_id='$id' order by m.id");
