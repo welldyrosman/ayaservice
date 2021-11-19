@@ -11,7 +11,9 @@ use Exception;
 class MedicalFormController extends Controller
 {
     public function getall($id){
-        $MedicalForm=DB::table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
+        $MedicalForm=DB::select("select m.* from medform m join medkind k on k.id=m.medkind_id where m.formkind_id='$id'");
+
+      //  table('medform')->join('medkind','medkind.id','=','medform.medkind_id')->where('medform.formkind_id',$id)->get();
         return Tools::MyResponse(true,"OK",$MedicalForm,200);
     }
     public function getid($id){
