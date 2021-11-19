@@ -201,7 +201,7 @@ class MedicalController extends Controller{
         join medform f on m.formkind_id=f.formkind_id
         left join medscreen s on f.id=s.medform_id and s.medical_id=m.id
         join medkind k on f.medkind_id=k.id
-        where m.id=$id order by k.group_id asc");
+        where m.id=$id order by f.id asc");
         $medicalform=DB::select("
         select m.*,p.poli,d.nama as dokter,u.nama as pasien,
         (select CONCAT('TRX',LPAD(id,6,'0')) from resep where medical_id=m.id) as code_trans
