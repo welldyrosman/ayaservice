@@ -7,7 +7,7 @@ use App\Models\Barang;
 use App\Models\Dokter;
 use App\Models\Formkind;
 use App\Models\Medical;
-use App\Models\MedicalForm;
+use App\Models\Medicalform;
 use App\Models\Medicalkind;
 use App\Models\Pasien;
 use App\Models\Poli;
@@ -104,7 +104,7 @@ class Tools{
         if(!$medkind){
             throw new Exception("cannot found Medical Kind");
         }
-        $medform=MedicalForm::where('medkind_id',$medkindid)->where('formkind_id',$formkind_id)->first();
+        $medform=Medicalform::where('medkind_id',$medkindid)->where('formkind_id',$formkind_id)->first();
         if(!$medform){
             throw new Exception("cannot found form in ".$formkind_id.$medkindid);
         }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MedicalForm extends Model
+class Medicalform extends Model
 {
     protected $table = 'medform';
     /**
@@ -13,6 +13,11 @@ class MedicalForm extends Model
      * @var array
      */
     protected $fillable = [
-        'formkind_id', 'medkind_id','dokter_only'
+        'formformat_id', 'medkind_id','dokter_only'
     ];
+
+    public function medkind(){
+        return $this->belongsTo(Medicalkind::class,'medkind_id');
+    }
+
 }

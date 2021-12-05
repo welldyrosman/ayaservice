@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
-use App\Models\MedicalForm;
+use App\Models\Medicalform;
 use App\Models\Medicalkind;
 use App\Models\MedicalScreen;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +49,7 @@ class MedicalkindController extends Controller
             if($medscreen){
                 throw new Exception("tidak bisa hapus medical kind yang sedang digunakan");
             }
-            MedicalForm::where('medkind_id',$id)->delete();
+            Medicalform::where('medkind_id',$id)->delete();
             $Medicalkind->delete();
             return Tools::MyResponse(true,"Medicalkind Was Deleted",null,200);
         }

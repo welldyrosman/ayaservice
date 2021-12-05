@@ -65,7 +65,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/takaran/{id}','TakaranController@getid');
     $router->delete('/api/v1/takaran/{id}','TakaranController@delete');
 
-    $router->post('/api/v1/staff/{id}','StaffController@create');
+   // $router->post('/api/v1/staff/{id}','StaffController@create');
     $router->get('/api/v1/staff','StaffController@getall');
     $router->put('/api/v1/staff/changepass','StaffController@changepass');
     $router->put('/api/v1/staff/dis/{id}','StaffController@disabled');
@@ -195,6 +195,12 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/testimoni','TestimoniController@getalltesti');
     $router->post('/api/v1/testimoni/staff','TestimoniController@create');
     $router->delete('/api/v1/testimoni/staff/{id}','TestimoniController@delete');
+
+
+    $router->post('/api/v1/formformat/input','FormformatController@fillfolder');
+    $router->post('/api/v1/formformat/folder','FormformatController@createfolder');
+    $router->get('/api/v1/formformat/get/{id}','FormformatController@getfolderbyformkind');
+
 });
 
 
@@ -215,7 +221,7 @@ $router->group(['middleware' => 'auth:api'], function () use ($router){
 $router->get('gethashstaff',function(){
     return app('hash')->make('pass@#123');
 });
-//$router->post('/api/v1/staff/{id}','StaffController@create');
+$router->post('/api/v1/staff/{id}','StaffController@create');
 
 $router->get('/api/v1/dokter','DokterController@getall');
 $router->get('/api/v1/layanan','LayananController@getall');
