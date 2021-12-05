@@ -33,12 +33,27 @@ class FormformatController extends Controller
     }
     public function deletefolder($id){
         try{
+            $formformat=Formformat::find($id);
+            $checkingchild=Formformat::where('formformat_id',$id)->get();
+            $Medicalform = Medicalform::where('formformat_id',$id)->get();
+            if (count($Medicalform)||count($checkingchild)>0) {
+                throw new Exception("Hapus Isi Group terlebih dahulu");
+            }
+            $formformat->delete();
+            return Tools::MyResponse(true,"Group Was Deleted",null,200);
+        }
+        catch(Exception $e){
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
+    public function deletefill($id){
+        try{
             $Medicalform = Medicalform::find($id);
             if (!$Medicalform) {
-                throw new Exception("Medical kind tidak ditemukan");
+                throw new Exception("Cannot Found Med form");
             }
             $Medicalform->delete();
-            return Tools::MyResponse(true,"Medicalform Was Deleted",null,200);
+            return Tools::MyResponse(true,"Medform Was Deleted",null,200);
         }
         catch(Exception $e){
             return Tools::MyResponse(false,$e,null,401);

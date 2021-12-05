@@ -200,6 +200,9 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->post('/api/v1/formformat/input','FormformatController@fillfolder');
     $router->post('/api/v1/formformat/folder','FormformatController@createfolder');
     $router->get('/api/v1/formformat/get/{id}','FormformatController@getfolderbyformkind');
+    $router->delete('/api/v1/formformat/folder/{id}','FormformatController@deletefolder');
+    $router->delete('/api/v1/formformat/input/{id}','FormformatController@deletefill');
+
 
 });
 
