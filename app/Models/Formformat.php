@@ -20,6 +20,6 @@ class Formformat extends Model
         return $this->hasMany(Formformat::class,"formformat_id","id")->with('subtitle','input');
     }
     public function input() {
-        return $this->hasMany(Medicalform::class,'formformat_id')->with('medkind');
+        return $this->hasMany(MedicalForm::class,'formformat_id')->with('medkind');
     }
 }

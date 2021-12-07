@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use App\Models\Formkind;
-use App\Models\Medicalform;
+use App\Models\MedicalForm;
 use App\Models\Medicalkind;
 use App\Models\Poli;
 use Exception;
@@ -51,7 +51,7 @@ class FormkindController extends Controller
             if (!$Formkind) {
                 throw new Exception("Formkind tidak ditemukan");
             }
-            $medform=Medicalform::where('formkind_id',$id)->get();
+            $medform=MedicalForm::where('formkind_id',$id)->get();
             if(count($medform)>0){
                 throw new Exception("Formkind cannot delete");
             }
@@ -64,7 +64,7 @@ class FormkindController extends Controller
     }
     public function getunselect($id){
         try{
-            $Medicalkind = Medicalkind::whereNotIn('id',Medicalform::select('medkind_id')->where('formkind_id',$id))->get();
+            $Medicalkind = Medicalkind::whereNotIn('id',MedicalForm::select('medkind_id')->where('formkind_id',$id))->get();
             if (!$Medicalkind) {
                 throw new Exception("Medicalkind tidak ditemukan");
             }

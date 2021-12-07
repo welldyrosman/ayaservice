@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Tools;
 use App\Models\Formformat;
-use App\Models\Medicalform;
+use App\Models\MedicalForm;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +35,8 @@ class FormformatController extends Controller
         try{
             $formformat=Formformat::find($id);
             $checkingchild=Formformat::where('formformat_id',$id)->get();
-            $Medicalform = Medicalform::where('formformat_id',$id)->get();
-            if (count($Medicalform)||count($checkingchild)>0) {
+            $MedicalForm = MedicalForm::where('formformat_id',$id)->get();
+            if (count($MedicalForm)||count($checkingchild)>0) {
                 throw new Exception("Hapus Isi Group terlebih dahulu");
             }
             $formformat->delete();
@@ -48,11 +48,11 @@ class FormformatController extends Controller
     }
     public function deletefill($id){
         try{
-            $Medicalform = Medicalform::find($id);
-            if (!$Medicalform) {
+            $MedicalForm = MedicalForm::find($id);
+            if (!$MedicalForm) {
                 throw new Exception("Cannot Found Med form");
             }
-            $Medicalform->delete();
+            $MedicalForm->delete();
             return Tools::MyResponse(true,"Medform Was Deleted",null,200);
         }
         catch(Exception $e){
@@ -66,7 +66,7 @@ class FormformatController extends Controller
                 "formformat_id"=>"required",
                 "medkind_id"=>"required"
             ]);
-            $medicalform=Medicalform::create($data);
+            $medicalform=MedicalForm::create($data);
             DB::commit();
             return Tools::MyResponse(true,"OK",$medicalform,200);
         }catch(Exception $e){
