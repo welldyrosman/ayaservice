@@ -44,6 +44,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'staff',
         ],
+        'aybe' => [
+            'driver' => 'jwt',
+            'provider' => 'aybe',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'staff' => [
             'driver' => 'eloquent',
             'model' => App\Models\Staff::class,
+        ],
+        'aybe' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Kasir::class,
         ],
     ],
 
@@ -102,6 +110,11 @@ return [
         ],
         'staff' => [
             'provider' => 'staff',
+            'table' => 'password_resets',
+            'expire' => 300,
+        ],
+        'aybe' => [
+            'provider' => 'aybe',
             'table' => 'password_resets',
             'expire' => 300,
         ],
