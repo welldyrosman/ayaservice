@@ -202,8 +202,8 @@ class MedicalController extends Controller{
             $nodes=Formformat::where('formkind_id',$medid)->where('formformat_id',$form->id)->get();
             $inputs=DB::select("
             select mf.*,ms.val_desc from medform mf
-            left join medscreen ms on mf.id=ms.medform_id
-            where mf.formformat_id=$form->id and ms.medical_id=$med ");
+            left join medscreen ms on mf.id=ms.medform_id and ms.medical_id=$med
+            where mf.formformat_id=$form->id  ");
             foreach($inputs as $input){
                 $input->medkind=Medicalkind::find($input->medkind_id);
             }
@@ -225,8 +225,8 @@ class MedicalController extends Controller{
             $nodes=Formformat::where('formkind_id',$medformnew->formkind_id)->where('formformat_id',$form->id)->get();
             $inputs=DB::select("
             select mf.*,ms.val_desc from medform mf
-            left join medscreen ms on mf.id=ms.medform_id
-            where mf.formformat_id=$form->id and ms.medical_id=$id ");
+            left join medscreen ms on mf.id=ms.medform_id and ms.medical_id=$id
+            where mf.formformat_id=$form->id  ");
 
             foreach($inputs as $input){
                 $input->medkind=Medicalkind::find($input->medkind_id);
