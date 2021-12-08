@@ -8,9 +8,11 @@ use App\Models\Barang;
 use App\Models\CompositeItem;
 use App\Models\DetailResep;
 use App\Models\Dokter;
+use App\Models\Formformat;
 use App\Models\ItemOut;
 use App\Models\Labs;
 use App\Models\Medical;
+use App\Models\MedicalForm;
 use App\Models\MedicalScreen;
 use App\Models\Pasien;
 use App\Models\Poli;
@@ -193,15 +195,42 @@ class MedicalController extends Controller{
             return Tools::MyResponse(false,$e,null,401);
         }
     }
+
+    public function ceknode($formformat,$medid,$med){
+        foreach($formformat as $form){
+            $nodes=Formformat::where('formkind_id',$medid)->where('formformat_id',$form->id)->get();
+            $inputs=DB::select("
+            select mf.*,ms.val_desc from medform mf
+            left join medscreen ms on mf.id=ms.medform_id
+            where mf.formformat_id=$form->id and ms.medical_id=$med ");
+            $form->input=$inputs;
+            if(count($nodes)>0){
+                $form->subtitle=$nodes;
+            }
+        }
+    }
+
+    public function getnewform($id){
+        $medformnew=Medical::with('screens')->find($id);
+        $formformat=Formformat::where('formkind_id',$medformnew->formkind_id)->where('formformat_id',0)->get();
+        foreach($formformat as $form){
+            $nodes=Formformat::where('formkind_id',$medformnew->formkind_id)->where('formformat_id',$form->id)->get();
+            $inputs=DB::select("
+            select mf.*,ms.val_desc from medform mf
+            left join medscreen ms on mf.id=ms.medform_id
+            where mf.formformat_id=$form->id and ms.medical_id=$id ");
+            $form->input=$inputs;
+            if(count($nodes)>0){
+                $form->subtitle=$nodes;
+                $this->ceknode($nodes,$medformnew->formkind_id,$id);
+            }
+        }
+        return $formformat;
+    }
+
     private function detailmed($id){
         $medical=new stdClass();
-        $medicalscren=DB::select("select f.formkind_id,f.medkind_id,f.dokter_only,s.created_at,s.updated_at,s.id,f.id as medform_id
-        ,s.val_desc,k.nama as label_kind,k.datatype,k.group_id
-        from medical m
-        join medform f on m.formkind_id=f.formkind_id
-        left join medscreen s on f.id=s.medform_id and s.medical_id=m.id
-        join medkind k on f.medkind_id=k.id
-        where m.id=$id order by f.id asc");
+        $medicalscren=$this->getnewform($id);
         $medicalform=DB::select("
         select m.*,p.poli,d.nama as dokter,u.nama as pasien,
         (select CONCAT('TRX',LPAD(id,6,'0')) from resep where medical_id=m.id) as code_trans
