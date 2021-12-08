@@ -211,7 +211,7 @@ class MedicalController extends Controller{
     }
 
     public function getnewform($id){
-        $medformnew=Medical::with('screens')->find($id);
+        $medformnew=Medical::find($id);
         $formformat=Formformat::where('formkind_id',$medformnew->formkind_id)->where('formformat_id',0)->get();
         foreach($formformat as $form){
             $nodes=Formformat::where('formkind_id',$medformnew->formkind_id)->where('formformat_id',$form->id)->get();
