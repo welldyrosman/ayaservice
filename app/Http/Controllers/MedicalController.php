@@ -13,6 +13,7 @@ use App\Models\ItemOut;
 use App\Models\Labs;
 use App\Models\Medical;
 use App\Models\MedicalForm;
+use App\Models\Medicalkind;
 use App\Models\MedicalScreen;
 use App\Models\Pasien;
 use App\Models\Poli;
@@ -203,6 +204,13 @@ class MedicalController extends Controller{
             select mf.*,ms.val_desc from medform mf
             left join medscreen ms on mf.id=ms.medform_id
             where mf.formformat_id=$form->id and ms.medical_id=$med ");
+            foreach($inputs as $input){
+                $input->medkind=Medicalkind::find($input->medkind_id);
+            }
+            if(count($nodes)>0){
+                $this->ceknode($nodes,$medid,$med);
+                $form->subtitle=$nodes;
+            }
             $form->input=$inputs;
             if(count($nodes)>0){
                 $form->subtitle=$nodes;
@@ -219,6 +227,10 @@ class MedicalController extends Controller{
             select mf.*,ms.val_desc from medform mf
             left join medscreen ms on mf.id=ms.medform_id
             where mf.formformat_id=$form->id and ms.medical_id=$id ");
+
+            foreach($inputs as $input){
+                $input->medkind=Medicalkind::find($input->medkind_id);
+            }
             $form->input=$inputs;
             if(count($nodes)>0){
                 $form->subtitle=$nodes;
