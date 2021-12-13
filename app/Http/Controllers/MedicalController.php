@@ -58,7 +58,6 @@ class MedicalController extends Controller{
     public function medicalsubmit(Request $request,$id){
         DB::beginTransaction();
         try{
-            throw new Exception("Under Maintenance");
             $this->saveaction($request,$id);
             $resep=Resep::where('medical_id',$id)->first();
             Tools::MedChangeStatus($resep->id,3,3,2,5);
@@ -102,6 +101,7 @@ class MedicalController extends Controller{
         $resepid=$resep->id;
         DetailResep::where('resep_id',$resepid)->delete();
         ItemOut::where('resep_id',$resepid)->delete();
+        throw new Exception("Under Maintenance");
         foreach($detail_resep as $row){
             $barangid=$row['barang_id'];
             $barang=Barang::find($barangid);
