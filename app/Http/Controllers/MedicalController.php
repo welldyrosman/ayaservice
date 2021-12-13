@@ -101,7 +101,7 @@ class MedicalController extends Controller{
         $resepid=$resep->id;
         DetailResep::where('resep_id',$resepid)->delete();
         ItemOut::where('resep_id',$resepid)->delete();
-        throw new Exception("Under Maintenance");
+
         foreach($detail_resep as $row){
             $barangid=$row['barang_id'];
             $barang=Barang::find($barangid);
@@ -112,10 +112,12 @@ class MedicalController extends Controller{
             $row['harga']=$barang->harga;
             $row['iscomposite']=$barang->iscomposite;
             if($barang->iscomposite){
+
                 $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
                 if(count($itemcomposite)<1){
                     throw new Exception("Error Barang 1");
                 }
+
                 foreach($itemcomposite as $item){
                     // if(!$item['id']){
                     //     throw new Exception(json_encode($item));
@@ -153,6 +155,7 @@ class MedicalController extends Controller{
             );
         }
         $data=$request->all();
+        throw new Exception("Under Maintenance");
         if($data["special"]==1){
             try{
                 $this->validate($request,["payamt"=>"required"]);
