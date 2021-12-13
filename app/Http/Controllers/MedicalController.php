@@ -170,7 +170,7 @@ class MedicalController extends Controller{
             }
         }
         $screenitems=$data['screenitems'];
-        throw new Exception("Under Maintenance");
+
         foreach($screenitems as $items){
             if($items['id']==null){
                 $items['medical_id']=$id;
@@ -187,6 +187,7 @@ class MedicalController extends Controller{
                 $medcr->save();
             }
         }
+        throw new Exception("Under Maintenance");
         $medical->fill($data);
         $medical->save();
     }
