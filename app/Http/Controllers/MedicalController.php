@@ -172,7 +172,7 @@ class MedicalController extends Controller{
         $screenitems=$data['screenitems'];
 
         foreach($screenitems as $items){
-            if(array_key_exists('id',$items)){
+            if(!array_key_exists('id',$items)){
                 $items['medical_id']=$id;
                 $medcrcek=MedicalScreen::where('medform_id',$items['medform_id'])->where('medical_id',$items['medical_id'])->first();
                 if(!$medcrcek){
