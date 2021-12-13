@@ -93,9 +93,10 @@ class MedicalController extends Controller{
                 ]
             );
         }
-
-
-
+        $resep=Resep::where('medical_id',$id)->first();
+        if(!$resep){
+            throw new Exception("Cannot Found Resep");
+        }
         $detail_resep=$request->input("detail_resep");
         $resepid=$resep->id;
         DetailResep::where('resep_id',$resepid)->delete();
