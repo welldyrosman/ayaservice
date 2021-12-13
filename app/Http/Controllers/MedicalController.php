@@ -182,12 +182,13 @@ class MedicalController extends Controller{
                     $medcrcek->save();
                 }
             }else{
+                throw new Exception("Under Maintenance"+json_encode($items));
                 $medcr=MedicalScreen::find($items['id']);
                 $medcr->fill($items);
                 $medcr->save();
             }
         }
-        throw new Exception("Under Maintenance");
+
         $medical->fill($data);
         $medical->save();
     }
