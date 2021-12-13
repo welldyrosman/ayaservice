@@ -172,7 +172,7 @@ class MedicalController extends Controller{
         $screenitems=$data['screenitems'];
 
         foreach($screenitems as $items){
-            throw new Exception("Under Maintenance"+json_encode($items));
+            throw new Exception("Under Maintenance".json_encode($items));
             if($items['id']==null){
                 $items['medical_id']=$id;
                 $medcrcek=MedicalScreen::where('medform_id',$items['medform_id'])->where('medical_id',$items['medical_id'])->first();
