@@ -155,7 +155,7 @@ class MedicalController extends Controller{
             );
         }
         $data=$request->all();
-        throw new Exception("Under Maintenance");
+
         if($data["special"]==1){
             try{
                 $this->validate($request,["payamt"=>"required"]);
@@ -170,11 +170,12 @@ class MedicalController extends Controller{
             }
         }
         $screenitems=$data['screenitems'];
+        throw new Exception("Under Maintenance");
         foreach($screenitems as $items){
             if($items['id']==null){
                 $items['medical_id']=$id;
                 $medcrcek=MedicalScreen::where('medform_id',$items['medform_id'])->where('medical_id',$items['medical_id'])->first();
-                if($medcrcek==null){
+                if(!$medcrcek){
                     MedicalScreen::create($items);
                 }else{
                     $medcrcek->fill($items);
