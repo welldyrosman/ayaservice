@@ -74,7 +74,7 @@ class MedicalController extends Controller{
             "treatment_kind"=>"required",
             "fee"=>"required",
             "special"=>"required",
-            // "screenitems.*.id"=>"required",
+            "screenitems.*.id"=>"required",
             "screenitems.*.medkind_id"=>"required",
             "screenitems.*.medform_id"=>"required",
            // "screenitems.*.val_desc"=>"required",
@@ -172,8 +172,7 @@ class MedicalController extends Controller{
         $screenitems=$data['screenitems'];
 
         foreach($screenitems as $items){
-            throw new Exception("Under Maintenance".json_encode($items));
-            if($items['id']==null){
+            if(property_exists($items,'id')||$items['id']==null){
                 $items['medical_id']=$id;
                 $medcrcek=MedicalScreen::where('medform_id',$items['medform_id'])->where('medical_id',$items['medical_id'])->first();
                 if(!$medcrcek){
@@ -183,7 +182,6 @@ class MedicalController extends Controller{
                     $medcrcek->save();
                 }
             }else{
-                throw new Exception("Under Maintenance"+json_encode($items));
                 $medcr=MedicalScreen::find($items['id']);
                 $medcr->fill($items);
                 $medcr->save();
