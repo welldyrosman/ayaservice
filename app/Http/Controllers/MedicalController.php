@@ -113,7 +113,7 @@ class MedicalController extends Controller{
             if($barang->iscomposite){
                 $itemcomposite=CompositeItem::where('parent_id',$barang->id)->get();
                 if(count($itemcomposite)<1){
-                    throw new Exception($barang->id);
+                    throw new Exception("Error Barang 1");
                 }
                 foreach($itemcomposite as $item){
                     // if(!$item['id']){
@@ -128,7 +128,7 @@ class MedicalController extends Controller{
                 }
             }else{
                 if(!$barangid){
-                    throw new Exception($barang->id);
+                    throw new Exception("Error Barang 2");
                 }
                 ItemOut::create([
                     "resep_id"=>$resepid,
