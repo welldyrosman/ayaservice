@@ -123,11 +123,15 @@ class ClosingController extends Controller
     public function detailGenerate($id){
         try{
             $detailtrans=DB::select("
-                with sumresep as(
-                select sum(rd.qty*rd.harga) as total,r.id,r.medical_id from resep r
-                    join resep_detail rd on r.id=rd.resep_id
+            with sumresep as(
+                select IFNULL(sum(rd.qty*rd.harga),0) as total,r.id,r.medical_id,
+					m.fee
+                    from resep r
+                    left join resep_detail rd on r.id=rd.resep_id
+					join medical m on m.id=r.medical_id
                     group by r.id,r.medical_id
-                ) select *,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing_detail cd
+                )
+                select sr.id,sr.medical_id,sr.total+sr.fee as total,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing_detail cd
                 join sumresep sr on cd.resep_id=sr.id where cd.closing_id=$id");
             if(count($detailtrans)<1){
                 throw new Exception("No Closing data");
