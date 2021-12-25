@@ -31,9 +31,9 @@ $app = new Laravel\Lumen\Application(
 
  $app->withFacades();
  $app->withEloquent();
- $app->withFacades(true, [
-    'Illuminate\Support\Facades\Notification' => 'Notification',
-]);
+//  $app->withFacades(true, [
+//     'Illuminate\Support\Facades\Notification' => 'Notification',
+// ]);
 
  $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
  $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
