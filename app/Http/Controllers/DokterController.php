@@ -126,7 +126,7 @@ class DokterController extends Controller
             $data=$request->all();
             if(key_exists('photo',$data)){
                 $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
-                if (File::file_exists($current_avatar_path)) {
+                if (file_exists($current_avatar_path)) {
                     unlink($current_avatar_path);
                 }
 
