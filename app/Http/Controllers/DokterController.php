@@ -8,12 +8,11 @@ use App\Models\Medical;
 use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 class DokterController extends Controller
 {
-    protected $path='dokter_photo';
-    protected $publicpath='dokter_photo';
+    protected $path='app/dokter_photo';
+    protected $publicpath='storage/app/dokter_photo';
     public function getall(){
         $Dokter=Dokter::with('poli')->get();
         return Tools::MyResponse(true,"OK",$Dokter,200);
