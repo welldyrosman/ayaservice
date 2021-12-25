@@ -189,7 +189,7 @@ class ReservasiController extends Controller
             left join poli p on r.poli_id=p.id
             left join medical m on r.medical_id=m.id
             left join dokter d on m.dokter_id=d.id
-            where r.status=2 or r.tgl_book<'$this->now' and r.pasien_id='$pasien->id'
+            where  r.pasien_id='$pasien->id'
             )
             select * from t ";
             $reservasipast=DB::select("$sql $cmd $orderby $page");
