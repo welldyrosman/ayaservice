@@ -37,12 +37,21 @@ class AntrianController extends Controller{
             $data=new stdClass();
             $onprocess=new stdClass();
             $now=Carbon::now()->toDateString();
+            $token = $this->jwt->getToken();
+            $user= Auth::guard('staff')->user($token);
+            $dokter=Dokter::where('email',$user->email)->first();
+            if($dokter->isdokter=='2'){
+                $dtrpoli='in(6,7)';
+            }
+            else{
+                $dtrpoli='=$p->id';
+            }
             foreach($poli as $p){
                 $query="SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,
                 i.poli FROM antrian a
                 join pasiens p on a.pasien_id=p.id
                 join poli i on a.poli_id=i.id
-                where a.queue_date='$now' and a.status=1 and a.poli_id=$p->id
+                where a.queue_date='$now' and a.status=1 and a.poli_id= ".$dtrpoli."
                 and i.stop_mk=0
                 order by a.reg_time asc";
                 $query2="SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,
@@ -51,7 +60,7 @@ class AntrianController extends Controller{
                 join poli i on a.poli_id=i.id
                 join poli_incharge ic on a.poli_id=ic.poli_id and ic.praktek_date='$now'
                 join dokter d on ic.dokter_id=d.id
-                 where a.queue_date='$now' and a.status=2 and a.poli_id=$p->id
+                 where a.queue_date='$now' and a.status=2 and a.poli_id= ".$dtrpoli."
                  and i.stop_mk=0
                  order by a.reg_time asc";
                 $antrislq=DB::select($query);
@@ -59,7 +68,7 @@ class AntrianController extends Controller{
                 $data->{$p->id}=$antrislq;
                 if(count($process)<1){
                     $schedule=DB::select("select ic.*,d.nama from poli_incharge ic join dokter d on ic.dokter_id=d.id
-                    where ic.poli_id='$p->id' and ic.praktek_date='$now'
+                    where ic.poli_id= ".$dtrpoli." and ic.praktek_date='$now'
                     ");
                     $p->dokter=count($schedule)<1?"Closed":$schedule[0]->nama;
                 }
