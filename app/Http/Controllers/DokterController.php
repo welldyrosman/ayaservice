@@ -8,8 +8,8 @@ use App\Models\Medical;
 use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use File;
 class DokterController extends Controller
 {
     protected $path='app/dokter_photo';
