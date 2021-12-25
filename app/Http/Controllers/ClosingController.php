@@ -129,7 +129,7 @@ class ClosingController extends Controller
                     from resep r
                     left join resep_detail rd on r.id=rd.resep_id
 					join medical m on m.id=r.medical_id
-                    group by r.id,r.medical_id
+                    group by r.id,r.medical_id,m.fee
                 )
                 select sr.id,sr.medical_id,sr.total+sr.fee as total,CONCAT('TRX',LPAD(cd.id,6,'0')) as trans_kode from closing_detail cd
                 join sumresep sr on cd.resep_id=sr.id where cd.closing_id=$id");
