@@ -23,7 +23,7 @@ class ReportController extends Controller
             $sql=DB::select("
             with sumresep as(
                     select sum(rd.qty*rd.harga)as total,cast(r.created_at as date) as days from resep r
-                    join resep_detail rd on r.id=rd.resep_id
+                    left join resep_detail rd on r.id=rd.resep_id
                     group by cast(r.created_at as date))
                 ,summed as(
                     select sum(m.fee) as feeamt,cast(r.created_at as date) as med_days,count(r.id) as visit_qty
