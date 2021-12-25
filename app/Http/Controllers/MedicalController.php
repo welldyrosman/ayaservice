@@ -358,12 +358,18 @@ class MedicalController extends Controller{
             $user= Auth::guard('staff')->user($token);
             $dokter=Dokter::where('email',$user->email)->first();
             $poliid=$dokter->poli_id;
+            if($dokter->isdokter=='2'){
+                $dtrpoli='in(6,7)';
+            }
+            else{
+                $dtrpoli='=$poliid';
+            }
             $now=Carbon::now()->toDateString();
             $data=DB::select("SELECT a.*,p.nama,p.tgl_lahir,p.jk,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien,
             i.poli FROM antrian a
             join pasiens p on a.pasien_id=p.id
             join poli i on a.poli_id=i.id
-            where a.queue_date='$now' and a.poli_id='$poliid' and a.status in(3,4,5)
+            where a.queue_date='$now' and a.poli_id ". $dtrpoli." and a.status in(3,4,5)
             order by a.reg_time asc
       ");
             return Tools::MyResponse(true,"OK",$data,200);
