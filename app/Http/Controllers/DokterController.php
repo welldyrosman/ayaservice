@@ -9,6 +9,7 @@ use App\Models\Staff;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use File;
 class DokterController extends Controller
 {
     protected $path='app/dokter_photo';
@@ -125,7 +126,7 @@ class DokterController extends Controller
             $data=$request->all();
             if(key_exists('photo',$data)){
                 $current_avatar_path = storage_path($this->path) . '/' .$Dokter->photo;
-                if (file_exists($current_avatar_path)) {
+                if (File::file_exists($current_avatar_path)) {
                     unlink($current_avatar_path);
                 }
 
