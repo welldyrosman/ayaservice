@@ -22,16 +22,16 @@ class ReportController extends Controller
             $orderby=Tools::GenSortQueryStr($sort);
             $sql=DB::select("
             with sumresep as(
-                    select sum(rd.qty*rd.harga)as total,cast(r.created_at as date) as days from resep r
-                    left join resep_detail rd on r.id=rd.resep_id
-                    group by cast(r.created_at as date))
-                ,summed as(
-                    select sum(m.fee) as feeamt,cast(r.created_at as date) as med_days,count(r.id) as visit_qty
-                    from resep r left join
-                    medical m on r.medical_id=m.id group by cast(r.created_at as date)
-                )
-                select r.total,m.feeamt,r.days,r.total+m.feeamt as grand_total,m.visit_qty from sumresep r
-                left join summed m on r.days=m.med_days where 1=1 $cmd $orderby $page");
+                select ifnull(sum(rd.qty*rd.harga),0)as total,cast(r.created_at as date) as days from resep r
+                left join resep_detail rd on r.id=rd.resep_id
+                group by cast(r.created_at as date))
+            ,summed as(
+                select ifnull(sum(m.fee),0) as feeamt,cast(r.created_at as date) as med_days,count(r.id) as visit_qty
+                from resep r left join
+                medical m on r.medical_id=m.id group by cast(r.created_at as date)
+            )
+            select r.total,m.feeamt,r.days,r.total+m.feeamt as grand_total,m.visit_qty from sumresep r
+            left join summed m on r.days=m.med_days where 1=1 $cmd $orderby $page");
             return Tools::MyResponse(true,"OK",$sql,200);
 
         }catch(Exception $e){
