@@ -7,6 +7,7 @@ use App\Models\Antrian;
 use App\Models\Pasien;
 use App\Models\Poli;
 use App\Models\Reservasi;
+use App\Models\Testimoni;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -185,15 +186,21 @@ class ReservasiController extends Controller
             $user= Auth::guard('api')->user($token);
             $pasien=Pasien::where('email', $user['email'])->first();
 
-            $sql=" with t as( SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.poli,m.dokter_id,d.nama as nama_dokter FROM reservasi r
-            left join poli p on r.poli_id=p.id
-            left join medical m on r.medical_id=m.id
-            left join dokter d on m.dokter_id=d.id
-            where  r.pasien_id='$pasien->id'
+            $sql="with t as( SELECT r.*,CONCAT('REG',LPAD(r.id,6,'0')) as kode_reg,p.poli,m.dokter_id,d.nama as nama_dokter ,
+            t.id as testimoni_id
+            FROM reservasi r
+                left join poli p on r.poli_id=p.id
+                left join medical m on r.medical_id=m.id
+                left join dokter d on m.dokter_id=d.id
+                left join testimoni t on r.id=t.reservasi_id
+                where  r.pasien_id='$pasien->id'
             )
             select * from t ";
             $reservasipast=DB::select("$sql $cmd $orderby $page");
-
+            foreach($reservasipast as $res){
+                $testimoni=Testimoni::find($res->testimoni_id);
+                $res->testimoni=$testimoni;
+            }
             $data=new stdClass();
             $data->rows=$reservasipast;
             $resercount=DB::select("$sql");
