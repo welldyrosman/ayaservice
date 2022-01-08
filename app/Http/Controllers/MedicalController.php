@@ -396,7 +396,7 @@ class MedicalController extends Controller{
         $currentproc=DB::select("select a.*,pl.poli as poli,p.nama,p.tgl_lahir,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien from antrian a
         left join pasiens p on a.pasien_id=p.id
         left join poli pl on a.poli_id=pl.id
-        where a.queue_date='$now' and a.poli_id ".$dtrpoli." and a.status=2");
+        where a.queue_date='$now' and a.poli_id ".$dtrpoli." and a.status=1");
         // if(count($currentproc)<1){
         //     throw new Exception($now.$poliid);
         // }
