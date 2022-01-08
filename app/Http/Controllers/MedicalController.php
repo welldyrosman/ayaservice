@@ -396,13 +396,13 @@ class MedicalController extends Controller{
         $currentproc=DB::select("select a.*,pl.poli as poli,p.nama,p.tgl_lahir,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien from antrian a
         left join pasiens p on a.pasien_id=p.id
         left join poli pl on a.poli_id=pl.id
-        where a.queue_date='$now' and a.poli_id ".$dtrpoli." ");
+        where a.queue_date='$now' and a.poli_id ".$dtrpoli." and a.status=1");
         // if(count($currentproc)<1){
         //     throw new Exception($now.$poliid);
         // }
         $data->graph=$this->graphicreservasi($poliid);
         $data->regqty=count(DB::select("select * from reservasi where tgl_book='$now' and poli_id ".$dtrpoli));
-        $data->waiting=count(DB::select("select * from antrian where queue_date='$now' and poli_id ".$dtrpoli." "));
+        $data->waiting=count(DB::select("select * from antrian where queue_date='$now' and poli_id ".$dtrpoli." and status=1"));
         $data->process=count($currentproc)<1?null:$currentproc[0];
         $data->done=count(DB::select("select * from antrian where queue_date='$now' and poli_id ".$dtrpoli." and status in(3,4,5)"));
 
