@@ -60,7 +60,7 @@ class AntrianController extends Controller{
                 join poli i on a.poli_id=i.id
                 join poli_incharge ic on a.poli_id=ic.poli_id and ic.praktek_date='$now'
                 join dokter d on ic.dokter_id=d.id
-                 where a.queue_date='$now' and a.status=2 and a.poli_id ".$dtrpoli."
+                 where a.queue_date='$now' and a.status=1 and a.poli_id ".$dtrpoli."
                  and i.stop_mk=0
                  order by a.reg_time asc";
                 $antrislq=DB::select($query);
