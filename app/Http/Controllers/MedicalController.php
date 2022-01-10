@@ -259,7 +259,7 @@ class MedicalController extends Controller{
         join pasiens u on m.pasien_id=u.id
         where m.id=$id");
         $resep=DB::select("select b.id,b.iscomposite,d.qty,d.unit,b.harga,b.nama,r.id as resep_id,d.ispreorder,r.payamt,r.special
-        ,k.takaran
+        ,k.takaran,k.id as takaran_id
         from resep r
         left join resep_detail d on r.id=d.resep_id
         join barang b on d.barang_id=b.id and kind=1
@@ -393,7 +393,8 @@ class MedicalController extends Controller{
         else{
             $dtrpoli='=$poliid';
         }
-        $currentproc=DB::select("select a.*,pl.poli as poli,p.nama,p.tgl_lahir,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien from antrian a
+        $currentproc=DB::select("select a.*,pl.poli as poli,p.nama,p.tgl_lahir,CONCAT('AK',LPAD(p.id,4,'0')) as kode_pasien
+        from antrian a
         left join pasiens p on a.pasien_id=p.id
         left join poli pl on a.poli_id=pl.id
         where a.queue_date='$now' and a.poli_id ".$dtrpoli." and a.status=2");
