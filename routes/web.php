@@ -130,6 +130,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/medicaldone','MedicalController@done');
     $router->get('/api/v1/medicalallres','MedicalController@allreserve');
 
+    $router->put('/api/v1/backtopoli/{id}','MedicalController@backtomedical');
 
     $router->get('/api/v1/transaksi','ResepController@getall');
 
@@ -183,7 +184,7 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->get('/api/v1/handover/{id}','ClosingController@detailGenerate');
     $router->get('/api/v1/handoverdetail','ClosingController@detailGenerateUnclose');
 
-    $router->get('/api/v1/currenthandover','ClosingController@calcclosing');
+
     $router->get('/api/v1/needclosinglist','ClosingController@needclosinglist');
 
     $router->get('/api/v1/resep','POSController@getresep');
@@ -204,8 +205,9 @@ $router->group(['middleware' => 'auth:staff'], function () use ($router){
     $router->delete('/api/v1/formformat/input/{id}','FormformatController@deletefill');
 
 
+    $router->get('/api/v1/medicalnew/{id}','MedicalController@getnewform');
+    $router->get('/api/v1/currenthandover','ClosingController@calcclosing');
 });
-
 
 
 $router->group(['middleware' => 'auth:api'], function () use ($router){

@@ -273,6 +273,17 @@ class MedicalController extends Controller{
         $medical->resep=$resep;
         return $medical;
     }
+    public function backtomedical($id){
+        DB::beginTransaction();
+        try{
+            Tools::MedChangeStatus($id,1,1,1,3);
+            DB::commit();
+            return Tools::MyResponse(true,"OK",null,200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return Tools::MyResponse(false,$e,null,401);
+        }
+    }
     public function getmeddet($id){
         try{
             $medical=$this->detailmed($id);
