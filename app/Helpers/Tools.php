@@ -117,6 +117,9 @@ class Tools{
         $cmd="";
         if($filter){
             foreach($filter as $key=>$value){
+                if($key=='kode_trans'){
+                    $key="CONCAT('TRX',LPAD(r.id,6,'0'))";
+                }
                 $cmd.=" AND UPPER($key) LIKE UPPER('%$value%')";
             }
         }
