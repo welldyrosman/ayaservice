@@ -86,7 +86,7 @@ class ArticleController extends Controller
             $this->validate($request,[
                 'subject' => 'required',
                 'content' => 'required',
-                'thumbnail_img'=>'required|image',
+
             ],['required'=>':attribute cannot Empty']);
 
             $data=$request->all();
