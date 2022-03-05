@@ -33,7 +33,7 @@ class ClosingController extends Controller
             left join medical m on r.medical_id=m.id
             left join resep_detail rd on r.id=rd.resep_id
             $cmd
-            group by r.id,r.medical_id,m.fee,r.special
+            group by r.id,r.medical_id,m.fee,r.special,r.payamt
         ),".$this->sql;
         // return "with sumresep as (
         //     select
