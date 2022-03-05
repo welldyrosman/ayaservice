@@ -129,7 +129,7 @@ class ClosingController extends Controller
         }
     }
     public function needclosinglist(Request $request){
-        $sql="select *,CONCAT('TRX',LPAD(id,6,'0')) as kode_trans from recap";
+        $sql="select *,CONCAT('TRX',LPAD(id,6,'0')) as kode_trans,total as grand_total from recap";
         $detdata=DB::select($this->sqlresep(4).$sql);
         return Tools::MyResponse(true,"OK",$detdata,200);
     }
