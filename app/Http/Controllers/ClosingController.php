@@ -46,12 +46,6 @@ class ClosingController extends Controller
         // ),".$this->sql;
     }
     private $sql="
-        sumall as(
-            select s.*,m.fee,
-            case when s.special=1 then s.total
-            else s.total+m.fee end as grand_total from sumresep s
-            left join medical m on s.medical_id=m.id
-        ),
         clossing_w as(
             select * from sumresep where id not in (select resep_id from closing_detail cd join closing c on cd.closing_id=c.id)
         ),
@@ -67,6 +61,13 @@ class ClosingController extends Controller
             select * from sumresep s where s.id not in(
             select resep_id from closing_detail)
         )";
+
+        // sumall as(
+        //     select s.*,m.fee,
+        //     case when s.special=1 then s.total
+        //     else s.total+m.fee end as grand_total from sumresep s
+        //     left join medical m on s.medical_id=m.id
+        // ),
 //         select
 //         (select sum(grand_total) as in_amt from sumall) as in_amt,
 //         (select ifnull(sum(ifnull(closing_amt,0)),0) as total_in from closing) as over_amt,
