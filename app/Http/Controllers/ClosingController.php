@@ -64,7 +64,7 @@ class ClosingController extends Controller
             from dual
         ),
         recap as (
-            select * from sumall s where s.id not in(
+            select * from sumresep s where s.id not in(
             select resep_id from closing_detail)
         )";
 //         select
@@ -88,7 +88,7 @@ class ClosingController extends Controller
     public function createhandover(){
         DB::beginTransaction();
         try{
-            $sumoversql="select sum(total) as total from clossing_w";
+            $sumoversql="select sum(total) as total from recap";
             $sumdata=DB::select($this->sqlresep(4).$sumoversql);
             if(!$sumdata[0]->total){
                 throw new Exception("No Data Need Caclculate");
@@ -111,7 +111,7 @@ class ClosingController extends Controller
                 ]);
             }
             ClosingDetail::where("closing_id",$closing->id)->delete();
-            $sumdetail="select * from clossing_w";
+            $sumdetail="select * from recap";
             $detdata=DB::select($this->sqlresep(4).$sumdetail);
             foreach($detdata as $data){
                 ClosingDetail::create([
@@ -129,7 +129,7 @@ class ClosingController extends Controller
         }
     }
     public function needclosinglist(Request $request){
-        $sql="select *,CONCAT('TRX',LPAD(id,6,'0')) as kode_trans from clossing_w";
+        $sql="select *,CONCAT('TRX',LPAD(id,6,'0')) as kode_trans from recap";
         $detdata=DB::select($this->sqlresep(4).$sql);
         return Tools::MyResponse(true,"OK",$detdata,200);
     }
