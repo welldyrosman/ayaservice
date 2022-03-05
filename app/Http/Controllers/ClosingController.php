@@ -78,7 +78,6 @@ class ClosingController extends Controller
     public function calcclosing(Request $request){
         try{
             $inoutsql=" select * from in_out";
-            throw new Exception($this->sqlresep(4).$inoutsql);
             $sql=DB::select($this->sqlresep(4).$inoutsql);
             return Tools::MyResponse(true,"OK",$sql,200);
 
